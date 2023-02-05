@@ -9,6 +9,12 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "EonData.Web", "EonData.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EonData.Api", "EonData.Api\EonData.Api.csproj", "{5DB2257B-8DCF-4F6D-A29E-FBD09A918EAB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureADB2C", "AzureADB2C", "{6FF11977-1EFA-4E78-8DEA-9FA394E84451}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{377AEEE2-B8FF-4E07-9FE6-295C08ABE257}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudFormation", "CloudFormation", "{6542E471-014F-4D81-9E5B-B123867A1C9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6542E471-014F-4D81-9E5B-B123867A1C9E} = {377AEEE2-B8FF-4E07-9FE6-295C08ABE257}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5863815B-F7C2-477F-BCB4-EACC8482F9F7}
