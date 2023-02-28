@@ -25,10 +25,17 @@ namespace EonData.Api.Controllers
         {   
             if (message == null)
             {
-                return BadRequest("Message is missing.");
+                return BadRequest("Message data is missing.");
             }
 
-            await _contactForm.SaveContactMessageAsync(message, cancellationToken);
+            try
+            {
+                await _contactForm.SaveContactMessageAsync(message, cancellationToken);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
 
             return Ok();
         }

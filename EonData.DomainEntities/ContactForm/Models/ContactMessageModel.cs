@@ -8,6 +8,7 @@ namespace EonData.DomainEntities.ContactForm.Models
 {
     public class ContactMessageModel
     {
+        public string? Name { get; set; }
         public string? ContactAddress { get; set; }
         public string? Message { get; set; }
         public string? Source { get; set; }
