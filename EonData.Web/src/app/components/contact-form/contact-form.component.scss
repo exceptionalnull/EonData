@@ -1,36 +1,32 @@
 @import '../../../variables';
 
 .contact-form {
-  margin-left: 113px;
+  div {
+      width: 80%;
+  }
 
   label {
-    font: {
-        family: 'Share Tech Mono', monospace;
-        weight: bold;
-    }
     color: $primary-heading-color;
-    margin-bottom: 10px;
+    font: {
+      family: 'Share Tech Mono', monospace;
+      weight: bold;
+    }
   }
 
   .contact-details {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 10px;
-
-    input {
-        width: 220px;
-    }
-
-    label {
-      margin-right: 19px;
-    }
+      input {
+          width: 220px;
+          margin-right: 13px;
+      }
   }
 
-  textarea {
-    height: 150px;
-    width: auto;
-    resize: vertical;
-    margin-bottom: 20px;
+  .contact-message {
+      label {
+          vertical-align: top;
+      }
+      textarea {
+          width: 70%;
+      }
   }
 
   button {
