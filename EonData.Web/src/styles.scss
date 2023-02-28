@@ -1,0 +1,25 @@
+$primary-background-color: #333333;
+$primary-background-color2:#5F758E;
+$primary-color: #FAF0E6;
+$primary-heading-color: #1A237E;
+$primary-accent-color: #006400;
+$secondary-accent-color: #4A148C;
+
+
+body {
+    background-color: $primary-background-color2;
+    color: $primary-color;
+    margin: {
+        top: 22px;
+        left: 13%;
+    }
+}
+
+h1 {
+  color: $primary-heading-color;
+
+  font: {
+    family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+  }
+}
+
