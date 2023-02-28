@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj" />
+    <ProjectReference Include="..\EonData.DomainEntities\EonData.DomainEntities.csproj" />
+  </ItemGroup>
+
 </Project>

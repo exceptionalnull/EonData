@@ -12,6 +12,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         public IActionResult SendMessage(ContactMessageModel message)
         {
+
             return Ok();
         }
     }

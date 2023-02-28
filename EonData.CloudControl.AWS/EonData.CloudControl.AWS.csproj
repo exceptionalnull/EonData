@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EonData.DomainEntities\EonData.DomainEntities.csproj" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.103.16" />
   </ItemGroup>
 
 </Project>

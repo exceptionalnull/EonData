@@ -14,8 +14,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{377AEEE2-B8FF-4E07-9FE6-295C08ABE257}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudFormation", "CloudFormation", "{6542E471-014F-4D81-9E5B-B123867A1C9E}"
+	ProjectSection(SolutionItems) = preProject
+		eondata-web.yaml = eondata-web.yaml
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EonData.DomainEntities", "EonData.DomainEntities\EonData.DomainEntities.csproj", "{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EonData.DomainLogic", "EonData.DomainLogic\EonData.DomainLogic.csproj", "{7933A9F9-799B-4503-9327-9A2281D69455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EonData.CloudControl.AWS", "EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj", "{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +50,14 @@ Global
 		{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7933A9F9-799B-4503-9327-9A2281D69455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7933A9F9-799B-4503-9327-9A2281D69455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7933A9F9-799B-4503-9327-9A2281D69455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7933A9F9-799B-4503-9327-9A2281D69455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
