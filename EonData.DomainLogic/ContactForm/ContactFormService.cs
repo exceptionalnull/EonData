@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EonData.DomainLogic.ContactForm
 {
-    internal class ContactFormService
+    public class ContactFormService
     {
         private readonly S3FileStorageService _storage;
         public ContactFormService(S3FileStorageService storageService)
@@ -17,10 +18,6 @@ namespace EonData.DomainLogic.ContactForm
             _storage = storageService;
         }
 
-        public async Task SaveContactMessageAsync(ContactMessageModel message)
-        {
-            string filename = "contact-message-.json";
-            _storage.WriteFile("eondata", $"contacts/{filename}", 
-        }
+        public Task SaveContactMessageAsync(ContactMessageModel message, CancellationToken cancellationToken) => _storage.SaveFileAsync("eondata", $"contacts/contact-message-{DateTime.UtcNow:ddMMyyHHmmssfff}.json", JsonSerializer.Serialize(message), cancellationToken);
     }
 }

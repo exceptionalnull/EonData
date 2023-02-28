@@ -12,7 +12,7 @@ namespace EonData.CloudControl.AWS
             _amazonS3 = amazonS3Service;
         }
 
-        public async Task WriteFile(string bucketName, string path, string data, CancellationToken cancellationToken)
+        public async Task SaveFileAsync(string bucketName, string path, string data, CancellationToken cancellationToken)
         {
             using var dataStream = new MemoryStream(Encoding.Default.GetBytes(data));
             if (dataStream != null)

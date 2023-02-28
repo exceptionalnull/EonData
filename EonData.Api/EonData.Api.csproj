@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EonData.DomainEntities\EonData.DomainEntities.csproj" />
+    <ProjectReference Include="..\EonData.DomainLogic\EonData.DomainLogic.csproj" />
   </ItemGroup>
 
 </Project>
