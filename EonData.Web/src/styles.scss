@@ -15,13 +15,23 @@ body {
     margin: {
         top: 22px;
         left: 13%;
+        right: 19%;
     }
+    line-height: 1.4;
 }
 
-h1 {
+div.title {
   color: $primary-heading-color;
+  margin-bottom: 2rem;
 
   font: {
     family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+    weight: bold;
+    size: xx-large;
   }
+}
+
+p {
+  margin: 0 0 1rem;
+  text-indent: 1rem;
 }
