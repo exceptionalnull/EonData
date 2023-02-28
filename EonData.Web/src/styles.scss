@@ -9,6 +9,9 @@ $secondary-accent-color: #4A148C;
 body {
     background-color: $primary-background-color2;
     color: $primary-color;
+    font: {
+        family: 'Montserrat', sans-serif;
+    }
     margin: {
         top: 22px;
         left: 13%;
@@ -22,4 +25,3 @@ h1 {
     family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
   }
 }
-
