@@ -21,7 +21,7 @@ Parameters:
     WebHostInstanceType:
         Description: The EC2 instance type to use when creating the bastion host.
         Type: String
-        Default: t4g.micro
+        Default: t4g.small
     WebHostSubnets:
         Description: The subnets to deploy the web host instances to. These should be private subnets.
         Type: List<AWS::EC2::Subnet::Id>
@@ -36,11 +36,8 @@ Resources:
         Properties:
             BucketName: !Ref EonDataWebAppBucketName
             AccessControl: PublicRead
-            # PublicAccessBlock:
-            #     BlockPublicAcls: false
-            #     BlockPublicPolicy: false
-            #     IgnorePublicAcls: false
-            #     RestrictPublicBuckets: false
+            WebsiteConfiguration:
+                IndexDocument: index.html
     EonDataWebDataS3Bucket:
         Type: AWS::S3::Bucket
         Properties:
