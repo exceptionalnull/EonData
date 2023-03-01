@@ -35,14 +35,37 @@ Resources:
         Type: AWS::S3::Bucket
         Properties:
             BucketName: !Ref EonDataWebAppBucketName
-            AccessControl: PublicRead
-            WebsiteConfiguration:
-                IndexDocument: index.html
+            AccessControl: Private
     EonDataWebDataS3Bucket:
         Type: AWS::S3::Bucket
         Properties:
             BucketName: !Ref EonDataWebDataBucketName
             AccessControl: Private
+    EonDataWebAppCert:
+        Type: AWS::CertificateManager::Certificate
+        Properties:
+            DomainName: eondata.net
+            SubjectAlternativeNames:
+                - www.eondata.net
+            ValidationMethod: DNS
+            DomainValidationOptions:
+                - DomainName: eondata.net
+                  ValidationDomain: eondata.net
+                - DomainName: www.eondata.net
+                  ValidationDomain: eondata.net
+    EonDataWebApiCert:
+        Type: AWS::CertificateManager::Certificate
+        Properties:
+            DomainName: api.eondata.net
+            ValidationMethod: DNS
+            DomainValidationOptions:
+                - DomainName: api.eondata.net
+                  ValidationDomain: eondata.net
+    # EonDataWebAppCloudFront:
+    #     Type: AWS::CloudFront::Distribution
+    #     Properties:
+    #         DistributionConfig:
+                
     # EonDataWebHostEC2Security:
     #     Type: AWS::EC2::SecurityGroup
     #     Properties:
