@@ -4,6 +4,14 @@ Parameters:
         Description: The EC2 KeyPair to use when creating the bastion host instances.
         Type: AWS::EC2::KeyPair::KeyName
         Default: eondata-web
+    EonDataWebAppBucketName:
+        Description: Name of the S3 bucket that will host the angular webapp.
+        Type: String
+        Default: eondata-web
+    EonDataWebDataBucketName:
+        Description: Name of the S3 bucket that stores data used by the website.
+        Type: String
+        Default: eondata-web-data
     BastionSecurityGroupId:
         Description: The security group id the bastion host belongs to.
         Type: String
@@ -24,13 +32,26 @@ Parameters:
         Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 Resources:
     EonDataWebAppS3Bucket:
-        Type: AWS::S3::
-    EonDataWebHostEC2Security:
-        Type: AWS::EC2::SecurityGroup
+        Type: AWS::S3::Bucket
         Properties:
-          GroupName: EonDreamWebServerSecurityGroup
-          GroupDescription: Controls access to the eondream website web ec2 servers.
-          VpcId: !Ref TargetVPC
-    EonDataWebHostAllowSSH:
-        Type: AWS::EC2::SecurityGroupIngress
-        GroupId: !GetAtt EonDataWebHostEC2Security.GroupId
+            BucketName: !Ref EonDataWebAppBucketName
+            AccessControl: PublicRead
+            # PublicAccessBlock:
+            #     BlockPublicAcls: false
+            #     BlockPublicPolicy: false
+            #     IgnorePublicAcls: false
+            #     RestrictPublicBuckets: false
+    EonDataWebDataS3Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Ref EonDataWebDataBucketName
+            AccessControl: Private
+    # EonDataWebHostEC2Security:
+    #     Type: AWS::EC2::SecurityGroup
+    #     Properties:
+    #       GroupName: EonDreamWebServerSecurityGroup
+    #       GroupDescription: Controls access to the eondream website web ec2 servers.
+    #       VpcId: !Ref TargetVPC
+    # EonDataWebHostAllowSSH:
+    #     Type: AWS::EC2::SecurityGroupIngress
+    #     GroupId: !GetAtt EonDataWebHostEC2Security.GroupId
