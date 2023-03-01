@@ -7,11 +7,11 @@ Parameters:
     EonDataWebAppBucketName:
         Description: Name of the S3 bucket that will host the angular webapp.
         Type: String
-        Default: eondata-web
+        Default: eondataweb
     EonDataWebDataBucketName:
         Description: Name of the S3 bucket that stores data used by the website.
         Type: String
-        Default: eondata-web-data
+        Default: eondataweb-data
     BastionSecurityGroupId:
         Description: The security group id the bastion host belongs to.
         Type: String
@@ -35,12 +35,35 @@ Resources:
         Type: AWS::S3::Bucket
         Properties:
             BucketName: !Ref EonDataWebAppBucketName
-            AccessControl: Private
+            AccessControl: PublicRead
+            WebsiteConfiguration:
+                IndexDocument: index.html
+                ErrorDocument: index.html
+    EonDataWebAppS3Policy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref EonDataWebAppS3Bucket
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Sid: "PublicReadGetObject"
+                      Effect: "Allow"
+                      Principal: "*"
+                      Action: "s3:GetObject"
+                      Resource: !Join ["", ["arn:aws:s3:::", !Ref EonDataWebAppBucketName, "/*"]]
     EonDataWebDataS3Bucket:
         Type: AWS::S3::Bucket
+        DeletionPolicy: Retain
         Properties:
             BucketName: !Ref EonDataWebDataBucketName
             AccessControl: Private
+            PublicAccessBlockConfiguration:
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+    # TODO: migrate eondata.net domain to Route53 to improve deployment of root domain resources. especially ACM certs like the two below.
+    # NOTE: for now when first deploying this template it will not complete until the CNAME validation is completed manually in google domains.
     EonDataWebAppCert:
         Type: AWS::CertificateManager::Certificate
         Properties:
