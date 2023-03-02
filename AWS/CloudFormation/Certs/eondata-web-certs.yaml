@@ -5,13 +5,9 @@ Resources:
     EonDataWebAppCert:
         Type: AWS::CertificateManager::Certificate
         Properties:
-            DomainName: eondata.net
-            SubjectAlternativeNames:
-                - www.eondata.net
+            DomainName: www.eondata.net
             ValidationMethod: DNS
             DomainValidationOptions:
-                - DomainName: eondata.net
-                  ValidationDomain: eondata.net
                 - DomainName: www.eondata.net
                   ValidationDomain: eondata.net
     EonDataWebApiCert:

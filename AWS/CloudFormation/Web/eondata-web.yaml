@@ -76,7 +76,6 @@ Resources:
                 Comment: EonData web app distribution
                 HttpVersion: http2
                 Aliases:
-                    - eondata.net
                     - www.eondata.net
                 ViewerCertificate:
                     AcmCertificateArn: !Ref EonDataWebAppCertArn
@@ -120,12 +119,12 @@ Resources:
     #     Properties:
     #         DistributionConfig:
 
-    # EonDataWebHostEC2Security:
+    # EonDataApiHostEC2Security:
     #     Type: AWS::EC2::SecurityGroup
     #     Properties:
-    #       GroupName: EonDreamWebServerSecurityGroup
+    #       GroupName: EonDataApiHostSecurityGroup
     #       GroupDescription: Controls access to the eondream website web ec2 servers.
     #       VpcId: !Ref TargetVPC
-    # EonDataWebHostAllowSSH:
+    # EonDataApiHostAllowBastionSSH:
     #     Type: AWS::EC2::SecurityGroupIngress
-    #     GroupId: !GetAtt EonDataWebHostEC2Security.GroupId
+    #     GroupId: !GetAtt EonDataApiHostEC2Security.GroupId
