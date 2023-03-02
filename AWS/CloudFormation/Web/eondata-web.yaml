@@ -113,12 +113,16 @@ Resources:
                       ResponsePagePath: /index.html
                       ResponseCode: '200'
                       ErrorCachingMinTTL: 300
-
     # EonDataWebApiCloudFrontDistribution:
     #     Type: AWS::CloudFront::Distribution
     #     Properties:
     #         DistributionConfig:
 
+    EonDataWebLogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+            LogGroupName: eondataweb
+            RetentionInDays: 120
     EonDataApiHostEC2Security:
         Type: AWS::EC2::SecurityGroup
         Properties:
@@ -149,6 +153,59 @@ Resources:
                 KeyName: !Ref WebHostKeyPair
                 SecurityGroupIds:
                 - !Ref EonDataApiHostEC2Security
+                UserData:
+                  Fn::Base64: !Sub |
+                    #!/bin/bash
+                    yum update -y
+                    yum install -y aws-cfn-bootstrap
+                    /opt/aws/bin/cfn-init --stack ${AWS::StackName} --resource EonDataApiHostLaunchTemplate --region ${AWS::Region} --configsets Setup
+        Metadata:
+            AWS::CloudFormation::Init:
+                configSets:
+                    Setup:
+                      - init
+                    #   - inst
+                    #   - strt
+                init:
+                  packages:
+                    yum:
+                      awslogs: []
+                      jq: []
+                      htop: []
+                  files:
+                    /etc/awslogs/awscli.conf:
+                        mode: "000400"
+                        content: !Sub |
+                            [plugins]
+                            cwlogs = cwlogs
+                            [default]
+                            region = ${AWS::Region}
+                    /etc/awslogs/awslogs.conf:
+                        mode: "000400"
+                        content: !Sub |
+                            [general]
+                            state_file = /var/lib/awslogs/agent-state
+                            use_gzip_http_content_encoding = true
+                            queue_size = 10
+
+                            [cfn-init]
+                            file = /var/log/cfn-init.log
+                            log_group_name = ${EonDataWebLogGroup}
+                            log_stream_name = api cfn-init {instance_id}
+                            datetime_format = %Y-%m-%d %H:%M:%S,%f
+                            time_zone = UTC
+                            multi_line_start_pattern = {datetime_format}
+
+                            [sshd]
+                            file = /var/log/secure
+                            log_group_name = ${EonDataWebLogGroup}
+                            log_stream_name = api sshd {instance_id}
+                            datetime_format = %b %d %H:%M:%S
+                  commands:
+                    awslogsenabl:
+                        command: systemctl enable awslogsd
+                    awslogsstart:
+                        command: systemctl start awslogsd
     EonDataApiHostEC2AutoScale:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
@@ -175,6 +232,24 @@ Resources:
                   Action:
                     - sts:AssumeRole
             Path: "/"
+    EonDataWebIAMPolicyWriteLogs:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: EonDataWebIAMPolicyWriteLogs
+            Roles:
+                - !Ref EonDataApiHostIAMRole
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Sid: EonDataWebIAMPolicyWriteLogs
+                      Effect: Allow
+                      Action:
+                        - logs:CreateLogGroup
+                        - logs:CreateLogStream
+                        - logs:DescribeLogGroups
+                        - logs:PutLogEvents
+                      Resource:
+                        - 'arn:aws:logs:*:*:log-group:eondataweb:*'
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:
