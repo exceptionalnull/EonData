@@ -164,7 +164,7 @@ Resources:
                 configSets:
                     Setup:
                       - init
-                    #   - inst
+                      - inst
                     #   - strt
                 init:
                   packages:
@@ -206,6 +206,12 @@ Resources:
                         command: systemctl enable awslogsd
                     awslogsstart:
                         command: systemctl start awslogsd
+                    msrepoadd:
+                        command: rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+                inst:
+                  packages:
+                    yum:
+                      aspnetcore-runtime-7.0: []
     EonDataApiHostEC2AutoScale:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
@@ -232,6 +238,28 @@ Resources:
                   Action:
                     - sts:AssumeRole
             Path: "/"
+    EonDataApiIAMPolicyS3Access:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: EonDataApiIAMPolicyS3Access
+            Roles:
+                - !Ref EonDataApiHostIAMRole
+            PolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                    - Sid: EonDataApiIAMPolicyS3Read
+                      Effect: Allow
+                      Action:
+                        - s3:GetObject
+                      Resource:
+                        - arn:aws:s3:::eondata/bin/eondataweb-api.tar.gz
+                        - arn:aws:s3:::eondataweb-data/contacts/*
+                    - Sid: EonDataApiIAMPolicyS3Write
+                      Effect: Allow
+                      Action:
+                        - s3:PutObject
+                      Resource:
+                        - arn:aws:s3:::eondataweb-data/contacts/*
     EonDataWebIAMPolicyWriteLogs:
         Type: AWS::IAM::Policy
         Properties:
