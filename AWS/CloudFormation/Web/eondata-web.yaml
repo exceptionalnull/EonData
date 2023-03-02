@@ -12,6 +12,12 @@ Parameters:
         Description: Name of the S3 bucket that stores data used by the website.
         Type: String
         Default: eondataweb-data
+    EonDataWebAppCertArn:
+        Description: ARN of the certificate to use for the webapp. This needs to be deployed to us-east-1 to work with CloudFront.
+        Type: String
+    EonDataWebApiCertArn:
+        Description: ARN of the certificate to use for the webapp. This needs to be deployed to us-east-1 to work with CloudFront.
+        Type: String
     BastionSecurityGroupId:
         Description: The security group id the bastion host belongs to.
         Type: String
@@ -62,33 +68,58 @@ Resources:
                 BlockPublicPolicy: true
                 IgnorePublicAcls: true
                 RestrictPublicBuckets: true
-    # TODO: migrate eondata.net domain to Route53 to improve deployment of root domain resources. especially ACM certs like the two below.
-    # NOTE: for now when first deploying this template it will not complete until the CNAME validation is completed manually in google domains.
-    EonDataWebAppCert:
-        Type: AWS::CertificateManager::Certificate
+    EonDataWebAppCloudFrontDistribution:
+        Type: AWS::CloudFront::Distribution
         Properties:
-            DomainName: eondata.net
-            SubjectAlternativeNames:
-                - www.eondata.net
-            ValidationMethod: DNS
-            DomainValidationOptions:
-                - DomainName: eondata.net
-                  ValidationDomain: eondata.net
-                - DomainName: www.eondata.net
-                  ValidationDomain: eondata.net
-    EonDataWebApiCert:
-        Type: AWS::CertificateManager::Certificate
-        Properties:
-            DomainName: api.eondata.net
-            ValidationMethod: DNS
-            DomainValidationOptions:
-                - DomainName: api.eondata.net
-                  ValidationDomain: eondata.net
-    # EonDataWebAppCloudFront:
+            DistributionConfig:
+                Enabled: true
+                Comment: EonData web app distribution
+                HttpVersion: http2
+                Aliases:
+                    - eondata.net
+                    - www.eondata.net
+                ViewerCertificate:
+                    AcmCertificateArn: !Ref EonDataWebAppCertArn
+                    SslSupportMethod: sni-only
+                    MinimumProtocolVersion: TLSv1.2_2018
+                DefaultRootObject: index.html
+                Origins:
+                    - Id: EonDataWebAppS3Origin
+                      DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
+                      S3OriginConfig: {}
+                    #     OriginAccessIdentity: ''
+                    #   OriginCustomHeaders:
+                    #     - HeaderName: Access-Control-Allow-Origin
+                    #       HeaderValue: "'*'"
+                      OriginPath: ''
+                DefaultCacheBehavior:
+                    TargetOriginId: EonDataWebAppS3Origin
+                    ForwardedValues:
+                        QueryString: false
+                        Cookies:
+                            Forward: none
+                    ViewerProtocolPolicy: redirect-to-https
+                    MinTTL: 0
+                    AllowedMethods:
+                        - GET
+                        - HEAD
+                        - OPTIONS
+                    CachedMethods:
+                        - GET
+                        - HEAD
+                    DefaultTTL: 3600
+                    MaxTTL: 86400
+                CustomErrorResponses:
+                    - ErrorCode: 404
+                      ResponsePagePath: /index.html
+                      ResponseCode: '200'
+                      ErrorCachingMinTTL: 300
+
+    # EonDataWebApiCloudFrontDistribution:
     #     Type: AWS::CloudFront::Distribution
     #     Properties:
     #         DistributionConfig:
-                
+
     # EonDataWebHostEC2Security:
     #     Type: AWS::EC2::SecurityGroup
     #     Properties:
