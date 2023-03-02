@@ -1,7 +1,7 @@
 Description: Creates the EonData.net website
 Parameters:
-    HostKeyPair:
-        Description: The EC2 KeyPair to use when creating the bastion host instances.
+    WebHostKeyPair:
+        Description: The EC2 KeyPair to use when creating the web host instances.
         Type: AWS::EC2::KeyPair::KeyName
         Default: eondata-web
     EonDataWebAppBucketName:
@@ -27,7 +27,7 @@ Parameters:
     WebHostInstanceType:
         Description: The EC2 instance type to use when creating the bastion host.
         Type: String
-        Default: t4g.small
+        Default: t3.small
     WebHostSubnets:
         Description: The subnets to deploy the web host instances to. These should be private subnets.
         Type: List<AWS::EC2::Subnet::Id>
@@ -119,12 +119,65 @@ Resources:
     #     Properties:
     #         DistributionConfig:
 
-    # EonDataApiHostEC2Security:
-    #     Type: AWS::EC2::SecurityGroup
-    #     Properties:
-    #       GroupName: EonDataApiHostSecurityGroup
-    #       GroupDescription: Controls access to the eondream website web ec2 servers.
-    #       VpcId: !Ref TargetVPC
-    # EonDataApiHostAllowBastionSSH:
-    #     Type: AWS::EC2::SecurityGroupIngress
-    #     GroupId: !GetAtt EonDataApiHostEC2Security.GroupId
+    EonDataApiHostEC2Security:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+          GroupName: EonDataApiHostEC2Security
+          GroupDescription: Controls access to the eondream website web ec2 servers.
+          VpcId: !Ref TargetVPC
+    EonDataApiHostAllowBastionSSH:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            Description: Allows SSH access to the API hosts from the bastion server.
+            GroupId: !GetAtt EonDataApiHostEC2Security.GroupId
+            IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            SourceSecurityGroupId: !Ref BastionSecurityGroupId
+    EonDataApiHostLaunchTemplate:
+        Type: AWS::EC2::LaunchTemplate
+        Properties:
+            LaunchTemplateName: EonDataApiHostTemplate
+            LaunchTemplateData:
+                ImageId: !Ref LatestAmiId
+                InstanceInitiatedShutdownBehavior: terminate
+                InstanceType: !Ref WebHostInstanceType
+                IamInstanceProfile:
+                    Arn: !GetAtt EonDataApiHostIAMProfile.Arn
+                CreditSpecification:
+                    CpuCredits: standard
+                KeyName: !Ref WebHostKeyPair
+                SecurityGroupIds:
+                - !Ref EonDataApiHostEC2Security
+    EonDataApiHostEC2AutoScale:
+        Type: AWS::AutoScaling::AutoScalingGroup
+        Properties:
+            AutoScalingGroupName: EonDataApiHostAutoScaling
+            DesiredCapacity: 1
+            MinSize: 0
+            MaxSize: 1
+            Cooldown: 90
+            VPCZoneIdentifier: !Ref WebHostSubnets
+            LaunchTemplate:
+                LaunchTemplateId: !Ref EonDataApiHostLaunchTemplate
+                Version: 1
+    EonDataApiHostIAMRole:
+        Type: AWS::IAM::Role
+        Properties:
+            RoleName: EonDataApiHostIAMRole
+            AssumeRolePolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Principal:
+                    Service:
+                      - ec2.amazonaws.com
+                  Action:
+                    - sts:AssumeRole
+            Path: "/"
+    EonDataApiHostIAMProfile:
+        Type: AWS::IAM::InstanceProfile
+        Properties:
+            InstanceProfileName: EonDataApiHostIAMProfile
+            Roles:
+              - !Ref EonDataApiHostIAMRole
