@@ -160,18 +160,28 @@ Resources:
                     yum install -y aws-cfn-bootstrap
                     /opt/aws/bin/cfn-init --stack ${AWS::StackName} --resource EonDataApiHostLaunchTemplate --region ${AWS::Region} --configsets Setup
         Metadata:
+            AWS::CloudFormation::Authentication:
+                rolebased:
+                    type: "S3"
+                    rolename: !Ref EonDataApiHostIAMRole
+                    buckets:
+                        - eondata
             AWS::CloudFormation::Init:
                 configSets:
                     Setup:
                       - init
                       - inst
-                    #   - strt
+                        # finalize configuration and start
                 init:
+                  # initialize environment and logging
                   packages:
                     yum:
                       awslogs: []
                       jq: []
                       htop: []
+                  users:
+                    eondata:
+                      homeDir: /home/eondata
                   files:
                     /etc/awslogs/awscli.conf:
                         mode: "000400"
@@ -206,12 +216,30 @@ Resources:
                         command: systemctl enable awslogsd
                     awslogsstart:
                         command: systemctl start awslogsd
+                    eondatacreatehome:
+                        command: mkdir -m 0700 /home/eondata
+                    eondatasetowner:
+                        command: chown eondata:eondata /home/eondata
                     msrepoadd:
                         command: rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
                 inst:
+                  # install and configure services
                   packages:
                     yum:
                       aspnetcore-runtime-7.0: []
+                  files:
+                    /home/eondata/update.sh:
+                      owner: eondata
+                      group: eondata
+                      mode: "000700"
+                      content: !Sub |
+                            #!/bin/bash
+                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/
+                  commands:
+                    eondataupdate:
+                      command: sudo -u eondata /home/eondata/update.sh
+                    instwebsvr:
+                      command: amazon-linux-extras install -y nginx1
     EonDataApiHostEC2AutoScale:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
@@ -245,21 +273,27 @@ Resources:
             Roles:
                 - !Ref EonDataApiHostIAMRole
             PolicyDocument:
-                Version: '2012-10-17'
+                Version: "2012-10-17"
                 Statement:
                     - Sid: EonDataApiIAMPolicyS3Read
                       Effect: Allow
                       Action:
                         - s3:GetObject
                       Resource:
-                        - arn:aws:s3:::eondata/bin/eondataweb-api.tar.gz
-                        - arn:aws:s3:::eondataweb-data/contacts/*
+                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/bin/api/*
+                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/contacts/*
+                    - Sid: EonDataApiIAMPolicyS3List
+                      Effect: Allow
+                      Action:
+                        - s3:ListBucket
+                      Resource:
+                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}*
                     - Sid: EonDataApiIAMPolicyS3Write
                       Effect: Allow
                       Action:
                         - s3:PutObject
                       Resource:
-                        - arn:aws:s3:::eondataweb-data/contacts/*
+                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/contacts/*
     EonDataWebIAMPolicyWriteLogs:
         Type: AWS::IAM::Policy
         Properties:
@@ -277,7 +311,7 @@ Resources:
                         - logs:DescribeLogGroups
                         - logs:PutLogEvents
                       Resource:
-                        - 'arn:aws:logs:*:*:log-group:eondataweb:*'
+                        - !Sub arn:aws:logs:*:*:log-group:${EonDataWebLogGroup}:*
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:
