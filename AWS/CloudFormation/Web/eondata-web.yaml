@@ -68,6 +68,21 @@ Resources:
                 BlockPublicPolicy: true
                 IgnorePublicAcls: true
                 RestrictPublicBuckets: true
+    EonDataWebDataS3Policy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+            Bucket: !Ref EonDataWebDataS3Bucket
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Sid: WebAppCFLogs
+                      Effect: Allow
+                      Principal:
+                        AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${EonDataWebOriginAccess}
+                      Action:
+                        - s3:GetBucketAcl
+                        - s3:PutBucketAcl
+                      Resource: !Sub arn:aws:s3:::${EonDataWebDataBucketName}
     EonDataWebAppCloudFrontDistribution:
         Type: AWS::CloudFront::Distribution
         Properties:
@@ -80,7 +95,7 @@ Resources:
                 ViewerCertificate:
                     AcmCertificateArn: !Ref EonDataWebAppCertArn
                     SslSupportMethod: sni-only
-                    MinimumProtocolVersion: TLSv1.2_2018
+                    MinimumProtocolVersion: TLSv1.2_2021
                 DefaultRootObject: index.html
                 Origins:
                     - Id: EonDataWebAppS3Origin
@@ -113,11 +128,19 @@ Resources:
                       ResponsePagePath: /index.html
                       ResponseCode: '200'
                       ErrorCachingMinTTL: 300
+                Logging:
+                    Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
+                    Prefix: logs/webapp/cf/
+                    IncludeCookies: false
     # EonDataWebApiCloudFrontDistribution:
     #     Type: AWS::CloudFront::Distribution
     #     Properties:
     #         DistributionConfig:
-
+    EonDataWebOriginAccess:
+        Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+        Properties:
+            CloudFrontOriginAccessIdentityConfig:
+                Comment: EonData Web App CloudFront Origin
     EonDataWebLogGroup:
         Type: AWS::Logs::LogGroup
         Properties:
@@ -152,7 +175,7 @@ Resources:
                     CpuCredits: standard
                 KeyName: !Ref WebHostKeyPair
                 SecurityGroupIds:
-                - !Ref EonDataApiHostEC2Security
+                    - !Ref EonDataApiHostEC2Security
                 UserData:
                   Fn::Base64: !Sub |
                     #!/bin/bash
@@ -211,11 +234,21 @@ Resources:
                             log_group_name = ${EonDataWebLogGroup}
                             log_stream_name = api sshd {instance_id}
                             datetime_format = %b %d %H:%M:%S
+                    # /etc/systemd/eondata-api.service
+                    #     mode: "00400"
+                    #     content: !Sub |
+                    #         [Unit]
+                    #         Description=EonData dotnet web api
+                    #         [Service]
                   commands:
                     awslogsenabl:
                         command: systemctl enable awslogsd
                     awslogsstart:
                         command: systemctl start awslogsd
+                    chgsshconfig:
+                        command: echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
+                    chgsshrestrt:
+                        command: systemctl restart sshd
                     eondatacreatehome:
                         command: mkdir -m 0700 /home/eondata
                     eondatasetowner:
@@ -275,20 +308,20 @@ Resources:
             PolicyDocument:
                 Version: "2012-10-17"
                 Statement:
-                    - Sid: EonDataApiIAMPolicyS3Read
+                    - Sid: EonDataApiS3Read
                       Effect: Allow
                       Action:
                         - s3:GetObject
                       Resource:
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/bin/api/*
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/contacts/*
-                    - Sid: EonDataApiIAMPolicyS3List
+                    - Sid: EonDataApiS3List
                       Effect: Allow
                       Action:
                         - s3:ListBucket
                       Resource:
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}*
-                    - Sid: EonDataApiIAMPolicyS3Write
+                    - Sid: EonDataApiS3Write
                       Effect: Allow
                       Action:
                         - s3:PutObject
@@ -312,6 +345,7 @@ Resources:
                         - logs:PutLogEvents
                       Resource:
                         - !Sub arn:aws:logs:*:*:log-group:${EonDataWebLogGroup}:*
+                        # - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/cloudfront/${EonDataWebAppCloudFrontDistribution}:*
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:
