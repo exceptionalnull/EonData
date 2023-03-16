@@ -54,7 +54,8 @@ Resources:
                 Statement:
                     - Sid: "PublicReadGetObject"
                       Effect: "Allow"
-                      Principal: "*"
+                      Principal:
+                        AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${EonDataWebOriginAccess}
                       Action: "s3:GetObject"
                       Resource: !Join ["", ["arn:aws:s3:::", !Ref EonDataWebAppBucketName, "/*"]]
     EonDataWebDataS3Bucket:
@@ -100,8 +101,8 @@ Resources:
                 Origins:
                     - Id: EonDataWebAppS3Origin
                       DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
-                      S3OriginConfig: {}
-                    #     OriginAccessIdentity: ''
+                      S3OriginConfig:
+                        OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
                     #   OriginCustomHeaders:
                     #     - HeaderName: Access-Control-Allow-Origin
                     #       HeaderValue: "'*'"
@@ -132,10 +133,6 @@ Resources:
                     Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
                     Prefix: logs/webapp/cf/
                     IncludeCookies: false
-    # EonDataWebApiCloudFrontDistribution:
-    #     Type: AWS::CloudFront::Distribution
-    #     Properties:
-    #         DistributionConfig:
     EonDataWebOriginAccess:
         Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
         Properties:
@@ -183,18 +180,12 @@ Resources:
                     yum install -y aws-cfn-bootstrap
                     /opt/aws/bin/cfn-init --stack ${AWS::StackName} --resource EonDataApiHostLaunchTemplate --region ${AWS::Region} --configsets Setup
         Metadata:
-            AWS::CloudFormation::Authentication:
-                rolebased:
-                    type: "S3"
-                    rolename: !Ref EonDataApiHostIAMRole
-                    buckets:
-                        - eondata
             AWS::CloudFormation::Init:
                 configSets:
                     Setup:
                       - init
                       - inst
-                        # finalize configuration and start
+                      - cfgs
                 init:
                   # initialize environment and logging
                   packages:
@@ -202,8 +193,12 @@ Resources:
                       awslogs: []
                       jq: []
                       htop: []
+                  groups:
+                    eondata_nginx: {}
                   users:
                     eondata:
+                      groups:
+                        - "eondata_nginx"
                       homeDir: /home/eondata
                   files:
                     /etc/awslogs/awscli.conf:
@@ -234,12 +229,54 @@ Resources:
                             log_group_name = ${EonDataWebLogGroup}
                             log_stream_name = api sshd {instance_id}
                             datetime_format = %b %d %H:%M:%S
-                    # /etc/systemd/eondata-api.service
-                    #     mode: "00400"
-                    #     content: !Sub |
-                    #         [Unit]
-                    #         Description=EonData dotnet web api
-                    #         [Service]
+
+                            [nginx_access]
+                            file = /var/log/nginx/access.log
+                            log_group_name = ${EonDataWebLogGroup}
+                            log_stream_name = api nginx_access {instance_id}
+                            datetime_format = %d/%b/%Y:%H:%M:%S %z
+                            time_zone = UTC
+
+                            [nginx_error]
+                            file = /var/log/nginx/error.log
+                            log_group_name = ${EonDataWebLogGroup}
+                            log_stream_name = api nginx_error {instance_id}
+                            datetime_format = %Y/%m/%d %H:%M:%S
+                            time_zone = UTC
+                    /etc/systemd/system/eondata-api.service:
+                        mode: "00400"
+                        content: !Sub |
+                            [Unit]
+                            Description=EonData API
+                            Requires=eondata-api.socket
+
+                            [Service]
+                            WorkingDirectory=/home/eondata/webapi
+                            ExecStart=/usr/bin/dotnet /home/eondata/webapi/EonData.Api.dll
+                            User=eondata
+                            Group=eondata
+                            Environment=ASPNETCORE_ENVIRONMENT=Production
+                            Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+                            Type=notify
+                            Restart=always
+                            RestartSec=10
+
+                            [Install]
+                            WantedBy=multi-user.target
+                    /etc/systemd/system/eondata-api.socket:
+                        mode: "00400"
+                        content: !Sub |
+                            [Unit]
+                            Description=EonData API Socket
+
+                            [Socket]
+                            ListenStream=/run/eondata-api.sock
+                            SocketUser=eondata
+                            SocketGroup=eondata_nginx
+                            SocketMode=0660
+
+                            [Install]
+                            WantedBy=sockets.target
                   commands:
                     awslogsenabl:
                         command: systemctl enable awslogsd
@@ -267,12 +304,51 @@ Resources:
                       mode: "000700"
                       content: !Sub |
                             #!/bin/bash
-                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/
+                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/ --delete
                   commands:
                     eondataupdate:
                       command: sudo -u eondata /home/eondata/update.sh
                     instwebsvr:
                       command: amazon-linux-extras install -y nginx1
+                cfgs:
+                  # finalize configurations
+                  files:
+                    /etc/nginx/conf.d/eondata-api.conf:
+                        owner: root
+                        group: root
+                        mode: "000640"
+                        content: !Sub |
+                            server {
+                                listen 80;
+                                server_name api.eondata.net;
+
+                                location / {
+                                    proxy_pass http://apisock/;
+                                    proxy_http_version 1.1;
+                                    proxy_set_header Upgrade $http_upgrade;
+                                    proxy_set_header Connection keep-alive;
+                                    proxy_set_header Host $host;
+                                    proxy_cache_bypass $http_upgrade;
+                                    proxy_set_header X-Real-IP $remote_addr;
+                                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                                    proxy_set_header X-Forwarded-Proto $scheme;
+                                }
+                            }
+
+                            upstream apisock {
+                                server unix:/run/eondata-api.sock;
+                            }
+                  commands:
+                    addnginxtogrp:
+                      command: sudo usermod -aG eondata_nginx nginx
+                    sysddreload:
+                      command: systemctl daemon-reload
+                    sysdenableserv:
+                      command: systemctl enable eondata-api.service
+                    sysdenablesock:
+                      command: systemctl enable --now eondata-api.socket
+                    websrvrestart:
+                      command: systemctl restart nginx
     EonDataApiHostEC2AutoScale:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
@@ -345,7 +421,6 @@ Resources:
                         - logs:PutLogEvents
                       Resource:
                         - !Sub arn:aws:logs:*:*:log-group:${EonDataWebLogGroup}:*
-                        # - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/cloudfront/${EonDataWebAppCloudFrontDistribution}:*
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:
