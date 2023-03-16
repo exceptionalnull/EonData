@@ -149,6 +149,15 @@ Resources:
           GroupName: EonDataApiHostEC2Security
           GroupDescription: Controls access to the eondream website web ec2 servers.
           VpcId: !Ref TargetVPC
+    EonDataApiHostAllowAllHTTP:
+        Type: AWS::EC2::SecurityGroupIngress
+        Properties:
+            Description: Allow HTTP accerss from everywhere to the API server.
+            GroupId: !GetAtt EonDataApiHostEC2Security.GroupId
+            IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0
     EonDataApiHostAllowBastionSSH:
         Type: AWS::EC2::SecurityGroupIngress
         Properties:
@@ -361,6 +370,52 @@ Resources:
             LaunchTemplate:
                 LaunchTemplateId: !Ref EonDataApiHostLaunchTemplate
                 Version: 1
+    EonDataWebApiCloudFrontDistribution:
+        Type: AWS::CloudFront::Distribution
+        Properties:
+            DistributionConfig:
+                Enabled: true
+                Comment: EonData web api distribution
+                HttpVersion: http2
+                Aliases:
+                    - api.eondata.net
+                ViewerCertificate:
+                    AcmCertificateArn: !Ref EonDataWebApiCertArn
+                    SslSupportMethod: sni-only
+                    MinimumProtocolVersion: TLSv1.2_2021
+                Origins:
+                    - Id: EonDataApiEC2Origin
+                      DomainName: eondata-api.aws.eondata.net
+                      CustomOriginConfig:
+                        OriginProtocolPolicy: http-only
+                        OriginReadTimeout: 30
+                        OriginKeepaliveTimeout: 5
+                    - Id: EonDataWebAppS3Origin
+                      DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
+                      S3OriginConfig:
+                        OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
+                DefaultCacheBehavior:
+                    TargetOriginId: EonDataApiEC2Origin
+                    MinTTL: 0
+                    ViewerProtocolPolicy: redirect-to-https
+                    Compress: true
+                    ForwardedValues:
+                        QueryString: true
+                        Cookies:
+                            Forward: none
+                    AllowedMethods:
+                        - GET
+                        - HEAD
+                        - OPTIONS
+                    CachedMethods:
+                        - GET
+                        - HEAD
+                    DefaultTTL: 30
+                    MaxTTL: 86400
+                Logging:
+                    Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
+                    Prefix: logs/webapi/cf/
+                    IncludeCookies: false
     EonDataApiHostIAMRole:
         Type: AWS::IAM::Role
         Properties:
