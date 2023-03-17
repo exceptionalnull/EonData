@@ -238,14 +238,6 @@ Resources:
                             log_stream_name = api sshd {instance_id}
                             datetime_format = %b %d %H:%M:%S
 
-                            [/var/log/journal]
-                            datetime_format = %Y-%m-%dT%H:%M:%S
-                            file = /var/log/journal/*.log
-                            buffer_duration = 5000
-                            log_stream_name = api journal {instance_id}
-                            initial_position = start_of_file
-                            log_group_name = ${EonDataWebLogGroup}
-
                             [nginx_access]
                             file = /var/log/nginx/access.log
                             log_group_name = ${EonDataWebLogGroup}
@@ -360,6 +352,14 @@ Resources:
                             #!/bin/bash
                             aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/ --delete --exact-timestamps
                             chown eondata:eondata /home/eondata/webapi/*
+                    /home/eondata/reload.sh:
+                      owner: eondata
+                      group: eondata
+                      mode: "000700"
+                      content: !Sub |
+                            #!/bin/bash
+                            ./update.sh
+                            systemctl stop eondata-api.service
                   commands:
                     eondataupdate:
                       command: sudo -u eondata /home/eondata/update.sh
@@ -369,26 +369,49 @@ Resources:
                   # finalize configurations
                   files:
                     /etc/nginx/conf.d/eondata-api.conf:
-                        owner: root
-                        group: root
                         mode: "000640"
                         content: !Sub |
                             server {
                                 listen 80;
                                 server_name api.eondata.net eondata-api.aws.eondata.net;
 
+                                location / {
+                                    return 301 https://www.eondata.net/;
+                                }
+
                                 location /api/ {
-                                    proxy_pass http://unix:/run/eondata/api.socket:/;
-                                    # proxy_http_version 1.1;
-                                    # proxy_set_header Upgrade $http_upgrade;
-                                    # proxy_set_header Connection keep-alive;
-                                    # proxy_set_header Host $host;
-                                    # proxy_cache_bypass $http_upgrade;
-                                    # proxy_set_header X-Real-IP $remote_addr;
-                                    # proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                                    # proxy_set_header X-Forwarded-Proto $scheme;
+                                    proxy_pass http://apisock/;
                                 }
                             }
+
+                            upstream apisock {
+                                server unix:/run/eondata/api.socket;
+                            }
+                    /usr/share/nginx/html/index.html:
+                        owner: root
+                        group: root
+                        mode: "000644"
+                        content: !Sub |
+                            <!DOCTYPE html>
+                            <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Redirecting...</title>
+                                <!-- Redirect using the meta refresh tag -->
+                                <meta http-equiv="refresh" content="0;url=https://www.eondata.net">
+                                <script>
+                                    // Redirect using JavaScript as a fallback in case the meta refresh tag is disabled or not supported
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        window.location.href = "https://www.eondata.net";
+                                    });
+                                </script>
+                            </head>
+                            <body>
+                                <p>Redirecting to <a href="https://www.eondata.net">www.eondata.net</a>...</p>
+                            </body>
+                            </html>
                   commands:
                     addnginxtogrp:
                       command: usermod --append --groups eondata nginx
