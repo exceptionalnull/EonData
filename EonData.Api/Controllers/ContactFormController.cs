@@ -19,20 +19,18 @@ namespace EonData.Api.Controllers
             _contactForm = new ContactFormService(storage);
         }
 
-        [HttpGet]
-        [Route("test")]
-        public async Task<IActionResult> Testing()
-        {
-            return Ok("TESTING 1 2 3!");
-        }
-
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> SendMessage(ContactMessageModel message)
         {   
-            if (message == null)
+            if (message == null || (message.Name?.Length ?? 0) == 0 || (message.ContactAddress?.Length ?? 0) == 0 || (message.Message?.Length ?? 0) == 0)
             {
                 return BadRequest("Message data is missing.");
+            }
+
+            if (message.Name!.Length > 250 || message.ContactAddress!.Length > 250 || message.Message!.Length > 7500)
+            {
+                return BadRequest("Message data exceeds limits.");
             }
 
             try

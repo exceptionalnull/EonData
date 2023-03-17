@@ -2,13 +2,13 @@
     <div class="contact-form">
         <div class="row">
             <label for="name">Name:</label>
-            <input type="text" name="name" [(ngModel)]="model.name" required />
+            <input type="text" name="name" [(ngModel)]="model.name" required maxlength="250" />
             <label for="email">Email:</label>
-            <input type="email" name="email" [(ngModel)]="model.contactAddress" required />
+            <input type="email" name="email" [(ngModel)]="model.contactAddress" required maxlength="250" />
         </div>
         <div class="row">
             <label for="message">Message:</label>
-            <textarea name="message" [(ngModel)]="model.message" required></textarea>
+            <textarea name="message" [(ngModel)]="model.message" required maxlength="7500"></textarea>
         </div>
         <div class="button-row">
             <button type="reset" (click)="resetForm()">Reset</button>
