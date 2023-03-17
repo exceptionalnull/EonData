@@ -18,7 +18,19 @@ builder.Services
     .AddAWSService<IAmazonS3>()
     .AddScoped<S3FileStorageService>()
     // configure controller routing
+    .AddCors(options =>
+    {
+        options.AddDefaultPolicy(options =>
+        {
+            options.WithOrigins("https://www.eondata.net")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+        });
+    })
     .AddControllers();
+
 var app = builder.Build();
+app.UseCors();
 app.MapControllers();
 app.Run();

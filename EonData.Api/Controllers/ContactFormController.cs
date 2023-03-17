@@ -28,7 +28,7 @@ namespace EonData.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> SendMessage(ContactMessageModel message, CancellationToken cancellationToken)
+        public async Task<IActionResult> SendMessage(ContactMessageModel message)
         {   
             if (message == null)
             {
@@ -37,7 +37,7 @@ namespace EonData.Api.Controllers
 
             try
             {
-                await _contactForm.SaveContactMessageAsync(message, cancellationToken);
+                await _contactForm.SaveContactMessageAsync(message, new CancellationToken());
             }
             catch(Exception ex)
             {

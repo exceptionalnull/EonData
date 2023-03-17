@@ -381,6 +381,7 @@ Resources:
 
                                 location /api/ {
                                     proxy_pass http://apisock/;
+                                    proxy_set_header Origin $http_origin;
                                 }
                             }
 
@@ -435,6 +436,38 @@ Resources:
             LaunchTemplate:
                 LaunchTemplateId: !Ref EonDataApiHostLaunchTemplate
                 Version: 1
+    EonDataWebApiCloudFrontRequests:
+        Type: AWS::CloudFront::OriginRequestPolicy
+        Properties:
+            OriginRequestPolicyConfig:
+                Name: EonDataWebApiCloudFrontRequests
+                CookiesConfig:
+                    CookieBehavior: none
+                HeadersConfig:
+                    HeaderBehavior: whitelist
+                    Headers:
+                         - Origin
+                         - Access-Control-Request-Method
+                         - Access-Control-Request-Headers
+                         - Referer
+                QueryStringsConfig:
+                    QueryStringBehavior: all
+    EonDatWebApiCloudFrontCaching:
+        Type: AWS::CloudFront::CachePolicy
+        Properties:
+            CachePolicyConfig:
+                Name: EonDatWebApiCloudFrontCaching
+                DefaultTTL: 30
+                MaxTTL: 86400
+                MinTTL: 0
+                ParametersInCacheKeyAndForwardedToOrigin:
+                    CookiesConfig:
+                        CookieBehavior: none
+                    HeadersConfig:
+                        HeaderBehavior: none
+                    QueryStringsConfig:
+                        QueryStringBehavior: all
+                    EnableAcceptEncodingGzip: true
     EonDataWebApiCloudFrontDistribution:
         Type: AWS::CloudFront::Distribution
         Properties:
@@ -461,22 +494,17 @@ Resources:
                         OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
                 DefaultCacheBehavior:
                     TargetOriginId: EonDataApiEC2Origin
-                    MinTTL: 0
                     ViewerProtocolPolicy: redirect-to-https
-                    Compress: true
-                    ForwardedValues:
-                        QueryString: true
-                        Cookies:
-                            Forward: none
+                    CachePolicyId: !Ref EonDatWebApiCloudFrontCaching
+                    OriginRequestPolicyId: !Ref EonDataWebApiCloudFrontRequests
                     AllowedMethods:
                         - GET
                         - HEAD
                         - OPTIONS
-                    CachedMethods:
-                        - GET
-                        - HEAD
-                    DefaultTTL: 30
-                    MaxTTL: 86400
+                        - PUT
+                        - PATCH
+                        - POST
+                        - DELETE
                 Logging:
                     Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
                     Prefix: logs/webapi/cf/

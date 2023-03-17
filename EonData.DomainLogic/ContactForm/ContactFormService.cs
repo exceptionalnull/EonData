@@ -18,6 +18,6 @@ namespace EonData.DomainLogic.ContactForm
             _storage = storageService;
         }
 
-        public Task SaveContactMessageAsync(ContactMessageModel message, CancellationToken cancellationToken) => _storage.SaveFileAsync("eondata", $"contacts/contact-message-{DateTime.UtcNow:ddMMyyHHmmssfff}.json", JsonSerializer.Serialize(message), cancellationToken);
+        public Task SaveContactMessageAsync(ContactMessageModel message, CancellationToken cancellationToken) => _storage.SaveFileAsync("eondataweb-data", $"contacts/contact-message-{DateTime.UtcNow:ddMMyyHHmmssfff}.json", JsonSerializer.Serialize(message), cancellationToken);
     }
 }
