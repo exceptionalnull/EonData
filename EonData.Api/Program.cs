@@ -8,7 +8,8 @@ builder.WebHost.ConfigureKestrel((context, options) =>
         options.UseSystemd();
     });
 
-builder.Logging.AddAWSProvider();
+//builder.Logging
+//    .AddAWSProvider(new AWS.Logger.AWSLoggerConfig("eondataweb") { LogStreamNamePrefix = "webapi" });
 
 builder.Services
     // improved systemd integration
@@ -18,7 +19,6 @@ builder.Services
     .AddScoped<S3FileStorageService>()
     // configure controller routing
     .AddControllers();
-
 var app = builder.Build();
 app.MapControllers();
 app.Run();

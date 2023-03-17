@@ -373,7 +373,7 @@ Resources:
                         content: !Sub |
                             server {
                                 listen 80;
-                                server_name api.eondata.net eondata-api.aws.eondata.net;
+                                server_name api.eondata.net;
 
                                 location / {
                                     return 301 https://www.eondata.net/;
@@ -537,10 +537,15 @@ Resources:
                       Action:
                         - logs:CreateLogGroup
                         - logs:CreateLogStream
-                        - logs:DescribeLogGroups
                         - logs:PutLogEvents
                       Resource:
                         - !Sub arn:aws:logs:*:*:log-group:${EonDataWebLogGroup}:*
+                    - Sid: EonDataWebIAMPolicyLogGroups
+                      Effect: Allow
+                      Action:
+                        - logs:DescribeLogGroups
+                      Resource:
+                        - arn:aws:logs:*:*:*
     EonDataWebIAMPolicyRt53:
         Type: AWS::IAM::Policy
         Properties:

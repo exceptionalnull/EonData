@@ -7,6 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { CloudControlModule } from './modules/cloud-control/cloud-control.module';
 import { AboutComponent } from './components/about/about.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ContactFormComponent } from './components/contact-form/contact-form.com
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    HttpClientModule,
     CloudControlModule
   ],
   providers: [],
