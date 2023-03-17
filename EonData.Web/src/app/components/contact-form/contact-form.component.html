@@ -1,15 +1,18 @@
 <form (ngSubmit)="sendMessage()">
     <div class="contact-form">
-        <div class="contact-details">
+        <div class="row">
             <label for="name">Name:</label>
             <input type="text" name="name" [(ngModel)]="model.name" required />
             <label for="email">Email:</label>
             <input type="email" name="email" [(ngModel)]="model.contactAddress" required />
         </div>
-        <div class="contact-message">
+        <div class="row">
             <label for="message">Message:</label>
             <textarea name="message" [(ngModel)]="model.message" required></textarea>
         </div>
-        <button type="submit">Send Message</button>
+        <div class="button-row">
+            <button type="reset" (click)="resetForm()">Reset</button>
+            <button type="submit">Submit</button>
+        </div>
     </div>
 </form>

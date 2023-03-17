@@ -1,43 +1,66 @@
 @import '../../../variables';
 
 .contact-form {
-  div {
-      width: 80%;
+  width: 70%;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 13px;
+
+    input {
+      width: 100%;
+    }
+
+    label:not(:first-child) {
+      margin-left: 10px;
+    }
   }
 
   label {
     color: $primary-heading-color;
+    flex-grow: 1;
+    margin-right: 10px;
+
     font: {
       family: 'Share Tech Mono', monospace;
       weight: bold;
     }
   }
 
-  .contact-details {
-      input {
-          width: 220px;
-          margin-right: 13px;
-      }
+  textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
   }
 
-  .contact-message {
-      label {
-          vertical-align: top;
-      }
-      textarea {
-          width: 70%;
-      }
-  }
+  .button-row {
+    display: flex;
+    justify-content: flex-end;
+    height: 36px;
 
-  button {
-    display: block;
-    color: $primary-color;
-    background-color: $primary-accent-color;
-    height: 22px;
+    button:not(:last-child) {
+        margin-right: 22px;
+    }
 
-    border: {
-      color: $secondary-accent-color;
-      radius: 5px;
+    button {
+      margin:{
+          left: 10px;
+          top: 7px;
+
+      }
+      margin-left: 10px;
+      margin-top: 7px;
+      color: $primary-color;
+      background-color: $primary-accent-color;
+
+      border: {
+        color: $secondary-accent-color;
+        radius: 5px;
+      }
     }
   }
 }
