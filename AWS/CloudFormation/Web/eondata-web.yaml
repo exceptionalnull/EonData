@@ -22,15 +22,18 @@ Parameters:
         Description: The security group id the bastion host belongs to.
         Type: String
     TargetVPC:
-        Description: VPC to launch the bastion host in.
+        Description: VPC to launch the api host in.
         Type: AWS::EC2::VPC::Id
     WebHostInstanceType:
-        Description: The EC2 instance type to use when creating the bastion host.
+        Description: The EC2 instance type to use when creating the api host.
         Type: String
         Default: t3.small
     WebHostSubnets:
         Description: The subnets to deploy the web host instances to. These should be private subnets.
         Type: List<AWS::EC2::Subnet::Id>
+    DnsHostedZoneId:
+        Description: The DNS hosted zone this stack can use for new entries.
+        Type: AWS::Route53::HostedZone::Id
     # get the latest amazon linux 2 ami id
     LatestAmiId:
         Description: This is the latest Amazon Linux 2 AMI which will be used for the EC2 instances.
@@ -202,12 +205,8 @@ Resources:
                       awslogs: []
                       jq: []
                       htop: []
-                  groups:
-                    eondata_nginx: {}
                   users:
                     eondata:
-                      groups:
-                        - "eondata_nginx"
                       homeDir: /home/eondata
                   files:
                     /etc/awslogs/awscli.conf:
@@ -239,6 +238,14 @@ Resources:
                             log_stream_name = api sshd {instance_id}
                             datetime_format = %b %d %H:%M:%S
 
+                            [/var/log/journal]
+                            datetime_format = %Y-%m-%dT%H:%M:%S
+                            file = /var/log/journal/*.log
+                            buffer_duration = 5000
+                            log_stream_name = api journal {instance_id}
+                            initial_position = start_of_file
+                            log_group_name = ${EonDataWebLogGroup}
+
                             [nginx_access]
                             file = /var/log/nginx/access.log
                             log_group_name = ${EonDataWebLogGroup}
@@ -252,16 +259,33 @@ Resources:
                             log_stream_name = api nginx_error {instance_id}
                             datetime_format = %Y/%m/%d %H:%M:%S
                             time_zone = UTC
+                    /etc/systemd/system/eondata-api.socket:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=Eon Data API socket
+
+                            [Socket]
+                            ListenStream=/run/eondata/api.socket
+                            SocketUser=eondata
+                            SocketGroup=eondata
+                            SocketMode=0660
+                            DirectoryMode=0775
+
+                            [Install]
+                            WantedBy=sockets.target nginx.service
                     /etc/systemd/system/eondata-api.service:
-                        mode: "00400"
+                        mode: "000400"
                         content: !Sub |
                             [Unit]
                             Description=EonData API
+                            After=network.target eondata-api.socket
                             Requires=eondata-api.socket
 
                             [Service]
                             WorkingDirectory=/home/eondata/webapi
                             ExecStart=/usr/bin/dotnet /home/eondata/webapi/EonData.Api.dll
+                            SyslogIdentifier=eondata-api
                             User=eondata
                             Group=eondata
                             Environment=ASPNETCORE_ENVIRONMENT=Production
@@ -272,29 +296,50 @@ Resources:
 
                             [Install]
                             WantedBy=multi-user.target
-                    /etc/systemd/system/eondata-api.socket:
-                        mode: "00400"
+                    /root/r53update.sh:
+                        mode: "000500"
                         content: !Sub |
-                            [Unit]
-                            Description=EonData API Socket
-
-                            [Socket]
-                            ListenStream=/run/eondata-api.sock
-                            SocketUser=eondata
-                            SocketGroup=eondata_nginx
-                            SocketMode=0660
-
-                            [Install]
-                            WantedBy=sockets.target
+                            #!/bin/bash
+                            PUB_IP=$( curl http://169.254.169.254/latest/meta-data/public-ipv4 )
+                            JQ_SET_IP=".ChangeBatch.Changes[0].ResourceRecordSet.ResourceRecords[0].Value=\"$PUB_IP\""
+                            R53_JSON=$( cat /root/r53set.json | jq -cr $JQ_SET_IP )
+                            aws route53 change-resource-record-sets --cli-input-json "$R53_JSON"
+                            R53_HOSTNAME=$( cat /root/r53set.json | jq -r .ChangeBatch.Changes[0].ResourceRecordSet.Name )
+                            hostnamectl set-hostname "$R53_HOSTNAME"
+                            hostname "$R53_HOSTNAME"
+                    /root/r53set.json:
+                        mode: "000400"
+                        content: !Sub |
+                            {
+                                "HostedZoneId": "${DnsHostedZoneId}",
+                                "ChangeBatch": {
+                                    "Comment": "Set eondata eondata api DNS name to the current public IP of the EC2 instance.",
+                                    "Changes": [{
+                                    "Action": "UPSERT",
+                                    "ResourceRecordSet": {
+                                        "Name": "eondata-api.aws.eondata.net",
+                                        "Type": "A",
+                                        "TTL": 30,
+                                        "ResourceRecords": [ { "Value": "127.0.0.1" } ]
+                                    }
+                                    }]
+                                }
+                            }
                   commands:
                     awslogsenabl:
                         command: systemctl enable awslogsd
                     awslogsstart:
                         command: systemctl start awslogsd
+                    awsrt53set:
+                        command: '/root/r53update.sh'
                     chgsshconfig:
                         command: echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
                     chgsshrestrt:
                         command: systemctl restart sshd
+                    chgsyslogconfig:
+                        command: echo "Storage=persistent" >> /etc/systemd/journald.conf
+                    chgsyslogrestrt:
+                        command: systemctl restart systemd-journald
                     eondatacreatehome:
                         command: mkdir -m 0700 /home/eondata
                     eondatasetowner:
@@ -313,7 +358,8 @@ Resources:
                       mode: "000700"
                       content: !Sub |
                             #!/bin/bash
-                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/ --delete
+                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/ --delete --exact-timestamps
+                            chown eondata:eondata /home/eondata/webapi/*
                   commands:
                     eondataupdate:
                       command: sudo -u eondata /home/eondata/update.sh
@@ -329,33 +375,29 @@ Resources:
                         content: !Sub |
                             server {
                                 listen 80;
-                                server_name api.eondata.net;
+                                server_name api.eondata.net eondata-api.aws.eondata.net;
 
-                                location / {
-                                    proxy_pass http://apisock/;
-                                    proxy_http_version 1.1;
-                                    proxy_set_header Upgrade $http_upgrade;
-                                    proxy_set_header Connection keep-alive;
-                                    proxy_set_header Host $host;
-                                    proxy_cache_bypass $http_upgrade;
-                                    proxy_set_header X-Real-IP $remote_addr;
-                                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                                    proxy_set_header X-Forwarded-Proto $scheme;
+                                location /api/ {
+                                    proxy_pass http://unix:/run/eondata/api.socket:/;
+                                    # proxy_http_version 1.1;
+                                    # proxy_set_header Upgrade $http_upgrade;
+                                    # proxy_set_header Connection keep-alive;
+                                    # proxy_set_header Host $host;
+                                    # proxy_cache_bypass $http_upgrade;
+                                    # proxy_set_header X-Real-IP $remote_addr;
+                                    # proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                                    # proxy_set_header X-Forwarded-Proto $scheme;
                                 }
-                            }
-
-                            upstream apisock {
-                                server unix:/run/eondata-api.sock;
                             }
                   commands:
                     addnginxtogrp:
-                      command: sudo usermod -aG eondata_nginx nginx
+                      command: usermod --append --groups eondata nginx
                     sysddreload:
                       command: systemctl daemon-reload
-                    sysdenableserv:
+                    sysdenablesck:
+                      command: systemctl enable eondata-api.socket
+                    sysdenablesvc:
                       command: systemctl enable eondata-api.service
-                    sysdenablesock:
-                      command: systemctl enable --now eondata-api.socket
                     websrvrestart:
                       command: systemctl restart nginx
     EonDataApiHostEC2AutoScale:
@@ -476,6 +518,21 @@ Resources:
                         - logs:PutLogEvents
                       Resource:
                         - !Sub arn:aws:logs:*:*:log-group:${EonDataWebLogGroup}:*
+    EonDataWebIAMPolicyRt53:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: EonDataWebIAMPolicyRt53
+            Roles:
+                - !Ref EonDataApiHostIAMRole
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Sid: EonDataWebIAMPolicyRt53
+                      Effect: Allow
+                      Action:
+                        - route53:ChangeResourceRecordSets
+                      Resource:
+                        - !Sub 'arn:aws:route53:::hostedzone/${DnsHostedZoneId}'
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:

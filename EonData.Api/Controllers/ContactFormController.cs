@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EonData.Api.Controllers
 {
-    [Route("api/contact")]
+    [Route("contact")]
     [ApiController]
     public class ContactFormController : ControllerBase
     {
@@ -17,6 +17,13 @@ namespace EonData.Api.Controllers
         {
             _storage = storage;
             _contactForm = new ContactFormService(storage);
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public async Task<IActionResult> Testing()
+        {
+            return Ok("TESTING 1 2 3!");
         }
 
         [HttpPost]
