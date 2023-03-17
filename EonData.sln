@@ -10,6 +10,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.Api", "EonData.Api\EonData.Api.csproj", "{5DB2257B-8DCF-4F6D-A29E-FBD09A918EAB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureADB2C", "AzureADB2C", "{6FF11977-1EFA-4E78-8DEA-9FA394E84451}"
+	ProjectSection(SolutionItems) = preProject
+		AzureADB2C\DeployADB2C.ps1 = AzureADB2C\DeployADB2C.ps1
+		AzureADB2C\PasswordReset.xml = AzureADB2C\PasswordReset.xml
+		AzureADB2C\ProfileEdit.xml = AzureADB2C\ProfileEdit.xml
+		AzureADB2C\SignUpOrSignin.xml = AzureADB2C\SignUpOrSignin.xml
+		AzureADB2C\TrustFrameworkBase.xml = AzureADB2C\TrustFrameworkBase.xml
+		AzureADB2C\TrustFrameworkExtensions.xml = AzureADB2C\TrustFrameworkExtensions.xml
+		AzureADB2C\TrustFrameworkLocalization.xml = AzureADB2C\TrustFrameworkLocalization.xml
+		AzureADB2C\TrustFrameworkPolicy_0.3.0.0.xsd = AzureADB2C\TrustFrameworkPolicy_0.3.0.0.xsd
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.DomainEntities", "EonData.DomainEntities\EonData.DomainEntities.csproj", "{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}"
 EndProject
