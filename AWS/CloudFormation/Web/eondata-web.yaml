@@ -499,9 +499,12 @@ Resources:
                     HeaderBehavior: whitelist
                     Headers:
                          - Origin
+                         - Referer
+                         - Accept
+                         - Accept-Language
+                         - Content-Type
                          - Access-Control-Request-Method
                          - Access-Control-Request-Headers
-                         - Referer
                 QueryStringsConfig:
                     QueryStringBehavior: all
     EonDatWebApiCloudFrontCaching:
@@ -516,7 +519,10 @@ Resources:
                     CookiesConfig:
                         CookieBehavior: none
                     HeadersConfig:
-                        HeaderBehavior: none
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
                     QueryStringsConfig:
                         QueryStringBehavior: all
                     EnableAcceptEncodingGzip: true
