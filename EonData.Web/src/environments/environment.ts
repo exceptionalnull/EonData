@@ -3,6 +3,6 @@ export const environment = {
   apiUrl: 'http://localhost:7041/',
   b2c: {
     tenantName: 'eonid',
-    tenantDomain: 'b2clogin.com',
+    appId: '385afbcc-67d0-4337-af02-94715a52d794'
   }
 };
