@@ -8,6 +8,8 @@ import { CloudControlModule } from './modules/cloud-control/cloud-control.module
 import { AboutComponent } from './components/about/about.component';
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthModule } from './modules/auth/auth.module';
+import { MsalRedirectComponent } from '@azure/msal-angular';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     ContactFormComponent
   ],
   imports: [
+    AuthModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
@@ -24,6 +27,6 @@ import { HttpClientModule } from '@angular/common/http';
     CloudControlModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, MsalRedirectComponent]
 })
 export class AppModule { }
