@@ -4,17 +4,16 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
   PolicySchemaVersion="0.3.0.0" 
-  TenantId="yourtenant.onmicrosoft.com" 
+  TenantId="eonid.onmicrosoft.com" 
   PolicyId="B2C_1A_TrustFrameworkLocalization" 
-  PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_TrustFrameworkLocalization">
+  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_TrustFrameworkLocalization">
 
   <BasePolicy>
-    <TenantId>yourtenant.onmicrosoft.com</TenantId>
+    <TenantId>eonid.onmicrosoft.com</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkBase</PolicyId>
   </BasePolicy>
 
   <BuildingBlocks>
-
     <ContentDefinitions>
       <ContentDefinition Id="api.signuporsignin">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
