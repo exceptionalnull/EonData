@@ -87,6 +87,60 @@ Resources:
                         - s3:GetBucketAcl
                         - s3:PutBucketAcl
                       Resource: !Sub arn:aws:s3:::${EonDataWebDataBucketName}
+    EonDataWebAppCloudFrontRequests:
+        Type: AWS::CloudFront::OriginRequestPolicy
+        Properties:
+            OriginRequestPolicyConfig:
+                Name: EonDataWebAppCloudFrontRequests
+                CookiesConfig:
+                    CookieBehavior: none
+                HeadersConfig:
+                    HeaderBehavior: whitelist
+                    Headers:
+                        - Origin
+                        - Referer
+                        - Accept
+                        - Accept-Language
+                QueryStringsConfig:
+                    QueryStringBehavior: all
+    EonDataWebAppCloudFrontCaching:
+        Type: AWS::CloudFront::CachePolicy
+        Properties:
+            CachePolicyConfig:
+                Name: EonDataWebAppCloudFrontCaching
+                DefaultTTL: 86400
+                MaxTTL: 2592000
+                MinTTL: 0
+                ParametersInCacheKeyAndForwardedToOrigin:
+                    CookiesConfig:
+                        CookieBehavior: none
+                    HeadersConfig:
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
+                    QueryStringsConfig:
+                        QueryStringBehavior: all
+                    EnableAcceptEncodingGzip: true
+    EonDataWebAppCloudFrontAssetCaching:
+        Type: AWS::CloudFront::CachePolicy
+        Properties:
+            CachePolicyConfig:
+                Name: EonDataWebAppCloudFrontAssetCaching
+                DefaultTTL: 2592000
+                MaxTTL: 31536000
+                MinTTL: 86400
+                ParametersInCacheKeyAndForwardedToOrigin:
+                    CookiesConfig:
+                        CookieBehavior: none
+                    HeadersConfig:
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
+                    QueryStringsConfig:
+                        QueryStringBehavior: all
+                    EnableAcceptEncodingGzip: true
     EonDataWebAppCloudFrontDistribution:
         Type: AWS::CloudFront::Distribution
         Properties:
@@ -106,27 +160,26 @@ Resources:
                       DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
                       S3OriginConfig:
                         OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
-                    #   OriginCustomHeaders:
-                    #     - HeaderName: Access-Control-Allow-Origin
-                    #       HeaderValue: "'*'"
                       OriginPath: ''
                 DefaultCacheBehavior:
                     TargetOriginId: EonDataWebAppS3Origin
-                    ForwardedValues:
-                        QueryString: false
-                        Cookies:
-                            Forward: none
                     ViewerProtocolPolicy: redirect-to-https
-                    MinTTL: 0
+                    CachePolicyId: !Ref EonDataWebAppCloudFrontCaching
+                    OriginRequestPolicyId: !Ref EonDataWebAppCloudFrontRequests
                     AllowedMethods:
                         - GET
                         - HEAD
                         - OPTIONS
-                    CachedMethods:
+                CacheBehaviors:
+                    - PathPattern: /assets/*
+                      TargetOriginId: EonDataWebAppS3Origin
+                      ViewerProtocolPolicy: redirect-to-https
+                      CachePolicyId: !Ref EonDataWebAppCloudFrontAssetCaching
+                      OriginRequestPolicyId: !Ref EonDataWebAppCloudFrontRequests
+                      AllowedMethods:
                         - GET
                         - HEAD
-                    DefaultTTL: 3600
-                    MaxTTL: 86400
+                        - OPTIONS
                 CustomErrorResponses:
                     - ErrorCode: 404
                       ResponsePagePath: /index.html
@@ -512,7 +565,7 @@ Resources:
         Properties:
             CachePolicyConfig:
                 Name: EonDatWebApiCloudFrontCaching
-                DefaultTTL: 30
+                DefaultTTL: 60
                 MaxTTL: 86400
                 MinTTL: 0
                 ParametersInCacheKeyAndForwardedToOrigin:
