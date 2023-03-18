@@ -288,6 +288,81 @@ Resources:
 
                             [Install]
                             WantedBy=multi-user.target
+                    /etc/systemd/system/eondata-api-update.service:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=EonData API automatic update
+                            Wants=eondata-api.service
+
+                            [Service]
+                            Type=oneshot
+                            SyslogIdentifier=eondata-api-update
+                            ExecStart=/bin/bash /root/apiUpdate.sh
+                    /etc/systemd/system/eondata-api-update.timer:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=Timer for EonData API automatic update
+
+                            [Timer]
+                            OnBootSec=1min
+                            OnUnitActiveSec=1min
+                            Unit=eondata-api-update.service
+
+                            [Install]
+                            WantedBy=timers.target
+                    /root/finalServices.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            systemctl daemon-reload
+
+                            # enable the services and sockets used by the api and the update script
+                            systemctl enable eondata-api.service
+                            systemctl enable eondata-api-update.service
+                            systemctl enable eondata-api.socket
+
+                            # run the update service to deploy the web api
+                            systemctl start eondata-api-update.service
+
+                            # start the automatic update service timer
+                            systemctl enable eondata-api-update.timer
+                            systemctl start eondata-api-update.timer
+                    /root/apiUpdate.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            TARGET_DIR="/home/eondata/webapi"
+                            SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ $TARGET_DIR --delete --exact-timestamps"
+
+                            show_message() {
+                                echo "$(date +'%Y-%m-%d %H:%M:%S') $@"
+                            }
+
+                            SYNC_NEEDED=$($SYNC_COMMAND --dryrun)
+
+                            if [ -n "$SYNC_NEEDED" ]
+                            then
+                                if [ -d "$TARGET_DIR" ]
+                                then
+                                    show_message "updating web api..."
+                                    systemctl stop eondata-api.socket
+                                    systemctl stop eondata-api.service
+                                else
+                                    show_message "deploying web api..."
+                                fi
+
+                                $SYNC_COMMAND
+
+                                chown -R eondata:eondata $TARGET_DIR
+
+                                systemctl start eondata-api.socket
+
+                                show_message "done."
+                            else
+                                show_message "no changes."
+                            fi
                     /root/r53update.sh:
                         mode: "000500"
                         content: !Sub |
@@ -317,17 +392,19 @@ Resources:
                                     }]
                                 }
                             }
+                    /root/initLogs.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
+                            systemctl restart sshd
+                            systemctl enable awslogsd
+                            systemctl start awslogsd
                   commands:
-                    awslogsenabl:
-                        command: systemctl enable awslogsd
-                    awslogsstart:
-                        command: systemctl start awslogsd
+                    awslogsinit:
+                        command: /root/initLogs.sh
                     awsrt53set:
                         command: '/root/r53update.sh'
-                    chgsshconfig:
-                        command: echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
-                    chgsshrestrt:
-                        command: systemctl restart sshd
                     eondatacreatehome:
                         command: mkdir -m 0700 /home/eondata
                     eondatasetowner:
@@ -339,75 +416,6 @@ Resources:
                   packages:
                     yum:
                       aspnetcore-runtime-7.0: []
-                  files:
-                    /home/eondata/update.sh:
-                        owner: eondata
-                        group: eondata
-                        mode: "000700"
-                        content: !Sub |
-                            #!/bin/bash
-                            TARGET_DIR="/home/eondata/webapi"
-                            SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ $TARGET_DIR --delete --exact-timestamps"
-
-                            show_message() {
-                                echo "$(date +'%Y-%m-%d %H:%M:%S') $@"
-                            }
-
-                            SYNC_NEEDED=$($SYNC_COMMAND --dryrun)
-
-                            if [ -n "$SYNC_NEEDED" ]
-                            then
-                                if [ -d "$TARGET_DIR" ]
-                                then
-                                    show_message "updating web api..."
-                                    sudo systemctl stop eondata-api.socket
-                                    sudo systemctl stop eondata-api.service
-                                else
-                                    show_message "deploying web api..."
-                                fi
-
-                                $SYNC_COMMAND
-
-                                chown -R eondata:eondata $TARGET_DIR
-
-                                sudo systemctl start eondata-api.socket
-
-                                show_message "done."
-                            else
-                                show_message "no changes."
-                            fi
-                    /etc/systemd/system/eondata-api-update.service:
-                        mode: "000400"
-                        content: !Sub |
-                            [Unit]
-                            Description=EonData API automatic update
-                            Wants=eondata-api.service
-
-                            [Service]
-                            Type=oneshot
-                            User=eondata
-                            Group=eondata
-                            SyslogIdentifier=eondata-api-update
-                            ExecStart=/bin/bash /home/eondata/update.sh
-                    /etc/systemd/system/eondata-api-update.timer:
-                        mode: "000400"
-                        content: !Sub |
-                            [Unit]
-                            Description=Timer for EonData API automatic update
-
-                            [Timer]
-                            OnBootSec=1min
-                            OnUnitActiveSec=1min
-                            Unit=eondata-api-update.service
-
-                            [Install]
-                            WantedBy=timers.target
-                    /etc/sudoers.d/eondata-api:
-                        mode: "000400"
-                        content: !Sub |
-                            eondata ALL=(root) NOPASSWD: /usr/bin/systemctl stop eondata-api.service
-                            eondata ALL=(root) NOPASSWD: /usr/bin/systemctl stop eondata-api.socket
-                            eondata ALL=(root) NOPASSWD: /usr/bin/systemctl start eondata-api.socket
                   commands:
                     instwebsvr:
                       command: amazon-linux-extras install -y nginx1
@@ -459,28 +467,13 @@ Resources:
                                 <p>Redirecting to <a href="https://www.eondata.net">www.eondata.net</a>...</p>
                             </body>
                             </html>
-                    /root/finalServices.sh:
-                        mode: "000700"
-                        content: !Sub |
-                            #!/bin/bash
-                            systemctl daemon-reload
-
-                            # enable the services and sockets used by the api and the update script
-                            systemctl enable eondata-api.service
-                            systemctl enable eondata-api-update.service
-                            systemctl enable eondata-api.socket
-
-                            # run the update service to deploy the web api
-                            systemctl start eondata-api-update.service
-
-                            # start the automatic update service timer
-                            systemctl enable eondata-api-update.timer
-                            systemctl start eondata-api-update.timer
                   commands:
                     addnginxtogrp:
                       command: usermod --append --groups eondata nginx
+                    # start aspnet core web api
                     sysdfinalize:
                       command: /root/finalServices.sh
+                    # restart web server to finish the startup process
                     websrvrestart:
                       command: systemctl restart nginx
     EonDataApiHostEC2AutoScale:
