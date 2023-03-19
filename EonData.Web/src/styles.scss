@@ -1,4 +1,4 @@
-@import 'variables';
+/*
 
 body {
     background-color: $primary-background-color2;
@@ -14,9 +14,13 @@ body {
     line-height: 1.4;
 }
 
-div.title {
-  color: $primary-heading-color;
-  margin-bottom: 2rem;
+header {
+  height: 72px;
+
+  div.logo {
+    color: $primary-heading-color;
+    margin-bottom: 2rem;
+  }
 
   font: {
     family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
@@ -37,4 +41,22 @@ p {
       bottom: 1rem;
   }
   text-indent: 1rem;
+}
+*/
+@import 'variables';
+body {
+  background-color: $primary-background-color2;
+  color: $primary-color;
+
+  font: {
+    family: 'Montserrat', sans-serif;
+  }
+
+  margin: {
+    top: 22px;
+    left: 13%;
+    right: 19%;
+  }
+
+  line-height: 1.4;
 }

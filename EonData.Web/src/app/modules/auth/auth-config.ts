@@ -35,6 +35,7 @@ class b2cPolicies {
   }
 }
 
+
 export const msalConfig: Configuration = {
   auth: {
     clientId: environment.b2c.appId,
@@ -58,19 +59,19 @@ export const msalConfig: Configuration = {
 }
 
 export const protectedResources = {
-  eonapi: {
-    endpoint: `${environment.apiUrl}/`,
-    scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
-  },
   contactapi: {
     endpoint: `${environment.apiUrl}/contact`,
     scopes: null
-  }
+  },
+  eonapi: {
+    endpoint: `${environment.apiUrl}/*`,
+    scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
+  },
+}
   //todoListApi: {
   //  endpoint: "http://localhost:5000/api/todolist",
   //  scopes: ["https://your-tenant-name.onmicrosoft.com/api/tasks.read"],
   //},
-}
 //export const loginRequest = {
 //  scopes: []
 //};

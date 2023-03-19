@@ -19,6 +19,13 @@ namespace EonData.Api.Controllers
             _contactForm = new ContactFormService(storage);
         }
 
+        [HttpGet]
+        [Route("")]
+        public IActionResult ListMessages()
+        {
+            return Ok("xyzzy!\nnoop...\nflimflam! isay¿");
+        }
+
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> SendMessage(ContactMessageModel message)

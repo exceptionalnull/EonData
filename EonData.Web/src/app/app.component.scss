@@ -1,0 +1,52 @@
+@import '../variables';
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+
+  div.logo {
+    color: $primary-heading-color;
+
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+
+      span {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  font: {
+    family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+    weight: bold;
+    size: xx-large;
+  }
+
+  img {
+    height: 72px;
+    vertical-align: middle;
+  }
+}
+
+p {
+  margin: {
+    top: 0;
+    right: 9rem;
+    bottom: 1rem;
+  }
+
+  text-indent: 1rem;
+}
+
+footer {
+    font-size: small;
+    color: $primary-accent-color;
+    text-align: center;
+    margin-top: 42px;
+    margin-bottom: 0;
+}

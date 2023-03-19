@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
+import { BrowserUtils } from '@azure/msal-browser';
 import { AboutComponent } from './components/about/about.component';
 
 import { HomeComponent } from './components/home/home.component';
@@ -13,12 +14,14 @@ const routes: Routes = [
   { path: 'clouds', loadChildren: () => import('./modules/cloud-control/cloud-control.module').then(m => m.CloudControlModule), canActivate: [MsalGuard] }
 ];
 
+const isIframe = window !== window.parent && !window.opener;
 
 @NgModule({
   declarations: [],
   imports: [RouterModule.forRoot(routes, {
     useHash: false,
-    initialNavigation: 'enabledBlocking'
+    // Don't perform initial navigation in iframes or popups
+    initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() ? 'enabledNonBlocking' : 'disabled' // Set to enabledBlocking to use Angular Universal
   })],
   exports: [RouterModule]
 })
