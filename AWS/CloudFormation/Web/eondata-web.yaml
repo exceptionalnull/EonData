@@ -87,6 +87,60 @@ Resources:
                         - s3:GetBucketAcl
                         - s3:PutBucketAcl
                       Resource: !Sub arn:aws:s3:::${EonDataWebDataBucketName}
+    EonDataWebAppCloudFrontRequests:
+        Type: AWS::CloudFront::OriginRequestPolicy
+        Properties:
+            OriginRequestPolicyConfig:
+                Name: EonDataWebAppCloudFrontRequests
+                CookiesConfig:
+                    CookieBehavior: none
+                HeadersConfig:
+                    HeaderBehavior: whitelist
+                    Headers:
+                        - Origin
+                        - Referer
+                        - Accept
+                        - Accept-Language
+                QueryStringsConfig:
+                    QueryStringBehavior: all
+    EonDataWebAppCloudFrontCaching:
+        Type: AWS::CloudFront::CachePolicy
+        Properties:
+            CachePolicyConfig:
+                Name: EonDataWebAppCloudFrontCaching
+                DefaultTTL: 86400
+                MaxTTL: 2592000
+                MinTTL: 0
+                ParametersInCacheKeyAndForwardedToOrigin:
+                    CookiesConfig:
+                        CookieBehavior: none
+                    HeadersConfig:
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
+                    QueryStringsConfig:
+                        QueryStringBehavior: all
+                    EnableAcceptEncodingGzip: true
+    EonDataWebAppCloudFrontAssetCaching:
+        Type: AWS::CloudFront::CachePolicy
+        Properties:
+            CachePolicyConfig:
+                Name: EonDataWebAppCloudFrontAssetCaching
+                DefaultTTL: 2592000
+                MaxTTL: 31536000
+                MinTTL: 86400
+                ParametersInCacheKeyAndForwardedToOrigin:
+                    CookiesConfig:
+                        CookieBehavior: none
+                    HeadersConfig:
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
+                    QueryStringsConfig:
+                        QueryStringBehavior: all
+                    EnableAcceptEncodingGzip: true
     EonDataWebAppCloudFrontDistribution:
         Type: AWS::CloudFront::Distribution
         Properties:
@@ -106,27 +160,26 @@ Resources:
                       DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
                       S3OriginConfig:
                         OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
-                    #   OriginCustomHeaders:
-                    #     - HeaderName: Access-Control-Allow-Origin
-                    #       HeaderValue: "'*'"
                       OriginPath: ''
                 DefaultCacheBehavior:
                     TargetOriginId: EonDataWebAppS3Origin
-                    ForwardedValues:
-                        QueryString: false
-                        Cookies:
-                            Forward: none
                     ViewerProtocolPolicy: redirect-to-https
-                    MinTTL: 0
+                    CachePolicyId: !Ref EonDataWebAppCloudFrontCaching
+                    OriginRequestPolicyId: !Ref EonDataWebAppCloudFrontRequests
                     AllowedMethods:
                         - GET
                         - HEAD
                         - OPTIONS
-                    CachedMethods:
+                CacheBehaviors:
+                    - PathPattern: /assets/*
+                      TargetOriginId: EonDataWebAppS3Origin
+                      ViewerProtocolPolicy: redirect-to-https
+                      CachePolicyId: !Ref EonDataWebAppCloudFrontAssetCaching
+                      OriginRequestPolicyId: !Ref EonDataWebAppCloudFrontRequests
+                      AllowedMethods:
                         - GET
                         - HEAD
-                    DefaultTTL: 3600
-                    MaxTTL: 86400
+                        - OPTIONS
                 CustomErrorResponses:
                     - ErrorCode: 404
                       ResponsePagePath: /index.html
@@ -288,6 +341,81 @@ Resources:
 
                             [Install]
                             WantedBy=multi-user.target
+                    /etc/systemd/system/eondata-api-update.service:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=EonData API automatic update
+                            Wants=eondata-api.service
+
+                            [Service]
+                            Type=oneshot
+                            SyslogIdentifier=eondata-api-update
+                            ExecStart=/bin/bash /root/apiUpdate.sh
+                    /etc/systemd/system/eondata-api-update.timer:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=Timer for EonData API automatic update
+
+                            [Timer]
+                            OnBootSec=1min
+                            OnUnitActiveSec=1min
+                            Unit=eondata-api-update.service
+
+                            [Install]
+                            WantedBy=timers.target
+                    /root/finalServices.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            systemctl daemon-reload
+
+                            # enable the services and sockets used by the api and the update script
+                            systemctl enable eondata-api.service
+                            systemctl enable eondata-api-update.service
+                            systemctl enable eondata-api.socket
+
+                            # run the update service to deploy the web api
+                            systemctl start eondata-api-update.service
+
+                            # start the automatic update service timer
+                            systemctl enable eondata-api-update.timer
+                            systemctl start eondata-api-update.timer
+                    /root/apiUpdate.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            TARGET_DIR="/home/eondata/webapi"
+                            SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ $TARGET_DIR --delete --exact-timestamps"
+
+                            show_message() {
+                                echo "$(date +'%Y-%m-%d %H:%M:%S') $@"
+                            }
+
+                            SYNC_NEEDED=$($SYNC_COMMAND --dryrun)
+
+                            if [ -n "$SYNC_NEEDED" ]
+                            then
+                                if [ -d "$TARGET_DIR" ]
+                                then
+                                    show_message "updating web api..."
+                                    systemctl stop eondata-api.socket
+                                    systemctl stop eondata-api.service
+                                else
+                                    show_message "deploying web api..."
+                                fi
+
+                                $SYNC_COMMAND
+
+                                chown -R eondata:eondata $TARGET_DIR
+
+                                systemctl start eondata-api.socket
+
+                                show_message "done."
+                            else
+                                show_message "no changes."
+                            fi
                     /root/r53update.sh:
                         mode: "000500"
                         content: !Sub |
@@ -317,21 +445,19 @@ Resources:
                                     }]
                                 }
                             }
+                    /root/initLogs.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
+                            systemctl restart sshd
+                            systemctl enable awslogsd
+                            systemctl start awslogsd
                   commands:
-                    awslogsenabl:
-                        command: systemctl enable awslogsd
-                    awslogsstart:
-                        command: systemctl start awslogsd
+                    awslogsinit:
+                        command: /root/initLogs.sh
                     awsrt53set:
                         command: '/root/r53update.sh'
-                    chgsshconfig:
-                        command: echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
-                    chgsshrestrt:
-                        command: systemctl restart sshd
-                    chgsyslogconfig:
-                        command: echo "Storage=persistent" >> /etc/systemd/journald.conf
-                    chgsyslogrestrt:
-                        command: systemctl restart systemd-journald
                     eondatacreatehome:
                         command: mkdir -m 0700 /home/eondata
                     eondatasetowner:
@@ -343,26 +469,7 @@ Resources:
                   packages:
                     yum:
                       aspnetcore-runtime-7.0: []
-                  files:
-                    /home/eondata/update.sh:
-                      owner: eondata
-                      group: eondata
-                      mode: "000700"
-                      content: !Sub |
-                            #!/bin/bash
-                            aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ /home/eondata/webapi/ --delete --exact-timestamps
-                            chown eondata:eondata /home/eondata/webapi/*
-                    /home/eondata/reload.sh:
-                      owner: eondata
-                      group: eondata
-                      mode: "000700"
-                      content: !Sub |
-                            #!/bin/bash
-                            ./update.sh
-                            systemctl stop eondata-api.service
                   commands:
-                    eondataupdate:
-                      command: sudo -u eondata /home/eondata/update.sh
                     instwebsvr:
                       command: amazon-linux-extras install -y nginx1
                 cfgs:
@@ -416,12 +523,10 @@ Resources:
                   commands:
                     addnginxtogrp:
                       command: usermod --append --groups eondata nginx
-                    sysddreload:
-                      command: systemctl daemon-reload
-                    sysdenablesck:
-                      command: systemctl enable eondata-api.socket
-                    sysdenablesvc:
-                      command: systemctl enable eondata-api.service
+                    # start aspnet core web api
+                    sysdfinalize:
+                      command: /root/finalServices.sh
+                    # restart web server to finish the startup process
                     websrvrestart:
                       command: systemctl restart nginx
     EonDataApiHostEC2AutoScale:
@@ -447,9 +552,12 @@ Resources:
                     HeaderBehavior: whitelist
                     Headers:
                          - Origin
+                         - Referer
+                         - Accept
+                         - Accept-Language
+                         - Content-Type
                          - Access-Control-Request-Method
                          - Access-Control-Request-Headers
-                         - Referer
                 QueryStringsConfig:
                     QueryStringBehavior: all
     EonDatWebApiCloudFrontCaching:
@@ -457,14 +565,17 @@ Resources:
         Properties:
             CachePolicyConfig:
                 Name: EonDatWebApiCloudFrontCaching
-                DefaultTTL: 30
+                DefaultTTL: 60
                 MaxTTL: 86400
                 MinTTL: 0
                 ParametersInCacheKeyAndForwardedToOrigin:
                     CookiesConfig:
                         CookieBehavior: none
                     HeadersConfig:
-                        HeaderBehavior: none
+                        HeaderBehavior: whitelist
+                        Headers:
+                            - Accept
+                            - Accept-Language
                     QueryStringsConfig:
                         QueryStringBehavior: all
                     EnableAcceptEncodingGzip: true
