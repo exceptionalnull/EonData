@@ -38,8 +38,13 @@ builder.Services
     {
         options.AddDefaultPolicy(options =>
         {
-            //options.WithOrigins("https://www.eondata.net")
-            options.WithOrigins("http://localhost:4200")
+            string corsOrigin = builder.Configuration["Cors:Origin"] ?? string.Empty;
+            if (string.IsNullOrEmpty(corsOrigin))
+            {
+                throw new ArgumentNullException(nameof(corsOrigin));
+            }
+
+            options.WithOrigins(corsOrigin)
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();

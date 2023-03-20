@@ -27,6 +27,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.DomainLogic", "EonD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.CloudControl.AWS", "EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj", "{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{8D5F9D73-D792-4AAD-843C-904EC1B4B5EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudFormation", "CloudFormation", "{4D6EEB04-CCB4-4F8F-B6C5-A8F8EA9D343F}"
+	ProjectSection(SolutionItems) = preProject
+		AWS\CloudFormation\Certs\eondata-web-certs.yaml = AWS\CloudFormation\Certs\eondata-web-certs.yaml
+		AWS\CloudFormation\Web\eondata-web.yaml = AWS\CloudFormation\Web\eondata-web.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,9 +53,9 @@ Global
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.Build.0 = Debug|ARM64
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.ActiveCfg = Debug|x64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Build.0 = Debug|x64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Deploy.0 = Debug|x64
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Build.0 = Debug|Any CPU
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Deploy.0 = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.Build.0 = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.Deploy.0 = Debug|Any CPU
@@ -154,6 +162,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4D6EEB04-CCB4-4F8F-B6C5-A8F8EA9D343F} = {8D5F9D73-D792-4AAD-843C-904EC1B4B5EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5863815B-F7C2-477F-BCB4-EACC8482F9F7}
