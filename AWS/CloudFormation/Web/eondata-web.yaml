@@ -208,7 +208,7 @@ Resources:
     EonDataApiHostAllowAllHTTP:
         Type: AWS::EC2::SecurityGroupIngress
         Properties:
-            Description: Allow HTTP accerss from everywhere to the API server.
+            Description: Allow HTTP access from everywhere to the API server.
             GroupId: !GetAtt EonDataApiHostEC2Security.GroupId
             IpProtocol: tcp
             FromPort: 80

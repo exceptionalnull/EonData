@@ -7,7 +7,15 @@ header {
   height: 72px;
 
   div.logo {
-    color: $primary-heading-color;
+    width: 512px;
+    border-radius: 22px;
+
+    background: {
+      image: url('/assets/spacegrid.png');
+      repeat: round;
+      position: center;
+      attachment: fixed;
+    }
 
     a {
       display: flex;
@@ -16,32 +24,48 @@ header {
       color: inherit;
 
       span {
-        margin-left: 8px;
+        color: lawngreen;
+        margin: {
+            left: 19px;
+            right: 42px;
+        }
+        width: 100%;
+        text-align: center;
+
+        font: {
+          family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+          weight: bold;
+          size: 50px;
+        }
+      }
+    }
+
+    img {
+      height: 72px;
+      vertical-align: middle;
+
+      margin: {
+        left: 13px;
+        right: 7px;
       }
     }
   }
+}
 
-  font: {
-    family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
-    weight: bold;
-    size: xx-large;
-  }
+main {
+  min-width: 768px;
+  max-width: 1536px;
 
-  img {
-    height: 72px;
-    vertical-align: middle;
+  p {
+    margin: {
+      right: 9rem;
+      bottom: 1rem;
+    }
+
+    text-indent: 1rem;
   }
 }
 
-p {
-  margin: {
-    top: 0;
-    right: 9rem;
-    bottom: 1rem;
-  }
-
-  text-indent: 1rem;
-}
 
 footer {
     font-size: small;
