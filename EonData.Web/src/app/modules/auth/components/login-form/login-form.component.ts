@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { MsalBroadcastService, MsalGuardConfiguration, MsalService, MSAL_GUARD_CONFIG } from '@azure/msal-angular';
+import { MsalBroadcastService, MsalGuardConfiguration, MsalService, MSAL_GUARD_CONFIG, MsalRedirectComponent } from '@azure/msal-angular';
 import { InteractionStatus, RedirectRequest } from '@azure/msal-browser';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -20,6 +20,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    console.log("auth login-form init...");
     this.broadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),
@@ -40,11 +41,12 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logoutRedirect({
-      postLogoutRedirectUri: 'http://localhost:4200'
+      postLogoutRedirectUri: `${location.origin}/auth`
     });
   }
 
   setLoginDisplay() {
+    console.log("setLoginDisplay() called...");
     this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
   }
 
