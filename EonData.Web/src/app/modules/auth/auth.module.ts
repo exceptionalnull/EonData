@@ -9,8 +9,6 @@ import { CallbackComponent } from './components/callback/callback.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RouterModule } from '@angular/router';
 
-
-
 @NgModule({
   declarations: [
     LoginFormComponent,
@@ -33,7 +31,7 @@ import { RouterModule } from '@angular/router';
           [protectedResources.contactapi.endpoint, protectedResources.contactapi.scopes],
           [protectedResources.eonapi.endpoint, protectedResources.eonapi.scopes]
         ])
-    })
+      })
   ],
   providers: [
     {
