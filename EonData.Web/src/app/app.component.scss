@@ -4,17 +4,29 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 72px;
+  /*height: 72px;*/
 
   div.logo {
-    width: 512px;
-    border-radius: 22px;
+    /*width: 512px;*/
+    border-radius: 19px 19px 22px 22px;
 
     background: {
       image: url('/assets/spacegrid.png');
-      repeat: round;
       position: center;
       attachment: fixed;
+    }
+
+    img {
+      // height of the img controls the height of the whole logo
+      height: 96px;
+      vertical-align: middle;
+
+      margin: {
+        top: 3px;
+        bottom: 5px;
+        left: 42px;
+        right: 7px;
+      }
     }
 
     a {
@@ -25,10 +37,12 @@ header {
 
       span {
         color: $logo-label-color;
+
         margin: {
-            left: 19px;
-            right: 42px;
+          left: 19px;
+          right: 42px;
         }
+
         width: 100%;
         text-align: center;
 
@@ -37,16 +51,6 @@ header {
           weight: bold;
           size: 50px;
         }
-      }
-    }
-
-    img {
-      height: 72px;
-      vertical-align: middle;
-
-      margin: {
-        left: 13px;
-        right: 7px;
       }
     }
   }
