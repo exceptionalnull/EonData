@@ -13,6 +13,7 @@ header {
     background: {
       image: url('/assets/spacegrid.png');
       position: center;
+      repeat: round;
       attachment: fixed;
     }
 
@@ -24,8 +25,8 @@ header {
       margin: {
         top: 3px;
         bottom: 5px;
-        left: 42px;
-        right: 7px;
+        left: 22px;
+        right: 13px;
       }
     }
 
@@ -59,22 +60,26 @@ header {
 main {
   min-width: 768px;
   max-width: 1536px;
+}
 
-  p {
-    margin: {
-      right: 9rem;
-      bottom: 1rem;
-    }
-
-    text-indent: 1rem;
+p {
+  margin: {
+    right: 9rem;
+    bottom: 1rem;
   }
+
+  text-indent: 1rem;
 }
 
 
 footer {
   font-size: small;
-  color: $logo-label-color;
+  color: darken($logo-label-color, 9%);
   text-align: center;
   margin-top: 42px;
   margin-bottom: 0;
+
+  p {
+      text-indent: 0;
+  }
 }
