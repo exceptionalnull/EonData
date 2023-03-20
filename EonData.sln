@@ -10,12 +10,30 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.Api", "EonData.Api\EonData.Api.csproj", "{5DB2257B-8DCF-4F6D-A29E-FBD09A918EAB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureADB2C", "AzureADB2C", "{6FF11977-1EFA-4E78-8DEA-9FA394E84451}"
+	ProjectSection(SolutionItems) = preProject
+		AzureADB2C\DeployADB2C.ps1 = AzureADB2C\DeployADB2C.ps1
+		AzureADB2C\PasswordReset.xml = AzureADB2C\PasswordReset.xml
+		AzureADB2C\ProfileEdit.xml = AzureADB2C\ProfileEdit.xml
+		AzureADB2C\SignUpOrSignin.xml = AzureADB2C\SignUpOrSignin.xml
+		AzureADB2C\TrustFrameworkBase.xml = AzureADB2C\TrustFrameworkBase.xml
+		AzureADB2C\TrustFrameworkExtensions.xml = AzureADB2C\TrustFrameworkExtensions.xml
+		AzureADB2C\TrustFrameworkLocalization.xml = AzureADB2C\TrustFrameworkLocalization.xml
+		AzureADB2C\TrustFrameworkPolicy_0.3.0.0.xsd = AzureADB2C\TrustFrameworkPolicy_0.3.0.0.xsd
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.DomainEntities", "EonData.DomainEntities\EonData.DomainEntities.csproj", "{BB0957EA-E9AA-46FE-8C97-442DB3E571EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.DomainLogic", "EonData.DomainLogic\EonData.DomainLogic.csproj", "{7933A9F9-799B-4503-9327-9A2281D69455}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.CloudControl.AWS", "EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj", "{6F60C6BC-0A04-4B22-B121-EC264A2AD2C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{8D5F9D73-D792-4AAD-843C-904EC1B4B5EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudFormation", "CloudFormation", "{4D6EEB04-CCB4-4F8F-B6C5-A8F8EA9D343F}"
+	ProjectSection(SolutionItems) = preProject
+		AWS\CloudFormation\Certs\eondata-web-certs.yaml = AWS\CloudFormation\Certs\eondata-web-certs.yaml
+		AWS\CloudFormation\Web\eondata-web.yaml = AWS\CloudFormation\Web\eondata-web.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +53,9 @@ Global
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.Build.0 = Debug|ARM64
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.ActiveCfg = Debug|x64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Build.0 = Debug|x64
-		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Deploy.0 = Debug|x64
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Build.0 = Debug|Any CPU
+		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x64.Deploy.0 = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.Build.0 = Debug|Any CPU
 		{311B826A-8316-454E-9071-F0866B31C283}.Debug|x86.Deploy.0 = Debug|Any CPU
@@ -144,6 +162,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4D6EEB04-CCB4-4F8F-B6C5-A8F8EA9D343F} = {8D5F9D73-D792-4AAD-843C-904EC1B4B5EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5863815B-F7C2-477F-BCB4-EACC8482F9F7}

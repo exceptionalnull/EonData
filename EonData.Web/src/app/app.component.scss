@@ -1,0 +1,85 @@
+@import '../variables';
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /*height: 72px;*/
+
+  div.logo {
+    /*width: 512px;*/
+    border-radius: 19px 19px 22px 22px;
+
+    background: {
+      image: url('/assets/spacegrid.png');
+      position: center;
+      repeat: round;
+      attachment: fixed;
+    }
+
+    img {
+      // height of the img controls the height of the whole logo
+      height: 96px;
+      vertical-align: middle;
+
+      margin: {
+        top: 3px;
+        bottom: 5px;
+        left: 22px;
+        right: 13px;
+      }
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+
+      span {
+        color: $logo-label-color;
+
+        margin: {
+          left: 19px;
+          right: 42px;
+        }
+
+        width: 100%;
+        text-align: center;
+
+        font: {
+          family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+          weight: bold;
+          size: 50px;
+        }
+      }
+    }
+  }
+}
+
+main {
+  min-width: 768px;
+  max-width: 1536px;
+}
+
+p {
+  margin: {
+    right: 9rem;
+    bottom: 1rem;
+  }
+
+  text-indent: 1rem;
+}
+
+
+footer {
+  font-size: small;
+  color: darken($logo-label-color, 9%);
+  text-align: center;
+  margin-top: 42px;
+  margin-bottom: 0;
+
+  p {
+      text-indent: 0;
+  }
+}
