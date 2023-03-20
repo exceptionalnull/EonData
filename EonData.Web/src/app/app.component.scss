@@ -24,7 +24,7 @@ header {
       color: inherit;
 
       span {
-        color: lawngreen;
+        color: $logo-label-color;
         margin: {
             left: 19px;
             right: 42px;
@@ -68,9 +68,9 @@ main {
 
 
 footer {
-    font-size: small;
-    color: $primary-accent-color;
-    text-align: center;
-    margin-top: 42px;
-    margin-bottom: 0;
+  font-size: small;
+  color: $logo-label-color;
+  text-align: center;
+  margin-top: 42px;
+  margin-bottom: 0;
 }
