@@ -1,3 +1,4 @@
+import { ProtectedResourceScopes } from '@azure/msal-angular';
 import { LogLevel, Configuration, BrowserCacheLocation } from '@azure/msal-browser';
 import { environment } from '@environments/environment';
 
@@ -35,7 +36,6 @@ class b2cPolicies {
   }
 }
 
-
 export const msalConfig: Configuration = {
   auth: {
     clientId: environment.b2c.appId,
@@ -58,20 +58,20 @@ export const msalConfig: Configuration = {
   }
 }
 
-export const protectedResources = {
-  contactapi: {
-    endpoint: `${environment.apiUrl}/contact`,
-    scopes: null
-  },
-  eonapi: {
-    endpoint: `${environment.apiUrl}/*`,
-    scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
-  },
-}
-  //todoListApi: {
-  //  endpoint: "http://localhost:5000/api/todolist",
-  //  scopes: ["https://your-tenant-name.onmicrosoft.com/api/tasks.read"],
-  //},
+export const protectedResources = new Map<string, (string | ProtectedResourceScopes)[] | null>([
+  [`${environment.apiUrl}/contact`, [
+    {
+      httpMethod: "POST",
+      scopes: null
+    },
+    {
+      httpMethod: "GET",
+      scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
+    },
+  ]],
+  [`${environment.apiUrl}/*`, ["https://eonid.onmicrosoft.com/eondata-api/default"]]
+]);
+
 //export const loginRequest = {
 //  scopes: []
 //};

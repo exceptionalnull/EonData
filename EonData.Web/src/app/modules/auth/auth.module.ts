@@ -22,15 +22,12 @@ import { RouterModule } from '@angular/router';
       {
         interactionType: InteractionType.Redirect,
         authRequest: {
-          scopes: protectedResources.eonapi.scopes
+          scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
         }
       },
       {
         interactionType: InteractionType.Redirect,
-        protectedResourceMap: new Map([
-          [protectedResources.contactapi.endpoint, protectedResources.contactapi.scopes],
-          [protectedResources.eonapi.endpoint, protectedResources.eonapi.scopes]
-        ])
+        protectedResourceMap: protectedResources
       })
   ],
   providers: [
