@@ -1,13 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ContactMessageModel } from '../../models/ContactMessageModel';
 import { ContactService } from '../../services/ContactService';
+//import { ContactMessageModel } from '../../models/ContactMessageModel';
+//import { ContactService } from '../../services/ContactService';
 
 @Component({
-  selector: 'app-contact-form',
-  templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.scss']
+  selector: 'app-contact-send-message',
+  templateUrl: './send-message-form.component.html',
+  styleUrls: ['./send-message-form.component.scss']
 })
-export class ContactFormComponent implements OnInit{
+export class SendMessageFormComponent implements OnInit {
   @Input() source: string = '';
   public model!: ContactMessageModel;
 
@@ -19,7 +21,7 @@ export class ContactFormComponent implements OnInit{
 
   resetForm() {
     this.model = new ContactMessageModel();
-    this.model.source = this.source;
+    this.model.formSource = this.source;
   }
 
   sendMessage() {
@@ -32,4 +34,5 @@ export class ContactFormComponent implements OnInit{
         console.log("error sending contact message:", error);
       });
   }
+
 }

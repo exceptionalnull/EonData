@@ -6,17 +6,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './components/home/home.component';
 import { CloudControlModule } from './modules/cloud-control/cloud-control.module';
 import { AboutComponent } from './components/about/about.component';
-import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './modules/auth/auth.module';
 import { MsalRedirectComponent } from '@azure/msal-angular';
+import { ContactFormModule } from './modules/contact-form/contact-form.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AboutComponent,
-    ContactFormComponent
+    AboutComponent
   ],
   imports: [
     AuthModule,
@@ -24,7 +23,8 @@ import { MsalRedirectComponent } from '@azure/msal-angular';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    CloudControlModule
+    CloudControlModule,
+    ContactFormModule
   ],
   providers: [],
   bootstrap: [AppComponent, MsalRedirectComponent]

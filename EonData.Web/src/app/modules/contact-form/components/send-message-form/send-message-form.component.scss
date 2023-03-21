@@ -1,4 +1,4 @@
-@import '../../../variables';
+@import '../../../../../variables';
 
 .contact-form {
   width: 45%;
@@ -43,14 +43,15 @@
     height: 36px;
 
     button:not(:last-child) {
-        margin-right: 22px;
+      margin-right: 22px;
     }
 
     button {
-      margin:{
-          left: 10px;
-          top: 7px;
+      margin: {
+        left: 10px;
+        top: 7px;
       }
+
       margin-left: 10px;
       margin-top: 7px;
       color: $primary-color;
