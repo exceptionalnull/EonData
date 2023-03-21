@@ -649,19 +649,12 @@ Resources:
                         - s3:GetObject
                       Resource:
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/bin/api/*
-                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/contacts/*
                     - Sid: EonDataApiS3List
                       Effect: Allow
                       Action:
                         - s3:ListBucket
                       Resource:
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}*
-                    - Sid: EonDataApiS3Write
-                      Effect: Allow
-                      Action:
-                        - s3:PutObject
-                      Resource:
-                        - !Sub arn:aws:s3:::${EonDataWebDataBucketName}/contacts/*
     EonDataWebIAMPolicyWriteLogs:
         Type: AWS::IAM::Policy
         Properties:
@@ -685,6 +678,21 @@ Resources:
                         - logs:DescribeLogGroups
                       Resource:
                         - arn:aws:logs:*:*:*
+    EonDataWebIAMPolicyDynamoDb:
+        Type: AWS::IAM::Policy
+        Properties:
+            PolicyName: EonDataWebIAMPolicyDynamoDb
+            Roles:
+                - !Ref EonDataApiHostIAMRole
+            PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                    - Sid: EonDataWebDynamoDbContactForm
+                      Effect: Allow
+                      Action:
+                        - dynamodb:PutItem
+                      Resource:
+                        - !Sub arn:aws:dynamodb:*:*:table/EonDataWebContactForm
     EonDataWebIAMPolicyRt53:
         Type: AWS::IAM::Policy
         Properties:
@@ -709,7 +717,7 @@ Resources:
     EonDataWebDynDbContactForm:
         Type: AWS::DynamoDB::Table
         Properties:
-            TableName: EonDataContactForm
+            TableName: EonDataWebContactForm
             BillingMode: PAY_PER_REQUEST
             TableClass: STANDARD
             AttributeDefinitions:
@@ -717,14 +725,6 @@ Resources:
                   AttributeType: S
                 - AttributeName: messageTimestamp
                   AttributeType: S
-                # - AttributeName: form_source
-                #   AttributeType: S
-                # - AttributeName: message_is_read
-                #   AttributeType: N
-                # - AttributeName: request_source
-                #   AttributeType: S
-                # - AttributeName: message_content
-                #   AttributeType: S
             KeySchema:
                 - AttributeName: messageId
                   KeyType: HASH
