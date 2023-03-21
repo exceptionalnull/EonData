@@ -27,7 +27,7 @@ Parameters:
     WebHostInstanceType:
         Description: The EC2 instance type to use when creating the api host.
         Type: String
-        Default: t3.small
+        Default: t3a.small
     WebHostSubnets:
         Description: The subnets to deploy the web host instances to. These should be private subnets.
         Type: List<AWS::EC2::Subnet::Id>
@@ -706,3 +706,27 @@ Resources:
             InstanceProfileName: EonDataApiHostIAMProfile
             Roles:
               - !Ref EonDataApiHostIAMRole
+    EonDataWebDynDbContactForm:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            TableName: EonDataContactForm
+            BillingMode: PAY_PER_REQUEST
+            TableClass: STANDARD
+            AttributeDefinitions:
+                - AttributeName: messageId
+                  AttributeType: S
+                - AttributeName: messageTimestamp
+                  AttributeType: S
+                # - AttributeName: form_source
+                #   AttributeType: S
+                # - AttributeName: message_is_read
+                #   AttributeType: N
+                # - AttributeName: request_source
+                #   AttributeType: S
+                # - AttributeName: message_content
+                #   AttributeType: S
+            KeySchema:
+                - AttributeName: messageId
+                  KeyType: HASH
+                - AttributeName: messageTimestamp
+                  KeyType: RANGE
