@@ -1,6 +1,8 @@
 ﻿using EonData.CloudControl.AWS;
 using EonData.DomainEntities.ContactForm.Models;
 using EonData.DomainLogic.ContactForm;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,39 +12,37 @@ namespace EonData.Api.Controllers
     [ApiController]
     public class ContactFormController : ControllerBase
     {
-        private readonly S3FileStorageService _storage;
-        private readonly ContactFormService _contactForm;
-
-        public ContactFormController(S3FileStorageService storage)
-        {
-            _storage = storage;
-            _contactForm = new ContactFormService(storage);
-        }
-
         [HttpGet]
         [Route("")]
-        public IActionResult ListMessages()
+        //[Authorize()]
+        public IActionResult ListMessages(CancellationToken cancellationToken)
         {
-            return Ok("xyzzy!\nnoop...\nflimflam! isay¿");
+            //_contactForm.ListContactMessagesAsync(cancellationToken);
+            return Ok("asdf");
         }
 
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> SendMessage(ContactMessageModel message)
-        {   
-            if (message == null || (message.Name?.Length ?? 0) == 0 || (message.ContactAddress?.Length ?? 0) == 0 || (message.Message?.Length ?? 0) == 0)
+        {
+            if (message == null || (message.ContactName?.Length ?? 0) == 0 || (message.ContactAddress?.Length ?? 0) == 0 || (message.MessageContent?.Length ?? 0) == 0)
             {
                 return BadRequest("Message data is missing.");
             }
 
-            if (message.Name!.Length > 250 || message.ContactAddress!.Length > 250 || message.Message!.Length > 7500)
+            if (message.ContactName!.Length > 250 || message.ContactAddress!.Length > 250 || message.MessageContent!.Length > 7500)
             {
                 return BadRequest("Message data exceeds limits.");
             }
 
+            // store values needed for a new message record
+            message.RequestSource = HttpContext.Connection.RemoteIpAddress?.ToString();
+            message.MessageTimestamp = DateTime.UtcNow;
+
             try
             {
-                await _contactForm.SaveContactMessageAsync(message, new CancellationToken());
+                ContactFormService contactForm = new();
+                await contactForm.SaveContactMessageAsync(message, new CancellationToken());
             }
             catch(Exception ex)
             {

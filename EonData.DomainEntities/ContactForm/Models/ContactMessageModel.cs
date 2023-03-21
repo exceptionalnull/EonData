@@ -8,10 +8,13 @@ namespace EonData.DomainEntities.ContactForm.Models
 {
     public class ContactMessageModel
     {
-        public string? Name { get; set; }
+        public Guid MessageId { get; set; }
+        public string? ContactName { get; set; }
         public string? ContactAddress { get; set; }
-        public string? Message { get; set; }
-        public string? Source { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.Now;
+        public string? MessageContent { get; set; }
+        public string? FormSource { get; set; }
+        public string? RequestSource { get; set; }
+        public DateTime MessageTimestamp { get; set; }
+        public bool isRead { get; set; }
     }
 }
