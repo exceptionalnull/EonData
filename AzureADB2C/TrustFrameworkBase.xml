@@ -703,6 +703,7 @@
             <Item Key="ContentDefinitionReferenceId">api.localaccountsignin</Item>
             <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
 			<Item Key="setting.showSignupLink">false</Item>
+			<Item Key="setting.showCancelButton">true</Item>
           </Metadata>
           <IncludeInSso>false</IncludeInSso>
           <InputClaims>

@@ -478,6 +478,8 @@ Resources:
                     /etc/nginx/conf.d/eondata-api.conf:
                         mode: "000640"
                         content: !Sub |
+                            limit_req_zone $binary_remote_addr zone=one:10m rate=5r/s;
+
                             server {
                                 listen 80;
                                 server_name api.eondata.net;
@@ -488,7 +490,7 @@ Resources:
 
                                 location /api/ {
                                     proxy_pass http://apisock/;
-                                    proxy_set_header Origin $http_origin;
+                                    limit_req zone=one burst=10 nodelay;
                                 }
                             }
 
@@ -576,6 +578,7 @@ Resources:
                         Headers:
                             - Accept
                             - Accept-Language
+                            - Authorization
                     QueryStringsConfig:
                         QueryStringBehavior: all
                     EnableAcceptEncodingGzip: true
@@ -691,6 +694,7 @@ Resources:
                       Effect: Allow
                       Action:
                         - dynamodb:PutItem
+                        - dynamodb:Scan
                       Resource:
                         - !Sub arn:aws:dynamodb:*:*:table/EonDataWebContactForm
     EonDataWebIAMPolicyRt53:
