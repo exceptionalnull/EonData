@@ -8,6 +8,7 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { CallbackComponent } from './components/callback/callback.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RouterModule } from '@angular/router';
+import { ContactFormModule } from '../contact-form/contact-form.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RouterModule } from '@angular/router';
       {
         interactionType: InteractionType.Redirect,
         protectedResourceMap: protectedResources
-      })
+      }),
+      ContactFormModule
   ],
   providers: [
     {

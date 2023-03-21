@@ -1,3 +1,6 @@
 <!--<a [routerLink]="['auth','profile']">Edit Profile</a>-->
 <button *ngIf="!loginDisplay" (click)="login()">Login</button>
 <button *ngIf="loginDisplay" (click)="logout()">Logout</button>
+<div *ngIf="loginDisplay">
+    <app-contact-notification></app-contact-notification>
+</div>

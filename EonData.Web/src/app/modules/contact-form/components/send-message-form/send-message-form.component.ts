@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ContactMessageModel } from '../../models/ContactMessageModel';
-import { ContactService } from '../../services/ContactService';
-//import { ContactMessageModel } from '../../models/ContactMessageModel';
-//import { ContactService } from '../../services/ContactService';
+import { ContactService } from '../../contact-form.service';
 
 @Component({
   selector: 'app-contact-send-message',
