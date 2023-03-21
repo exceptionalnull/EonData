@@ -1,22 +1,22 @@
+using Amazon.DynamoDBv2;
 using Amazon.S3;
-using EonData.CloudControl.AWS;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureKestrel((context, options) =>
-    {
-        options.UseSystemd();
-    });
+// configure kestrel to support using unix socket files provided by systemd
+builder.WebHost.ConfigureKestrel((context, options) => { options.UseSystemd(); });
 
 //builder.Logging
 //    .AddAWSProvider(new AWS.Logger.AWSLoggerConfig("eondataweb") { LogStreamNamePrefix = "webapi" });
 
-// improved systemd integration
+// add improved systemd integration
 builder.Services.AddSystemd();
 
-// authentication
+// add authentication
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(options => {
@@ -30,9 +30,13 @@ builder.Services
 
 // add AWS services
 builder.Services
-    .AddAWSService<IAmazonS3>()
-    .AddScoped<S3FileStorageService>();
+    .AddAWSService<IAmazonDynamoDB>();
+//.AddAWSService<IAmazonS3>();
 
+// configure forwarded headers so that client details are correctly configured through the reverse proxy
+builder.Services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; });
+
+// add CORS and routing
 builder.Services
     .AddCors(options =>
     {
@@ -50,11 +54,13 @@ builder.Services
             .AllowCredentials();
         });
     })
-    // map configure controller routing
     .AddControllers();
 
+// build and run
 var app = builder.Build();
 app.UseCors();
+// forward 
+app.UseForwardedHeaders();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
