@@ -2,14 +2,19 @@
     <div class="logo">
         <a [routerLink]="['']"><img src="/assets/logo.png" alt="EonData Logo" /><span>E o n D a t a</span></a>
     </div>
-    <app-login-form></app-login-form>
-</header><!--
-<nav aria-label="Breadcrumb">
-    Breadcrumbs > Or > Something
+    <div class="authbox">
+        <app-login-form></app-login-form>
+    </div>
+</header>
+<!--<nav>
+    <div class="appmenu">
+    </div>
+    <div class="appnotify">
+    </div>
 </nav>-->
 <main>
     <router-outlet></router-outlet>
 </main>
 <footer>
-    <p>&copy; 2023 EonData. All rights reserved.</p>
+    <div class="copyr">&copy; 2023 EonData. All rights reserved.</div>
 </footer>

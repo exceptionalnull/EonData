@@ -2,13 +2,13 @@
 
 header {
   display: flex;
+  align-content: center;
   justify-content: space-between;
-  align-items: center;
-  /*height: 72px;*/
 
   div.logo {
-    /*width: 512px;*/
     border-radius: 19px 19px 22px 22px;
+    min-width: 475px;
+
 
     background: {
       image: url('/assets/spacegrid.png');
@@ -55,31 +55,35 @@ header {
       }
     }
   }
+
+  div.authbox {
+
+  }
 }
+
+/*nav {
+  div.appmenu {
+  }
+
+  div.appnotify {
+  }
+}*/
 
 main {
   min-width: 768px;
   max-width: 1536px;
+  text-indent: 0.9rem;
+  line-height: 1.4;
 }
-
-p {
-  margin: {
-    right: 9rem;
-    bottom: 1rem;
-  }
-
-  text-indent: 1rem;
-}
-
 
 footer {
-  font-size: small;
-  color: darken($logo-label-color, 9%);
-  text-align: center;
   margin-top: 42px;
   margin-bottom: 0;
 
-  p {
-      text-indent: 0;
+  div.copyr {
+    text-indent: 0;
+    font-size: small;
+    color: $footer-copy-text-color;
+    text-align: center;
   }
 }
