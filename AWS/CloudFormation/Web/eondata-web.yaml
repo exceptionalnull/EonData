@@ -258,8 +258,12 @@ Resources:
                       awslogs: []
                       jq: []
                       htop: []
+                  groups:
+                    apisocket: {}
                   users:
                     eondata:
+                      groups:
+                        - apisocket
                       homeDir: /home/eondata
                   files:
                     /etc/awslogs/awscli.conf:
@@ -313,7 +317,7 @@ Resources:
                             [Socket]
                             ListenStream=/run/eondata/api.socket
                             SocketUser=eondata
-                            SocketGroup=eondata
+                            SocketGroup=apisocket
                             SocketMode=0660
                             DirectoryMode=0775
 
@@ -513,9 +517,7 @@ Resources:
                                 <meta http-equiv="refresh" content="0;url=https://www.eondata.net">
                                 <script>
                                     // Redirect using JavaScript as a fallback in case the meta refresh tag is disabled or not supported
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        window.location.href = "https://www.eondata.net";
-                                    });
+                                    document.addEventListener("DOMContentLoaded", function() { window.location.href = "https://www.eondata.net"; });
                                 </script>
                             </head>
                             <body>
@@ -524,7 +526,7 @@ Resources:
                             </html>
                   commands:
                     addnginxtogrp:
-                      command: usermod --append --groups eondata nginx
+                      command: usermod --append --groups apisocket nginx
                     # start aspnet core web api
                     sysdfinalize:
                       command: /root/finalServices.sh
