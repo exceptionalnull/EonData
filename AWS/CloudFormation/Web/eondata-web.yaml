@@ -736,3 +736,8 @@ Resources:
                   KeyType: HASH
                 - AttributeName: messageTimestamp
                   KeyType: RANGE
+    EonDataOpenAIAPIKeySecret:
+        Type: AWS::SecretsManager::Secret
+        Properties:
+            Name: openai-api-key
+            Description: OpenAI API key
