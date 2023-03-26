@@ -10,11 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // configure kestrel to support using unix socket files provided by systemd
 builder.WebHost.ConfigureKestrel((context, options) => { options.UseSystemd(); });
 
-//builder.Logging
-//    .AddAWSProvider(new AWS.Logger.AWSLoggerConfig("eondataweb") { LogStreamNamePrefix = "webapi" });
-
-// add improved systemd integration
-builder.Services.AddSystemd();
+// setup some general services
+builder.Services
+    .AddSystemd()       // improved systemd integration
+    .AddHttpClient();   // allow proper httpclient DI
 
 // add authentication
 builder.Services
@@ -30,8 +29,8 @@ builder.Services
 
 // add AWS services
 builder.Services
+    //.AddAWSService<IAmazonS3>()
     .AddAWSService<IAmazonDynamoDB>();
-//.AddAWSService<IAmazonS3>();
 
 // configure forwarded headers so that client details are correctly configured through the reverse proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; });

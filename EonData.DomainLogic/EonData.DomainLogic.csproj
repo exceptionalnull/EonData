@@ -8,8 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EonData.BotAI\EonData.BotAI.csproj" />
     <ProjectReference Include="..\EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj" />
     <ProjectReference Include="..\EonData.DomainEntities\EonData.DomainEntities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Bots\" />
+    <Folder Include="ContactForm\" />
   </ItemGroup>
 
 </Project>
