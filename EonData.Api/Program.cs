@@ -48,9 +48,9 @@ builder.Services
             }
 
             options.WithOrigins(corsOrigin)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
         });
     })
     .AddControllers();
