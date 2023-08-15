@@ -1,6 +1,5 @@
 using Amazon.DynamoDBv2;
 using Amazon.S3;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Identity.Web;
