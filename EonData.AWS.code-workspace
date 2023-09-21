@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "AWS"
+		},
+		{
+			"path": "Docker"
 		}
 	],
 	"settings": {}

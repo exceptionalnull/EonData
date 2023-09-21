@@ -18,7 +18,6 @@ const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigato
 //      authority: "https://your-tenant-name.b2clogin.com/your-tenant-name.onmicrosoft.com/b2c_1_edit_profile_v2"
 //    }
 //  },
-
 //};
 
 interface B2CPolicyNames {
@@ -50,7 +49,7 @@ export const msalConfig: Configuration = {
   system: {
     loggerOptions: {
       loggerCallback: (logLevel, message, containsPii) => {
-        console.log(message);
+        console.log(containsPii ? 'pii:' + message : message);
       },
       logLevel: LogLevel.Verbose,
       piiLoggingEnabled: false
