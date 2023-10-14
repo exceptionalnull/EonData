@@ -10,6 +10,9 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RouterModule } from '@angular/router';
 import { ContactFormModule } from '../contact-form/contact-form.module';
 
+
+
+
 @NgModule({
   declarations: [
     LoginFormComponent,
@@ -24,7 +27,8 @@ import { ContactFormModule } from '../contact-form/contact-form.module';
         interactionType: InteractionType.Redirect,
         authRequest: {
           scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
-        }
+        },
+        loginFailedRoute: '/auth/failed'
       },
       {
         interactionType: InteractionType.Redirect,

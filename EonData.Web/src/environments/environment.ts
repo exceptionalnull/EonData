@@ -1,4 +1,6 @@
-export const environment = {
+import { Environment } from './environment.interface';
+
+export const environment : Environment = {
   production: false,
   apiUrl: 'https://localhost:7041',
   b2c: {

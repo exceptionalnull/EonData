@@ -48,27 +48,24 @@ export const msalConfig: Configuration = {
   },
   system: {
     loggerOptions: {
-      loggerCallback: (logLevel, message, containsPii) => {
-        console.log(containsPii ? 'pii:' + message : message);
-      },
-      logLevel: LogLevel.Verbose,
+      loggerCallback: authLogMessage,
+      logLevel: (environment.production) ? LogLevel.Error : LogLevel.Verbose,
       piiLoggingEnabled: false
     }
   }
 }
 
+function authLogMessage(logLevel: LogLevel, message: string) {
+  console.log(`auth: ${logLevel} :: ${message}`);
+}
+
 export const protectedResources = new Map<string, (string | ProtectedResourceScopes)[] | null>([
   [`${environment.apiUrl}/contact`, [
-    {
-      httpMethod: "POST",
-      scopes: null
-    },
-    {
-      httpMethod: "GET",
-      scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
-    },
+    { httpMethod: "POST", scopes: null },
+    { httpMethod: "GET",  scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"] },
   ]],
-  [`${environment.apiUrl}/*`, ["https://eonid.onmicrosoft.com/eondata-api/default"]]
+  [`${environment.apiUrl}/*`, ["https://eonid.onmicrosoft.com/eondata-api/default"]],
+  ['https://graph.microsoft.com/v1.0/me', ['user.read']]
 ]);
 
 //export const loginRequest = {
