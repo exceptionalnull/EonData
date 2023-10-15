@@ -1,17 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MsalGuard, MsalInterceptor, MsalModule, MsalRedirectComponent } from '@azure/msal-angular';
-import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
-import { msalConfig, protectedResources } from './auth-config';
+import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalInterceptor, MsalModule, MsalRedirectComponent, MsalService } from '@azure/msal-angular';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { CallbackComponent } from './components/callback/callback.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RouterModule } from '@angular/router';
 import { ContactFormModule } from '../contact-form/contact-form.module';
-
-
-
+import { MsalConfig } from './msal-config';
 
 @NgModule({
   declarations: [
@@ -22,19 +18,8 @@ import { ContactFormModule } from '../contact-form/contact-form.module';
   imports: [
     CommonModule,
     RouterModule,
-    MsalModule.forRoot(new PublicClientApplication(msalConfig),
-      {
-        interactionType: InteractionType.Redirect,
-        authRequest: {
-          scopes: ["https://eonid.onmicrosoft.com/eondata-api/default"]
-        },
-        loginFailedRoute: '/auth/failed'
-      },
-      {
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap: protectedResources
-      }),
-      ContactFormModule
+    MsalModule,
+    ContactFormModule
   ],
   providers: [
     {
@@ -42,8 +27,23 @@ import { ContactFormModule } from '../contact-form/contact-form.module';
       useClass: MsalInterceptor,
       multi: true
     },
-    MsalGuard
+    {
+      provide: MSAL_INSTANCE,
+      useFactory: MsalConfig.MSALInstanceFactory
+    },
+    {
+      provide: MSAL_GUARD_CONFIG,
+      useFactory: MsalConfig.MSALGuardConfigFactory
+    },
+    {
+      provide: MSAL_INTERCEPTOR_CONFIG,
+      useFactory: MsalConfig.MSALInterceptorConfigFactory
+    },
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService
   ],
+  bootstrap: [ MsalRedirectComponent ],
   exports: [ MsalModule, LoginFormComponent ]
 })
 export class AuthModule { }
