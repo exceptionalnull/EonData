@@ -28,7 +28,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
         this.setLoginDisplay();
-      })
+      });
   }
 
   login() {
