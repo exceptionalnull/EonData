@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalInterceptor, MsalModule, MsalRedirectComponent, MsalService } from '@azure/msal-angular';
+import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalInterceptor, MsalModule, MsalService } from '@azure/msal-angular';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { CallbackComponent } from './components/callback/callback.component';
@@ -43,7 +43,6 @@ import { MsalConfig } from './msal-config';
     MsalGuard,
     MsalBroadcastService
   ],
-  bootstrap: [ MsalRedirectComponent ],
   exports: [ MsalModule, LoginFormComponent ]
 })
 export class AuthModule { }

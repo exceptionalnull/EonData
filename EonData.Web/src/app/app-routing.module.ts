@@ -14,8 +14,6 @@ const routes: Routes = [
   { path: 'clouds', loadChildren: () => import('./modules/cloud-control/cloud-control.module').then(m => m.CloudControlModule), canActivate: [MsalGuard] }
 ];
 
-const isIframe = window !== window.parent && !window.opener;
-
 @NgModule({
   declarations: [],
   imports: [RouterModule.forRoot(routes, {
