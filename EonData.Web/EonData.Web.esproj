@@ -25,9 +25,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\app\modules\contact-form\services\" />
-  </ItemGroup>
   <PropertyGroup>
     <StartupCommand>npm start</StartupCommand>
     <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
@@ -39,4 +36,10 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\EonData.Web</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="src\app\modules\contact-form\services\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\app\modules\contact-form\services\**" />
+  </ItemGroup>
 </Project>
