@@ -16,9 +16,20 @@ export class RecipeWizardComponent {
   selectedItems: number[] = [];
   items: Item[] = nmsItems;
   recipes: Recipe[] = nmsRecipes;
+  itemCache: Item[] = [];
 
-  getItem(itemId: number) : Item | undefined {
-    return this.items.find(itm => itm.itemId == itemId);
+  getItem(itemId: number): Item | undefined {
+    if (itemId in this.itemCache) {
+      return this.itemCache[itemId];
+    }
+    else {
+      const result = this.items.find(itm => itm.itemId == itemId);
+      if (result != undefined) {
+        this.itemCache[itemId] = result;
+        return result;
+      }
+    }
+    return undefined;
   }
 
   *getItemDetails() {
