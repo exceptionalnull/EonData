@@ -1,1 +1,6 @@
-<p>recipe-wizard works!</p>
+<div>
+    <label for="item-select">Choose an item:</label>
+    <select name="item-select" [(ngModel)]="selectedItem" (change)="pickedItem(selectedItem)">
+        <option *ngFor="let itm of items" [value]="itm.itemId">{{itm.itemName}}</option>
+    </select>
+</div>

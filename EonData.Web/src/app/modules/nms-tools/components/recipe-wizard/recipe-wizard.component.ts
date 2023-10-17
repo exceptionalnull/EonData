@@ -10,5 +10,10 @@ import nmsRecipes from '../../data/recipes.json';
   styleUrls: ['./recipe-wizard.component.scss']
 })
 export class RecipeWizardComponent {
+  selectedItem = 0;
+  items = nmsItems;
+  recipes = nmsRecipes;
 
+  pickedItem(itemId: number) {
+  }
 }
