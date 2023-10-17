@@ -17,6 +17,7 @@ export class RecipeWizardComponent {
   items: Item[] = nmsItems;
   recipes: Recipe[] = nmsRecipes;
   itemCache: Item[] = [];
+  recipeCache: Recipe[] = [];
 
   getItem(itemId: number): Item | undefined {
     if (itemId in this.itemCache) {
@@ -36,6 +37,13 @@ export class RecipeWizardComponent {
     for (const itemId of this.selectedItems) {
       yield this.getItem(itemId);
     }
+  }
+
+  getRecipesByItem(itemId: number | undefined): Recipe[] | undefined {
+    if (itemId != undefined) {
+      return this.recipes.filter(rcp => rcp.createsItemId == itemId);
+    }
+    return undefined;
   }
 
   pickedItem(itemId: number) {

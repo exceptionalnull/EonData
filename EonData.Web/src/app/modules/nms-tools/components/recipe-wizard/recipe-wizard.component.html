@@ -9,5 +9,9 @@
         <h2>{{itemInfo?.itemName}}</h2>
         <img [src]="itemInfo?.picture" />
         <p>Price: {{itemInfo?.itemCost}}</p>
+        <div *ngFor="let recipeInfo of getRecipesByItem(itemInfo?.itemId)">
+            <h3>{{recipeInfo.recipeName}}</h3>
+
+        </div>
     </div>
 </div>
