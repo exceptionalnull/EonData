@@ -24,8 +24,10 @@
       "dom"
     ],
     "paths": {
-      "@environments/*": ["src/environments/*"]
-    }
+      "@environments/*": [ "src/environments/*" ]
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
