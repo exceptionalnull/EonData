@@ -1,0 +1,1214 @@
+[
+    {
+        "recipeId": 0,
+        "recipeName": "unknown",
+        "createsItemId": 0,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 0,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 1,
+        "recipeName": "Craft stasis chamber",
+        "createsItemId": 1,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 2,
+                "quantity": 1
+            },
+            {
+                "itemId": 3,
+                "quantity": 1
+            },
+            {
+                "itemId": 4,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 2,
+        "recipeName": "Craft quantum processor",
+        "createsItemId": 2,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 5,
+                "quantity": 1
+            },
+            {
+                "itemId": 6,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 3,
+        "recipeName": "Craft cryogenic chamber",
+        "createsItemId": 3,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 7,
+                "quantity": 1
+            },
+            {
+                "itemId": 8,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 4,
+        "recipeName": "Craft iridesite",
+        "createsItemId": 4,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 9,
+                "quantity": 1
+            },
+            {
+                "itemId": 10,
+                "quantity": 1
+            },
+            {
+                "itemId": 11,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 5,
+        "recipeName": "Craft circuit board",
+        "createsItemId": 5,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 12,
+                "quantity": 1
+            },
+            {
+                "itemId": 13,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 6,
+        "recipeName": "Craft poly fibre",
+        "createsItemId": 12,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 14,
+                "quantity": 100
+            },
+            {
+                "itemId": 15,
+                "quantity": 200
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 7,
+        "recipeName": "Craft heat capacitor",
+        "createsItemId": 13,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 16,
+                "quantity": 100
+            },
+            {
+                "itemId": 17,
+                "quantity": 200
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 8,
+        "recipeName": "Craft superconductor",
+        "createsItemId": 6,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 18,
+                "quantity": 1
+            },
+            {
+                "itemId": 19,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 9,
+        "recipeName": "Craft enriched carbon",
+        "createsItemId": 18,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 20,
+                "quantity": 250
+            },
+            {
+                "itemId": 24,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 10,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 18,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 20,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 11,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 18,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 20,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 12,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 18,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 20,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 13,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 18,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 20,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 14,
+        "recipeName": "Craft semiconductor",
+        "createsItemId": 19,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 30,
+                "quantity": 1
+            },
+            {
+                "itemId": 31,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 15,
+        "recipeName": "Craft thermic condensate",
+        "createsItemId": 30,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 21,
+                "quantity": 250
+            },
+            {
+                "itemId": 24,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 16,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 30,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 21,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 17,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 30,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 21,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 18,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 30,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 21,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 19,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 30,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 21,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 20,
+        "recipeName": "Craft nitrogen salt",
+        "createsItemId": 31,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 22,
+                "quantity": 250
+            },
+            {
+                "itemId": 24,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 21,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 31,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 22,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 22,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 31,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 22,
+                "quantity": 100
+            },
+            {
+                "itemId": 23,
+                "quantity": 20
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 23,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 31,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 22,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 26,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 24,
+        "recipeName": "High-Speed Sublimation",
+        "createsItemId": 31,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 22,
+                "quantity": 100
+            },
+            {
+                "itemId": 24,
+                "quantity": 10
+            },
+            {
+                "itemId": 25,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 0
+    },
+    {
+        "recipeId": 25,
+        "recipeName": "Craft living glass",
+        "createsItemId": 7,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 32,
+                "quantity": 1
+            },
+            {
+                "itemId": 51,
+                "quantity": 5
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 26,
+        "recipeName": "Craft lubricant",
+        "createsItemId": 32,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 28,
+                "quantity": 50
+            },
+            {
+                "itemId": 27,
+                "quantity": 400
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 27,
+        "recipeName": "Craft glass",
+        "createsItemId": 51,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 16,
+                "quantity": 40
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 28,
+        "recipeName": "Salt Crystal Polishing",
+        "createsItemId": 51,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 16,
+                "quantity": 40
+            }
+        ],
+        "isRefined": true,
+        "duration": 10
+    },
+    {
+        "recipeId": 29,
+        "recipeName": "Silicate Forging",
+        "createsItemId": 51,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 0,
+                "quantity": 1
+            }
+        ],
+        "isRefined": true,
+        "duration": 5
+    },
+    {
+        "recipeId": 30,
+        "recipeName": "Polish Crystals",
+        "createsItemId": 51,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 16,
+                "quantity": 40
+            }
+        ],
+        "isRefined": true,
+        "duration": 30
+    },
+    {
+        "recipeId": 31,
+        "recipeName": "Craft cryo-pump",
+        "createsItemId": 8,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 29,
+                "quantity": 1
+            },
+            {
+                "itemId": 30,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 32,
+        "recipeName": "Craft hot ice",
+        "createsItemId": 29,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 18,
+                "quantity": 1
+            },
+            {
+                "itemId": 31,
+                "quantity": 1
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 33,
+        "recipeName": "Craft aronium",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 50
+            },
+            {
+                "itemId": 36,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 36,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 37,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 38,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 39,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 9,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 33,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 33,
+        "recipeName": "Craft aronium",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 50
+            },
+            {
+                "itemId": 36,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 36,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 37,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 38,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 39,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 10,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 34,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 33,
+        "recipeName": "Craft aronium",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 50
+            },
+            {
+                "itemId": 36,
+                "quantity": 50
+            }
+        ],
+        "isRefined": false,
+        "duration": 0
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 41,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 36,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 37,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 38,
+                "quantity": 20
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 38,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 39,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 39,
+                "quantity": 10
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 34,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 36,
+                "quantity": 30
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    },
+    {
+        "recipeId": 35,
+        "recipeName": "Alloy Latticing",
+        "createsItemId": 11,
+        "createsQuantity": 1,
+        "sources": [
+            {
+                "itemId": 35,
+                "quantity": 30
+            },
+            {
+                "itemId": 37,
+                "quantity": 60
+            },
+            {
+                "itemId": 40,
+                "quantity": 5
+            }
+        ],
+        "isRefined": true,
+        "duration": 45
+    }
+]

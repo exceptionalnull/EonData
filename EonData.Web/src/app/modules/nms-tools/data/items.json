@@ -1,0 +1,317 @@
+[
+    {
+        "itemId": 0,
+        "itemName": "unknown",
+        "itemCost": 0
+    },
+    {
+        "itemId": 1,
+        "itemName": "Stasis chamber",
+        "itemCost": 15600000
+    },
+    {
+        "itemId": 2,
+        "itemName": "Quantum Processor",
+        "itemCost": 4400000
+    },
+    {
+        "itemId": 3,
+        "itemName": "Cryogenic Chamber",
+        "itemCost": 3800000
+    },
+    {
+        "itemId": 4,
+        "itemName": "Iridesite",
+        "itemCost": 150000
+    },
+    {
+        "itemId": 5,
+        "itemName": "Circuit Board",
+        "itemCost": 916250
+    },
+    {
+        "itemId": 6,
+        "itemName": "Superconductor",
+        "itemCost": 1500000
+    },
+    {
+        "itemId": 7,
+        "itemName": "Living Glass",
+        "itemCost": 566000
+    },
+    {
+        "itemId": 8,
+        "itemName": "Cryo-Pump",
+        "itemCost": 1500000
+    },
+    {
+        "itemId": 9,
+        "itemName": "Aronium",
+        "itemCost": 25000
+    },
+    {
+        "itemId": 10,
+        "itemName": "Magno-Gold",
+        "itemCost": 25000
+    },
+    {
+        "itemId": 11,
+        "itemName": "Grantine",
+        "itemCost": 25000
+    },
+    {
+        "itemId": 12,
+        "itemName": "Poly Fibre",
+        "itemCost": 130000
+    },
+    {
+        "itemId": 13,
+        "itemName": "Heat Capacitor",
+        "itemCost": 180000
+    },
+    {
+        "itemId": 14,
+        "itemName": "Cactus Flesh",
+        "itemCost": 0
+    },
+    {
+        "itemId": 15,
+        "itemName": "Star Bulb",
+        "itemCost": 0
+    },
+    {
+        "itemId": 16,
+        "itemName": "Frost Crystal",
+        "itemCost": 0
+    },
+    {
+        "itemId": 17,
+        "itemName": "Solanium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 18,
+        "itemName": "Enriched Carbon",
+        "itemCost": 50000
+    },
+    {
+        "itemId": 19,
+        "itemName": "Semiconductor",
+        "itemCost": 0
+    },
+    {
+        "itemId": 20,
+        "itemName": "Radon",
+        "itemCost": 0
+    },
+    {
+        "itemId": 21,
+        "itemName": "Sulphurine",
+        "itemCost": 0
+    },
+    {
+        "itemId": 22,
+        "itemName": "Nitrogen",
+        "itemCost": 0
+    },
+    {
+        "itemId": 23,
+        "itemName": "Carbon",
+        "itemCost": 0
+    },
+    {
+        "itemId": 24,
+        "itemName": "Condensed Carbon",
+        "itemCost": 0
+    },
+    {
+        "itemId": 25,
+        "itemName": "Salt",
+        "itemCost": 0
+    },
+    {
+        "itemId": 26,
+        "itemName": "Chlorine",
+        "itemCost": 0
+    },
+    {
+        "itemId": 27,
+        "itemName": "Gamma Root",
+        "itemCost": 0
+    },
+    {
+        "itemId": 28,
+        "itemName": "Faecium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 29,
+        "itemName": "Hot Ice",
+        "itemCost": 320000
+    },
+    {
+        "itemId": 30,
+        "itemName": "Thermic Condensate",
+        "itemCost": 0
+    },
+    {
+        "itemId": 31,
+        "itemName": "Nitrogen Salt",
+        "itemCost": 0
+    },
+    {
+        "itemId": 32,
+        "itemName": "Lubricant",
+        "itemCost": 0
+    },
+    {
+        "itemId": 33,
+        "itemName": "Paraffinium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 34,
+        "itemName": "Phosphorus",
+        "itemCost": 0
+    },
+    {
+        "itemId": 35,
+        "itemName": "Dioxite",
+        "itemCost": 0
+    },
+    {
+        "itemId": 36,
+        "itemName": "Ionised Cobalt",
+        "itemCost": 0
+    },
+    {
+        "itemId": 37,
+        "itemName": "Cobalt",
+        "itemCost": 0
+    },
+    {
+        "itemId": 38,
+        "itemName": "Silver",
+        "itemCost": 0
+    },
+    {
+        "itemId": 39,
+        "itemName": "Gold",
+        "itemCost": 0
+    },
+    {
+        "itemId": 40,
+        "itemName": "Platinum",
+        "itemCost": 0
+    },
+    {
+        "itemId": 41,
+        "itemName": "Tritium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 42,
+        "itemName": "Dihydrogen",
+        "itemCost": 0
+    },
+    {
+        "itemId": 43,
+        "itemName": "Deuterium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 44,
+        "itemName": "Pyrite",
+        "itemCost": 0
+    },
+    {
+        "itemId": 45,
+        "itemName": "Ammonium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 46,
+        "itemName": "Oxygen",
+        "itemCost": 0
+    },
+    {
+        "itemId": 47,
+        "itemName": "Ferrite Dust",
+        "itemCost": 0
+    },
+    {
+        "itemId": 48,
+        "itemName": "Pure Ferrite",
+        "itemCost": 0
+    },
+    {
+        "itemId": 49,
+        "itemName": "Magnetised Ferrite",
+        "itemCost": 0
+    },
+    {
+        "itemId": 50,
+        "itemName": "Cyto-Phosphate",
+        "itemCost": 0
+    },
+    {
+        "itemId": 51,
+        "itemName": "Glass",
+        "itemCost": 0
+    },
+    {
+        "itemId": 52,
+        "itemName": "Silicate Powder",
+        "itemCost": 0
+    },
+    {
+        "itemId": 53,
+        "itemName": "Chromatic Metal",
+        "itemCost": 0
+    },
+    {
+        "itemId": 54,
+        "itemName": "Copper",
+        "itemCost": 0
+    },
+    {
+        "itemId": 55,
+        "itemName": "Cadmium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 56,
+        "itemName": "Emeril",
+        "itemCost": 0
+    },
+    {
+        "itemId": 57,
+        "itemName": "Indium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 58,
+        "itemName": "Activated Copper",
+        "itemCost": 0
+    },
+    {
+        "itemId": 59,
+        "itemName": "Activated Cadmium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 60,
+        "itemName": "Activated Emeril",
+        "itemCost": 0
+    },
+    {
+        "itemId": 61,
+        "itemName": "Activated Indium",
+        "itemCost": 0
+    },
+    {
+        "itemId": 62,
+        "itemName": "Fusion Igniter",
+        "itemCost": 15600000
+    }
+]
