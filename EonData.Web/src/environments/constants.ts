@@ -1,5 +1,5 @@
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 export class EnvironmentConstants {
-  static readonly appVersion: string = version;
+  static readonly appVersion: string = packageJson.version;
 }
