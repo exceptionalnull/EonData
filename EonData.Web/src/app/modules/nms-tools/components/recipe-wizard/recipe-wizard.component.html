@@ -4,3 +4,10 @@
         <option *ngFor="let itm of items" [value]="itm.itemId">{{itm.itemName}}</option>
     </select>
 </div>
+<div *ngFor="let itemInfo of getItemDetails()">
+    <div>
+        <h2>{{itemInfo?.itemName}}</h2>
+        <img [src]="itemInfo?.picture" />
+        <p>Price: {{itemInfo?.itemCost}}</p>
+    </div>
+</div>
