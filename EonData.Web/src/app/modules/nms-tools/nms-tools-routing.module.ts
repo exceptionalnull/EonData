@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CookbookComponent } from './components/cookbook/cookbook.component';
+import { RecipeWizardComponent } from './components/recipe-wizard/recipe-wizard.component';
 
 const routes: Routes = [
-  { path: 'cookbook', component: CookbookComponent}
+  { path: 'wizard', component: RecipeWizardComponent}
 ];
 
 @NgModule({

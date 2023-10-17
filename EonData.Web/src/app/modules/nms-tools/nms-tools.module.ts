@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { NmsToolsRoutingModule } from './nms-tools-routing.module';
-import { CookbookComponent } from './components/cookbook/cookbook.component';
+import { RecipeWizardComponent } from './components/recipe-wizard/recipe-wizard.component';
 
 
 @NgModule({
   declarations: [
-    CookbookComponent
+    RecipeWizardComponent
   ],
   imports: [
     CommonModule,
