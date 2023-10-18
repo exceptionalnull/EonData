@@ -1,16 +1,9 @@
 <div>
     <label for="item-select">Choose an item:</label>
     <select name="item-select" [(ngModel)]="selectedItem" (change)="pickedItem()">
-        <option *ngFor="let itm of nmsData.items" [value]="itm.itemId">{{itm.itemName}}</option>
+        <option *ngFor="let itm of items" [value]="itm.itemId">{{itm.itemName}}</option>
     </select>
 </div>
-<div *ngFor="let itemInfo of getItemDetails()">
-    <div>
-        <h2>{{itemInfo?.itemName}}</h2>
-        <img [src]="itemInfo?.picture" />
-        <p>Price: {{itemInfo?.itemCost}}</p>
-        <select name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe(itemInfo?.itemId, selectedRecipe)">
-            <option *ngFor="let rcp of nmsData.getRecipesByItem(itemInfo?.itemId)" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
-        </select>
-    </div>
+<div *ngFor="let itemId of selectedItems">
+    <nms-recipe-node [itemId]="itemId"></nms-recipe-node>
 </div>

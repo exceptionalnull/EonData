@@ -1,0 +1,8 @@
+<div>
+    <h2>{{itemInfo?.itemName}}</h2>
+    <img [src]="itemInfo?.picture" />
+    <p>Price: {{itemInfo?.itemCost}}</p>
+    <select name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
+        <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
+    </select>
+</div>

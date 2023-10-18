@@ -1,38 +1,25 @@
 import { Component } from '@angular/core';
 import { NmsDataService } from '../../services/nms-data.service';
+import { Item } from '../../models/item.interface';
 
 
 @Component({
-  selector: 'app-recipe-wizard',
+  selector: 'nms-recipe-wizard',
   templateUrl: './recipe-wizard.component.html',
   styleUrls: ['./recipe-wizard.component.scss']
 })
 export class RecipeWizardComponent {
   selectedItem: number = 0;
   selectedItems: number[] = [];
-  selectedRecipe: number = 0;
-  selectedRecipes: number[] = [];
-  nmsData: NmsDataService;
+  items: Item[] = [];
   
   constructor(private dataService: NmsDataService) {
-    this.nmsData = dataService;
-  }
-
-  *getItemDetails() {
-    for (const itemId of this.selectedItems) {
-      yield this.nmsData.getItem(itemId);
-    }
+    this.items = dataService.items;
   }
 
   pickedItem() {
     if (!this.selectedItems.includes(this.selectedItem)) {
       this.selectedItems.push(this.selectedItem);
-    }
-  }
-
-  pickedRecipe(itemId: number | undefined, recipeId: number) {
-    if (itemId != undefined) {
-      this.selectedRecipes[itemId] = recipeId;
     }
   }
 }

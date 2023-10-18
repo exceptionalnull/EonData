@@ -12,27 +12,15 @@ import { Recipe } from '../models/recipe.interface'
 export class NmsDataService {
   items: Item[] = nmsItems;
   recipes: Recipe[] = nmsRecipes;
-  private itemCache: Item[] = [];
-  private recipeCache: Recipe[] = [];
 
   constructor() { }
 
   getItem(itemId: number): Item | undefined {
-    if (itemId in this.itemCache) {
-      return this.itemCache[itemId];
-    }
-    else {
-      const result = this.items.find(itm => itm.itemId == itemId);
-      if (result != undefined) {
-        this.itemCache[itemId] = result;
-        return result;
-      }
-    }
-    return undefined;
+    return this.items.find(itm => itm.itemId == itemId);
   }
 
   getRecipe(recipeId: number) {
-
+    this.recipes.find(rcp => rcp.recipeId == recipeId);
   }
 
   getRecipesByItem(itemId: number | undefined): Recipe[] | undefined {
