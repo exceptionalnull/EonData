@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NmsDataService } from '../../services/nms-data.service';
 import { Item } from '../../models/item.interface';
 
@@ -8,13 +8,15 @@ import { Item } from '../../models/item.interface';
   templateUrl: './recipe-wizard.component.html',
   styleUrls: ['./recipe-wizard.component.scss']
 })
-export class RecipeWizardComponent {
+export class RecipeWizardComponent implements OnInit {
   selectedItem: number = 0;
   selectedItems: number[] = [];
   items: Item[] = [];
   
-  constructor(private dataService: NmsDataService) {
-    this.items = dataService.items;
+  constructor(private dataService: NmsDataService) { }
+
+  ngOnInit() {
+    this.items = this.dataService.items;
   }
 
   pickedItem() {
