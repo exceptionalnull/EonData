@@ -1,7 +1,4 @@
-interface RecipeSource {
-  itemId: number;
-  quantity: number;
-}
+import { RecipeSource } from "./recipe-source.interface";
 
 export interface Recipe {
   recipeId: number;
