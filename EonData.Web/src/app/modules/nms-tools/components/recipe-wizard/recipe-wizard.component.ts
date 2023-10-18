@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
+import { NmsDataService } from '../../services/nms-data.service';
 
-import nmsItems from '../../data/items.json'
-import { Item } from '../../data/items.interface'
-
-import nmsRecipes from '../../data/recipes.json';
-import { Recipe } from '../../data/recipes.interface'
 
 @Component({
   selector: 'app-recipe-wizard',
@@ -14,41 +10,29 @@ import { Recipe } from '../../data/recipes.interface'
 export class RecipeWizardComponent {
   selectedItem: number = 0;
   selectedItems: number[] = [];
-  items: Item[] = nmsItems;
-  recipes: Recipe[] = nmsRecipes;
-  itemCache: Item[] = [];
-  recipeCache: Recipe[] = [];
-
-  getItem(itemId: number): Item | undefined {
-    if (itemId in this.itemCache) {
-      return this.itemCache[itemId];
-    }
-    else {
-      const result = this.items.find(itm => itm.itemId == itemId);
-      if (result != undefined) {
-        this.itemCache[itemId] = result;
-        return result;
-      }
-    }
-    return undefined;
+  selectedRecipe: number = 0;
+  selectedRecipes: number[] = [];
+  nmsData: NmsDataService;
+  
+  constructor(private dataService: NmsDataService) {
+    this.nmsData = dataService;
   }
 
   *getItemDetails() {
     for (const itemId of this.selectedItems) {
-      yield this.getItem(itemId);
+      yield this.nmsData.getItem(itemId);
     }
   }
 
-  getRecipesByItem(itemId: number | undefined): Recipe[] | undefined {
+  pickedItem() {
+    if (!this.selectedItems.includes(this.selectedItem)) {
+      this.selectedItems.push(this.selectedItem);
+    }
+  }
+
+  pickedRecipe(itemId: number | undefined, recipeId: number) {
     if (itemId != undefined) {
-      return this.recipes.filter(rcp => rcp.createsItemId == itemId);
-    }
-    return undefined;
-  }
-
-  pickedItem(itemId: number) {
-    if (!this.selectedItems.includes(itemId)) {
-      this.selectedItems.push(itemId);
+      this.selectedRecipes[itemId] = recipeId;
     }
   }
 }
