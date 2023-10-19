@@ -1,6 +1,10 @@
 export interface Item {
   itemId: number;
   itemName: string;
-  itemCost: number;
-  picture?: string;
+  abbrev: string;
+  category: string;
+  rarity: string;
+  price: number;
+  isCraftable?: boolean;
+  icon: string;
 }

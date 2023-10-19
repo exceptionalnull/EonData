@@ -1,0 +1,157 @@
+itemId,itemName,abbrev,category,rarity,price,isCraftable,icon
+0,Unknown,Unk,Unknown,Unknown,0,FALSE,unk
+1,Carbon,C,Organic,Common,12,,SUBSTANCE.FUEL.1
+2,Condensed Carbon,C+,Organic,Uncommon,24,,SUBSTANCE.FUEL.2
+3,Oxygen,O2,Organic,Common,34,,SUBSTANCE.AIR.1
+4,Hexite,X,Organic,Rare,654,,PRODUCT.HEXCORE
+5,Di-hydrogen,H,High Energy,Common,34,,SUBSTANCE.LAUNCHSUB.1
+6,Deuterium,D,High Energy,Rare,34,,SUBSTANCE.LAUNCHSUB.2
+7,Tritium,H3,High Energy,Common,6,,SUBSTANCE.ROCKETSUB
+8,Ferrite Dust,Fe,Metallic,Common,14,,SUBSTANCE.LAND.1
+9,Pure Ferrite,Fe+,Metallic,Uncommon,28,,SUBSTANCE.LAND.2
+10,Magnetised Ferrite,Fe++,Metallic,Uncommon,82,,SUBSTANCE.LAND.3
+11,Silicate Powder,Si,Metallic,Common,2,,SUBSTANCE.SAND.1
+12,Sodium,Na,Catalytic,Common,41,,SUBSTANCE.CATALYST.1
+13,Sodium Nitrate,Na+,Catalytic,Uncommon,82,,SUBSTANCE.CATALYST.2
+14,Cobalt,Co,Subterranean,Common,76,,SUBSTANCE.CAVE.1
+15,Ionised Cobalt,Co+,Subterranean,Uncommon,162,,SUBSTANCE.CAVE.2
+16,Salt,NaCl,Aquatic,Common,101,,SUBSTANCE.WATER.1
+17,Chlorine,Cl,Aquatic,Rare,205,,SUBSTANCE.WATER.2
+18,Cyto-Phosphate,Cy,Organic Compound,Common,201,,SUBSTANCE.WATER.PLANT
+19,Copper,Cu,Stellar,Common,41,,SUBSTANCE.YELLOW.2
+20,Cadmium,Cd,Stellar,Rare,83,,SUBSTANCE.RED.2
+21,Emeril,Em,Stellar,Rare,114,,SUBSTANCE.GREEN.2
+22,Indium,In,Stellar,Rare,132,,SUBSTANCE.BLUE.2
+23,Chromatic Metal,Ch,Stellar,Uncommon,88,,SUBSTANCE.STELLAR.2
+24,Paraffinium,Pf,Localised,Uncommon,62,,SUBSTANCE.BIOME.LUSH
+25,Pyrite,Py,Localised,Uncommon,62,,SUBSTANCE.BIOME.DUSTY
+26,Ammonia,NH3,Localised,Uncommon,62,,SUBSTANCE.BIOME.TOXIC
+27,Uranium,U,Localised,Uncommon,62,,SUBSTANCE.BIOME.RADIO
+28,Dioxite,C02,Localised,Uncommon,62,,SUBSTANCE.BIOME.COLD
+29,Phosphorus,P,Localised,Uncommon,62,,SUBSTANCE.BIOME.HOT
+30,Basalt,B,Localised,Unknown,62,,SUBSTANCE.BIOME.LAVA
+31,Tainted Metal,Un,Localised,Uncommon,380,,Tainted metal
+32,Mordite,Mo,Harvested,Uncommon,40,,SUBSTANCE.CREATURE.1
+33,Pugneum,Pg,Anomalous,Rare,138,,SUBSTANCE.ROBOT.1
+34,Silver,Ag,Asteroid,Common,186,,SUBSTANCE.ASTEROID.1
+35,Gold,Au,Asteroid,Uncommon,353,,SUBSTANCE.ASTEROID.2
+36,Platinum,Pt,Asteroid,Rare,505,,SUBSTANCE.ASTEROID.3
+37,Sulphurine,Su,Gas,Uncommon,20,,GAS.3
+38,Radon,Rn,Gas,Uncommon,20,,GAS.2
+39,Nitrogen,N,Gas,Uncommon,20,,GAS.1
+40,Activated Copper,Cu+,Stellar,Common,75,,SUBSTANCE.EXYELLOW.2
+41,Activated Cadmium,Cd+,Stellar,Rare,111,,SUBSTANCE.EXRED.2
+42,Activated Emeril,Em+,Stellar,Rare,134,,SUBSTANCE.EXGREEN.2
+43,Activated Indium,In+,Stellar,Rare,165,,SUBSTANCE.EXBLUE.2
+44,Fungal Mould,Ml,Agricultural,Uncommon,16,,SUBSTANCE.PLANT.TOXIC
+45,Frost Crystal,Fc,Agricultural,Uncommon,12,,SUBSTANCE.PLANT.SNOW
+46,Gamma Root,Gr,Agricultural,Uncommon,16,,SUBSTANCE.PLANT.RADIO
+47,Cactus Flesh,Cc,Agricultural,Uncommon,28,,SUBSTANCE.PLANT.DUSTY
+48,Solanium,So,Agricultural,Uncommon,70,,SUBSTANCE.PLANT.HOT
+49,Star Bulb,Sb,Agricultural,Uncommon,32,,SUBSTANCE.PLANT.LUSH
+50,Marrow Bulb,Bu,Agricultural,Uncommon,41,,SUBSTANCE.PLANT.CAVE
+51,Kelp Sac,Ke,Agricultural,Uncommon,41,,SUBSTANCE.PLANT.WATER
+52,Faecium,Fa,Agricultural,Uncommon,30,,SUBSTANCE.PLANT.POOP
+53,Residual Goop,Jn,Junk,Common,20,,SPACEGUNK.1
+54,Runaway Mould,Jn,Junk,Uncommon,20,,SPACEGUNK.2
+55,Rusted Metal,Jn,Junk,Common,20,,SPACEGUNK.3
+56,Living Slime,Jn,Junk,Uncommon,20,,SPACEGUNK.4
+57,Viscous Fluids,Jn,Junk,Uncommon,20,,SPACEGUNK.5
+58,Somnal Dust,?,Special,Common,1616,,SUBSTANCE.TIMEDUST
+59,Ancestral Memories,?,Special,Common,1616,,SUBSTANCE.TIMEMILK
+60,Liquid Sun,?,Special,Common,16,,SUB.SUNGOLD
+61,Nanite Cluster,?,Special,Rare,137.5,,NANITE
+62,Atlantideum,?,Special,Rare,138,,SUBSTANCE.ROBOT.2
+63,Cursed Dust,?,Special,Rare,959,,SUBSTANCE.WORMDUST
+64,Acid,,Advanced Agricultural Product,,188000,TRUE,
+65,Circuit Board,,Advanced Agricultural Product,,916250,TRUE,
+66,Glass,,Advanced Agricultural Product,,200,TRUE,
+67,Heat Capacitor,,Advanced Agricultural Product,,180000,TRUE,
+68,Liquid Explosive,,Advanced Agricultural Product,,800500,TRUE,
+69,Living Glass,,Advanced Agricultural Product,,566000,TRUE,
+70,Lubricant,,Advanced Agricultural Product,,110000,TRUE,
+71,Poly Fibre,,Advanced Agricultural Product,,130000,TRUE,
+72,Unstable Gel,,Advanced Agricultural Product,,50000,TRUE,
+73,Five Dimensional Torus,,Trade Goods (Construction),,30000,FALSE,
+74,Nanotube Crate,,Trade Goods (Construction),,1000,FALSE,
+75,Optical Solvent,,Trade Goods (Construction),,15000,FALSE,
+76,Self-Repairing Heridium,,Trade Goods (Construction),,6000,FALSE,
+77,Superconducting Fibre,,Trade Goods (Construction),,50000,FALSE,
+78,Cryogenic Chamber,,Advanced Crafted Product,,3800000,TRUE,
+79,Portable Reactor,,Advanced Crafted Product,,4200000,TRUE,
+80,Quantum Processor,,Advanced Crafted Product,,5200000,TRUE,
+81,Aronium,,Alloy Metal,,25000,TRUE,
+82,Dirty Bronze,,Alloy Metal,,25000,TRUE,
+83,Grantine,,Alloy Metal,,25000,TRUE,
+84,Herox,,Alloy Metal,,25000,TRUE,
+85,Lemmium,,Alloy Metal,,25000,TRUE,
+86,Magno-Gold,,Alloy Metal,,25000,TRUE,
+87,Crystal Sulphide,,Compressed Mineral,,7410,FALSE,
+88,Enriched Carbon,,Enhanced/Enriched Products,,50000,TRUE,
+89,Nitrogen Salt,,Enhanced/Enriched Products,,50000,TRUE,
+90,Thermic Condensate,,Enhanced/Enriched Products,,50000,TRUE,
+91,Geodesite,,Enhanced/Enriched Products,,150000,TRUE,
+92,Iridesite,,Enhanced/Enriched Products,,150000,TRUE,
+93,Fusion Ignitor,,Highly Refined Technology,,15600000,TRUE,
+94,Stasis Device,,Highly Refined Technology,,15600000,TRUE,
+95,Hadal Core,,Horrific Sample,,92625,FALSE,
+96,Hypnotic Eye,,Horrific Sample,,57000,FALSE,
+97,Enormous Metal Cog,,Trade Goods (Industrial),,1000,FALSE,
+98,High Capacity Vector Compressor,,Trade Goods (Industrial),,50000,FALSE,
+99,Holographic Crankshaft,,Trade Goods (Industrial),,30000,FALSE,
+100,Non-Stick Piston,,Trade Goods (Industrial),,6000,FALSE,
+101,Six-Pronged Mesh Decoupler,,Trade Goods (Industrial),,15000,FALSE,
+102,Cryo-Pump,,Manufactured Gas Product,,1500000,TRUE,
+103,Fusion Accelerant,,Manufactured Gas Product,,1500000,TRUE,
+104,Hot Ice,,Manufactured Gas Product,,320000,TRUE,
+105,Organic Catalyst,,Manufactured Gas Product,,320000,TRUE,
+106,Semiconductor,,Manufactured Gas Product,,400000,TRUE,
+107,Superconductor,,Manufactured Gas Product,,1500000,TRUE,
+108,De-Scented Pheromone Bottle,,Trade Goods (Scientific),,1000,FALSE,
+109,Instability Injector,,Trade Goods (Scientific),,15000,FALSE,
+110,Neural Duct,,Trade Goods (Scientific),,50000,FALSE,
+111,Neutron Microscope,,Trade Goods (Scientific),,6000,FALSE,
+112,Organic Piping,,Trade Goods (Scientific),,30000,FALSE,
+113,Living Pearl,,Semi-Conscious Gemstone,,4797,FALSE,
+114,Banned Weapons,,Smuggled Goods,,83000,FALSE,
+115,Blood Salt,,Smuggled Goods,,2000,FALSE,
+116,Counterfeit Circuits,,Smuggled Goods,,68000,FALSE,
+117,First Spawn Relics,,Smuggled Goods,,98000,FALSE,
+118,GrahGrah,,Smuggled Goods,,58000,FALSE,
+119,Moon Ether,,Smuggled Goods,,18000,FALSE,
+120,Prismatic Feathers,,Smuggled Goods,,32000,FALSE,
+121,Stolen DNA Samples,,Smuggled Goods,,9000,FALSE,
+122,Compressed Indium Scraps,,Starship Subcomponents,,3000000,FALSE,
+123,Handful of Cogs,,Starship Subcomponents,,10000,FALSE,
+124,Once-Useful Springs,,Starship Subcomponents,,1000,FALSE,
+125,Recycled Circuitry,,Starship Subcomponents,,600000,FALSE,
+126,Reinforced Piping,,Starship Subcomponents,,50000,FALSE,
+127,Spool of Nano-Cables,,Starship Subcomponents,,400000,FALSE,
+128,Starship AI Valves,,Starship Subcomponents,,12000000,FALSE,
+129,Subatomic Regulators,,Starship Subcomponents,,800000,FALSE,
+130,Tank of Coolant,,Starship Subcomponents,,200000,FALSE,
+131,Thermal Panels,,Starship Subcomponents,,100000,FALSE,
+132,Autonomous Positioning Unit,,Trade Goods (Technology),,30000,FALSE,
+133,Decommissioned Circuit Board,,Trade Goods (Technology),,1000,FALSE,
+134,Ion Capacitor,,Trade Goods (Technology),,15000,FALSE,
+135,Quantum Accelerator,,Trade Goods (Technology),,50000,FALSE,
+136,Welding Soap,,Trade Goods (Technology),,6000,FALSE,
+137,Experimental Power Fluid,,Trade Goods (Energy Source),,30000,FALSE,
+138,Fusion Core,,Trade Goods (Energy Source),,50000,FALSE,
+139,Industrial-Grade Battery,,Trade Goods (Energy Source),,6000,FALSE,
+140,Ohmic Gel,,Trade Goods (Energy Source),,15000,FALSE,
+141,Spark Canister,,Trade Goods (Energy Source),,1000,FALSE,
+142,Bromide Salt,,Trade Goods (Minerals),,15000,FALSE,
+143,Dirt,,Trade Goods (Minerals),,1000,FALSE,
+144,Polychromatic Zirconium,,Trade Goods (Minerals),,30000,FALSE,
+145,Re-latticed Arc Crystal,,Trade Goods (Minerals),,50000,FALSE,
+146,Unrefined Pyrite Grease,,Trade Goods (Minerals),,6000,FALSE,
+147,Comet Droplets,,Trade Goods,,15000,FALSE,
+148,Decrypted User Data,,Trade Goods,,1000,FALSE,
+149,Ion Sphere,,Trade Goods,,30000,FALSE,
+150,Star Silk,,Trade Goods,,6000,FALSE,
+151,Teleport Coordinators,,Trade Goods,,50000,FALSE,
+152,Albumen Pearl,,Trade commodity,,9025,FALSE,
+153,Gravitino Ball,,Trade commodity,,40024,FALSE,
+154,Sac Venom,,Trade commodity,,11685,FALSE,
+155,Vortex Cube,,Trade commodity,,5800,FALSE,
