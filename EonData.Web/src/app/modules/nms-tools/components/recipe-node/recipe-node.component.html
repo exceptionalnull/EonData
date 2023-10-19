@@ -1,4 +1,4 @@
-<div>
+<div class="nms-recipe-node">
     <h2>{{itemInfo?.itemName}}</h2>
     <img [src]="itemInfo?.picture" />
     <p>Price: {{itemInfo?.itemCost}}</p>
@@ -7,8 +7,6 @@
         <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
     </select>
 </div>
-<div *ngFor="let ingrId of (ingredients | async)">
+<div class="nms-ingredient-row" *ngFor="let ingrId of (ingredients | async)">
     <nms-recipe-node [itemId]="ingrId"></nms-recipe-node>
 </div>
-
-

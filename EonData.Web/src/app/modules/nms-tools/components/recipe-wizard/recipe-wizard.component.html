@@ -3,7 +3,7 @@
     <select name="item-select" [(ngModel)]="selectedItem" (change)="pickedItem()">
         <option *ngFor="let itm of items" [value]="itm.itemId">{{itm.itemName}}</option>
     </select>
-</div>
-<div *ngFor="let itemId of selectedItems">
-    <nms-recipe-node [itemId]="itemId"></nms-recipe-node>
+    <div *ngFor="let itemId of selectedItems" class="nms-tree-container">
+        <nms-recipe-node [itemId]="itemId"></nms-recipe-node>
+    </div>
 </div>
