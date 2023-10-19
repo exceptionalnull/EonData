@@ -27,7 +27,7 @@ export class RecipeNodeComponent implements OnInit {
       this.itemInfo = item;
       this.recipes = recipes;
 
-      if (this.recipes !== undefined) {
+      if ((this.recipes?.length ?? 0) > 0) {
         this.selectedRecipe = this.recipes[0].recipeId;
         this.isIntermediate = true;
         this.pickedRecipe();

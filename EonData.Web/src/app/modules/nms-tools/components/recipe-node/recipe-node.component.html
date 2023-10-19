@@ -1,12 +1,13 @@
 <div class="nms-recipe-node">
-    <h2>{{itemInfo?.itemName}}</h2>
-    <img [src]="itemInfo?.picture" />
-    <p>Price: {{itemInfo?.itemCost}}</p>
-    <label *ngIf="isIntermediate" for="item{{itemInfo?.itemId}}-recipes">Recipe:</label>
-    <select *ngIf="isIntermediate" [disabled]="(recipes?.length ?? 0) <= 1" name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
-        <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
-    </select>
-</div>
-<div class="nms-ingredient-row" *ngFor="let ingrId of (ingredients | async)">
-    <nms-recipe-node [itemId]="ingrId"></nms-recipe-node>
+    <div class="nms-ingredient-info">
+        <div>{{itemInfo?.itemName}}</div>
+        <p>Price: {{itemInfo?.itemCost}}</p>
+        <label *ngIf="isIntermediate" for="item{{itemInfo?.itemId}}-recipes">Recipe:</label>
+        <select *ngIf="isIntermediate" [disabled]="(recipes?.length ?? 0) <= 1" name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
+            <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
+        </select>
+    </div>
+    <div class="nms-ingredient-row" *ngFor="let ingrId of (ingredients | async)">
+        <nms-recipe-node [itemId]="ingrId"></nms-recipe-node>
+    </div>
 </div>

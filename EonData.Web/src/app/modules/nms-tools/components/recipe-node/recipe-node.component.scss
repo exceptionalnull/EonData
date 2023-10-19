@@ -1,20 +1,16 @@
-.nms-recipe-node {
-  display: inline-block;
-
-  div {
-    border: 1px solid red;
-    width: auto;
+div {
+  .nms-ingredient-info {
+      border: 3px dotted purple;
   }
 
-  h2 {
-    font-size: small;
-  }
-}
-
-.nms-ingredient-row {
-  div {
-    border: 1px solid yellow;
-    width: auto;
+  .nms-ingredient-row {
     display: inline-block;
+    border: 1px solid red;
+  }
+
+  .nms-recipe-node {
+    display: inline-block;
+    clear: right;
+    border: 5px solid green;
   }
 }
