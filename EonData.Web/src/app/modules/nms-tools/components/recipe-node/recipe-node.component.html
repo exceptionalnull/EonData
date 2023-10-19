@@ -2,7 +2,13 @@
     <h2>{{itemInfo?.itemName}}</h2>
     <img [src]="itemInfo?.picture" />
     <p>Price: {{itemInfo?.itemCost}}</p>
-    <select name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
+    <select *ngIf="isIntermediate" name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
         <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
     </select>
 </div>
+<div *ngIf="recipes; let recipeList">
+    <div *ngFor="let ingr of recipeList[selectedRecipe]?.sources">
+        <nms-recipe-node [itemId]="ingr.itemId"></nms-recipe-node>
+    </div>
+</div>
+
