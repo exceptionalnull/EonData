@@ -22,6 +22,6 @@ namespace EonData.BotAI
             }
         }
 
-        public IAsyncEnumerable<string>
+        //public IAsyncEnumerable<string>
     }
 }

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EonData.BotAI\EonData.BotAI.csproj" />
+    <ProjectReference Include="..\EonData.CloudControl.AWS\EonData.CloudControl.AWS.csproj" />
+    <ProjectReference Include="..\EonData.DomainEntities\EonData.DomainEntities.csproj" />
+  </ItemGroup>
+
+</Project>

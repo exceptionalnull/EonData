@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CloudFormation", "CloudForm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EonData.BotAI", "EonData.BotAI\EonData.BotAI.csproj", "{647C7B3E-C0A9-4F0A-A1E5-2D0C59E50707}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EonData.DomainLogic", "EonData.DomainLogic\EonData.DomainLogic.csproj", "{980923AA-77D8-4E45-9D9F-2D502EE16644}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,22 @@ Global
 		{647C7B3E-C0A9-4F0A-A1E5-2D0C59E50707}.Release|x64.Build.0 = Release|Any CPU
 		{647C7B3E-C0A9-4F0A-A1E5-2D0C59E50707}.Release|x86.ActiveCfg = Release|Any CPU
 		{647C7B3E-C0A9-4F0A-A1E5-2D0C59E50707}.Release|x86.Build.0 = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|x64.Build.0 = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Debug|x86.Build.0 = Debug|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|Any CPU.Build.0 = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|ARM64.Build.0 = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|x64.ActiveCfg = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|x64.Build.0 = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|x86.ActiveCfg = Release|Any CPU
+		{980923AA-77D8-4E45-9D9F-2D502EE16644}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
