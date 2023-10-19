@@ -2,8 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../../models/item.interface';
 import { NmsDataService } from '../../services/nms-data.service';
 import { Recipe } from '../../models/recipe.interface';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'nms-recipe-node',
@@ -21,16 +20,26 @@ export class RecipeNodeComponent implements OnInit {
   constructor(private dataService: NmsDataService) { }
 
   ngOnInit() {
-    this.itemInfo = this.dataService.getItem(this.itemId);
-    this.recipes = this.dataService.getRecipesByItem(this.itemId);
+    forkJoin({
+      item: this.dataService.getItem(this.itemId),
+      recipes: this.dataService.getRecipesByItem(this.itemId)
+    }).subscribe(({ item, recipes }) => {
+      this.itemInfo = item;
+      this.recipes = recipes;
 
-    if (this.recipes !== undefined) {
-      this.selectedRecipe = this.recipes[0].recipeId;
-      this.isIntermediate = true;
-    }
+      if (this.recipes !== undefined) {
+        this.selectedRecipe = this.recipes[0].recipeId;
+        this.isIntermediate = true;
+        this.pickedRecipe();
+      }
+    });
+  }
+
+  getIngredientIds(): Observable<number[]> {
+    return of(this.recipes?.find(rcp => rcp.recipeId == this.selectedRecipe)?.sources.map(rsrc => rsrc.itemId) ?? []);
   }
 
   pickedRecipe() {
-
+    this.ingredients = this.getIngredientIds();
   }
 }

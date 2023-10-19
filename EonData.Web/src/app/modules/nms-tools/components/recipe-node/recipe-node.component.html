@@ -6,9 +6,8 @@
         <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>
     </select>
 </div>
-<div *ngIf="recipes; let recipeList">
-    <div *ngFor="let ingr of recipeList[selectedRecipe]?.sources">
-        <nms-recipe-node [itemId]="ingr.itemId"></nms-recipe-node>
-    </div>
+<div *ngFor="let ingrId of (ingredients | async)">
+    <nms-recipe-node [itemId]="ingrId"></nms-recipe-node>
 </div>
+
 
