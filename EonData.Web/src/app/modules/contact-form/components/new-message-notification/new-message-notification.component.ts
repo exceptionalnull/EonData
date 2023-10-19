@@ -13,7 +13,7 @@ export class NewMessageNotificationComponent implements OnInit {
   constructor(private contactFormService: ContactService) { }
 
   ngOnInit() {
-    timer(0, 900000).subscribe((i) => {
+    timer(0, 22.2 * 60000).subscribe((i) => {
       this.contactFormService.getMessageCount(true)
         .subscribe((c) => {
           this.unreadMessageCount = c;
