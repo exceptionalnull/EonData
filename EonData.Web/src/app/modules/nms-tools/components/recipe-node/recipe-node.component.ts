@@ -11,8 +11,8 @@ import { Observable, forkJoin, of } from 'rxjs';
 })
 export class RecipeNodeComponent implements OnInit {
   @Input() itemId: number = 0;
-  itemInfo: Item | undefined;
-  recipes: Recipe[] | undefined;
+  itemInfo?: Item;
+  recipes: Recipe[] | null = null;
   selectedRecipe: number = 0;
   isIntermediate: boolean = false;
   ingredients: Observable<number[]> | undefined;
@@ -21,13 +21,13 @@ export class RecipeNodeComponent implements OnInit {
 
   ngOnInit() {
     forkJoin({
-      item: this.dataService.getItem(this.itemId),
+      item: this.dataService.getItemById(this.itemId),
       recipes: this.dataService.getRecipesByItem(this.itemId)
     }).subscribe(({ item, recipes }) => {
-      this.itemInfo = item;
+      this.itemInfo = item ?? NmsDataService.UNKNOWN_ITEM;
       this.recipes = recipes;
 
-      if ((this.recipes?.length ?? 0) > 0) {
+      if ((this.recipes?.length ?? 0) > 0 && this.recipes != null) {
         this.selectedRecipe = this.recipes[0].recipeId;
         this.isIntermediate = true;
         this.pickedRecipe();

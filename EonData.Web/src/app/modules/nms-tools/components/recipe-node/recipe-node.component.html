@@ -1,7 +1,7 @@
 <div class="nms-recipe-node">
     <div class="nms-ingredient-info">
         <div>{{itemInfo?.itemName}}</div>
-        <p>Price: {{itemInfo?.itemCost}}</p>
+        <p>Price: {{itemInfo?.price}}</p>
         <label *ngIf="isIntermediate" for="item{{itemInfo?.itemId}}-recipes">Recipe:</label>
         <select *ngIf="isIntermediate" [disabled]="(recipes?.length ?? 0) <= 1" name="item{{itemInfo?.itemId}}-recipes" [(ngModel)]="selectedRecipe" (change)="pickedRecipe()">
             <option *ngFor="let rcp of recipes" [value]="rcp.recipeId">{{rcp.recipeName}}</option>

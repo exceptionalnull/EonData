@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs'
+import { Observable, map, of } from 'rxjs'
 
 import nmsItems from '../data/items.json'
 import nmsRecipes from '../data/recipes.json';
@@ -11,24 +11,45 @@ import { Recipe } from '../models/recipe.interface'
   providedIn: 'root'
 })
 export class NmsDataService {
-  items: Item[] = nmsItems;
-  recipes: Recipe[] = nmsRecipes;
+  private readonly items: Item[] = nmsItems;
+  private readonly recipes: Recipe[] = nmsRecipes;
+
+  static readonly UNKNOWN_ITEM: Item = {
+    itemId: 0,
+    icon: "unk",
+    itemName: "Unknown",
+    category: "Unknown",
+    rarity: "Unknown",
+    abbrev: "Unk",
+    isCraftable: false,
+    price: 0
+  };
+
+  static readonly PLACEHOLDER_ICON: string = "plac";
 
   constructor() { }
 
-  getItem(itemId: number): Observable<Item | undefined> {
-    return of(this.items.find(itm => itm.itemId == itemId));
+  getItems(): Observable<Item[]> {
+    return of(this.items);
   }
 
-  getRecipe(recipeId: number): Observable<Recipe | undefined> {
-    return of(this.recipes.find(rcp => rcp.recipeId == recipeId));
+  getItemById(itemId: number): Observable<Item | null> {
+    return this.getItems().pipe(map(itms => itms.find(itm => itm.itemId == itemId) ?? null));
   }
 
-  getRecipesByItem(itemId: number | undefined): Observable<Recipe[]> {
-    let result: Recipe[] = [];
-    if (itemId != undefined) {
-      result = this.recipes.filter(rcp => rcp.createsItemId == itemId);
-    }
-    return of(result);
+  getCraftableItems(): Observable<Item[] | null> {
+    return this.getItems().pipe(map(itms => itms.filter(itm => itm.isCraftable) ?? null));
+  }
+
+  getRecipes(): Observable<Recipe[]> {
+    return of(this.recipes);
+  }
+
+  getRecipeById(recipeId: number): Observable<Recipe | null> {
+    return this.getRecipes().pipe(map(rcps => rcps.find(rcp => rcp.recipeId == recipeId) ?? null));
+  }
+
+  getRecipesByItem(itemId: number | undefined): Observable<Recipe[] | null> {
+    return this.getRecipes().pipe(map(rcps => rcps.filter(rcp => rcp.createsItemId == itemId) ?? null));
   }
 }

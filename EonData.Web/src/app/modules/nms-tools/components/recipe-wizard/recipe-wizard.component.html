@@ -1,7 +1,7 @@
 <div>
     <label for="item-select">Choose an item:</label>
     <select name="item-select" [(ngModel)]="selectedItem" (change)="pickedItem()">
-        <option *ngFor="let itm of items" [value]="itm.itemId">{{itm.itemName}}</option>
+        <option *ngFor="let itm of (items$ | async)" [value]="itm.itemId">{{itm.itemName}}</option>
     </select>
     <div *ngFor="let itemId of selectedItems" class="nms-tree-container">
         <nms-recipe-node [itemId]="itemId"></nms-recipe-node>

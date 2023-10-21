@@ -5,6 +5,6 @@ export interface Item {
   category: string;
   rarity: string;
   price: number;
-  isCraftable?: boolean;
+  isCraftable: boolean | null;
   icon: string;
 }

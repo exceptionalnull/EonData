@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NmsDataService } from '../../services/nms-data.service';
 import { Item } from '../../models/item.interface';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -11,12 +12,12 @@ import { Item } from '../../models/item.interface';
 export class RecipeWizardComponent implements OnInit {
   selectedItem: number = 0;
   selectedItems: number[] = [];
-  items: Item[] = [];
+  items$?: Observable<Item[] | null>;
   
   constructor(private dataService: NmsDataService) { }
 
   ngOnInit() {
-    this.items = this.dataService.items;
+    this.items$ = this.dataService.getCraftableItems();
   }
 
   pickedItem() {
