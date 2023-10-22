@@ -7,4 +7,5 @@ export interface Recipe {
   sources: RecipeSource[];
   isRefined: boolean;
   duration: number;
+  createsQuantity: number;
 }

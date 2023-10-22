@@ -5,13 +5,14 @@ import nmsItems from '../data/items.json'
 import nmsRecipes from '../data/recipes.json';
 
 import { Item } from '../models/item.interface'
+import { ItemModel } from '../models/item.model';
 import { Recipe } from '../models/recipe.interface'
 
 @Injectable({
   providedIn: 'root'
 })
 export class NmsDataService {
-  private readonly items: Item[] = nmsItems;
+  private readonly items: ItemModel[] = nmsItems;
   private readonly recipes: Recipe[] = nmsRecipes;
 
   static readonly UNKNOWN_ITEM: Item = {
@@ -23,6 +24,16 @@ export class NmsDataService {
     abbrev: "Unk",
     isCraftable: false,
     price: 0
+  };
+
+  static readonly UNKNOWN_RECIPE: Recipe = {
+    recipeId: 0,
+    recipeName: "Unknown",
+    createsItemId: 0,
+    createsQuantity: 0,
+    sources: [{ itemId: 0, quantity: 0 }],
+    isRefined: false,
+    duration: 0
   };
 
   static readonly PLACEHOLDER_ICON: string = "plac";

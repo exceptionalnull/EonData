@@ -1,5 +1,5 @@
 <div class="nms-recipe-node">
-    <div class="nms-ingredient-info">
+    <div *ngIf="!isLoadingData()" class="nms-ingredient-info">
         <div>{{itemInfo?.itemName}}</div>
         <p>Price: {{itemInfo?.price}}</p>
         <label *ngIf="isIntermediate" for="item{{itemInfo?.itemId}}-recipes">Recipe:</label>

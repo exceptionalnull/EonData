@@ -27,12 +27,21 @@ export class RecipeNodeComponent implements OnInit {
       this.itemInfo = item ?? NmsDataService.UNKNOWN_ITEM;
       this.recipes = recipes;
 
-      if ((this.recipes?.length ?? 0) > 0 && this.recipes != null) {
+      if (this.recipes != null && this.recipes.length > 0) {
         this.selectedRecipe = this.recipes[0].recipeId;
         this.isIntermediate = true;
         this.pickedRecipe();
       }
     });
+  }
+
+  isLoadingData(): boolean {
+    if (this.itemInfo == undefined || this.itemInfo == null || this.recipes == undefined) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   getIngredientIds(): Observable<number[]> {

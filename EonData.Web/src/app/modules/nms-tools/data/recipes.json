@@ -1,19 +1,5 @@
 [
     {
-        "recipeId": 0,
-        "recipeName": "unknown",
-        "createsItemId": 0,
-        "createsQuantity": 1,
-        "sources": [
-            {
-                "itemId": 0,
-                "quantity": 1
-            }
-        ],
-        "isRefined": false,
-        "duration": 0
-    },
-    {
         "recipeId": 1,
         "recipeName": "Craft stasis chamber",
         "createsItemId": 1,
