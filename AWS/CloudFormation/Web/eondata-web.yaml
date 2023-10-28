@@ -271,8 +271,6 @@ Resources:
                     /etc/awslogs/awscli.conf:
                         mode: "000400"
                         content: !Sub |
-                            [plugins]
-                            cwlogs = cwlogs
                             [default]
                             region = ${AWS::Region}
                     /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json:
@@ -492,14 +490,6 @@ Resources:
                                     }]
                                 }
                             }
-                    /root/initLogs.sh:
-                        mode: "000700"
-                        content: !Sub |
-                            #!/bin/bash
-                            echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
-                            systemctl restart sshd
-                            systemctl enable awslogsd
-                            systemctl start awslogsd
                   commands:
                     ashdconfig:
                       command: 'echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config'
