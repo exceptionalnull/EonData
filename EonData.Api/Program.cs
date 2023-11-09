@@ -26,6 +26,8 @@ builder.Services
         builder.Configuration.Bind("AzureAdB2C", options);
     });
 
+builder.Logging.AddAWSProvider();
+
 // add AWS services
 builder.Services
     //.AddAWSService<IAmazonS3>()
@@ -53,6 +55,9 @@ builder.Services
         });
     })
     .AddControllers();
+
+// debug!
+Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
 // build and run
 var app = builder.Build();

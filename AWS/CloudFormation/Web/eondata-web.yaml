@@ -346,13 +346,6 @@ Resources:
                                                     "log_stream_name": "nginx error {instance_id}",
                                                     "timestamp_format": "%d/%b/%Y:%H:%M:%S %z",
                                                     "timezone": "UTC"
-                                                },
-                                                {
-                                                    "file_path": "/var/log/eondata-api.log",
-                                                    "log_group_name": "${EonDataWebLogGroup}",
-                                                    "log_stream_name": "webapi {instance_id}",
-                                                    "timestamp_format": "%b %d %H:%M:%S",
-                                                    "timezone": "UTC"
                                                 }
                                             ]
                                         }
@@ -361,9 +354,6 @@ Resources:
                                     "force_flush_interval": 15
                                 }
                             }
-                    /etc/rsyslog.d/30-eondata-api.conf:
-                        mode: "000400"
-                        content: :syslogtag, startswith, "eondata-api" /var/log/eondata-api.log
                     /etc/systemd/system/eondata-api.socket:
                         mode: "000400"
                         content: !Sub |
