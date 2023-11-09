@@ -5,15 +5,16 @@
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
   PolicySchemaVersion="0.3.0.0" 
   TenantId="eonid.onmicrosoft.com" 
-  PolicyId="B2C_1A_TrustFrameworkLocalization" 
-  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_TrustFrameworkLocalization">
+  PolicyId="B2C_1A_TRUSTFRAMEWORKLOCALIZATION" 
+  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_TRUSTFRAMEWORKLOCALIZATION">
 
   <BasePolicy>
     <TenantId>eonid.onmicrosoft.com</TenantId>
-    <PolicyId>B2C_1A_TrustFrameworkBase</PolicyId>
+    <PolicyId>B2C_1A_TRUSTFRAMEWORKBASE</PolicyId>
   </BasePolicy>
 
   <BuildingBlocks>
+
     <ContentDefinitions>
       <ContentDefinition Id="api.signuporsignin">
         <LocalizedResourcesReferences MergeBehavior="Prepend">

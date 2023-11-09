@@ -5,8 +5,8 @@
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06"
   PolicySchemaVersion="0.3.0.0"
   TenantId="eonid.onmicrosoft.com"
-  PolicyId="B2C_1A_TrustFrameworkBase"
-  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_TrustFrameworkBase">
+  PolicyId="B2C_1A_TRUSTFRAMEWORKBASE"
+  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_TRUSTFRAMEWORKBASE">
 
   <BuildingBlocks>
     <ClaimsSchema>
@@ -698,12 +698,10 @@
           <DisplayName>Local Account Signin</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
-            <!--<Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>-->
+            <Item Key="SignUpTarget">SignUpWithLogonEmailExchange</Item>
             <Item Key="setting.operatingMode">Email</Item>
             <Item Key="ContentDefinitionReferenceId">api.localaccountsignin</Item>
             <Item Key="IncludeClaimResolvingInClaimsHandling">true</Item>
-			<Item Key="setting.showSignupLink">false</Item>
-			<Item Key="setting.showCancelButton">true</Item>
           </Metadata>
           <IncludeInSso>false</IncludeInSso>
           <InputClaims>
