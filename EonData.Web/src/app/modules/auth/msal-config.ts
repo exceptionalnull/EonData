@@ -22,9 +22,8 @@ export class MsalConfig {
   ]);
 
   private static readonly policyNames: B2CPolicyNames = {
-    //"SignUpSignIn": "B2C_1A_SIGNUP_SIGNIN",
-    "SignUpSignIn": "B2C_1_FLOW_LOGIN",
-    "EditProfile": "B2C_1A_PROFILEEDIT"
+    "SignUpSignIn": "B2C_1A_SIGNUP_SIGNIN"
+    //"EditProfile": "B2C_1A_PROFILEEDIT"
   }
 
   // MSAL instance configuration
