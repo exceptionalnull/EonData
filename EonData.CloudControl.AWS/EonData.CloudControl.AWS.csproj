@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.102.9" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.5" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.103.32" />
+    <PackageReference Include="AWS.Logger.AspNetCore" Version="3.4.1" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.203.15" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.205.25" />
   </ItemGroup>
 
 </Project>

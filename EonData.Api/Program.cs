@@ -26,6 +26,8 @@ builder.Services
         builder.Configuration.Bind("AzureAdB2C", options);
     });
 
+builder.Logging.AddAWSProvider();
+
 // add AWS services
 builder.Services
     //.AddAWSService<IAmazonS3>()

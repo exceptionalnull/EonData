@@ -38,7 +38,7 @@ Parameters:
     LatestAmiId:
         Description: This is the latest Amazon Linux 2 AMI which will be used for the EC2 instances.
         Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-        Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+        Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64'
 Resources:
     EonDataWebAppS3Bucket:
         Type: AWS::S3::Bucket
@@ -249,15 +249,16 @@ Resources:
                 configSets:
                     Setup:
                       - init
-                      - inst
-                      - cfgs
+                      - nstl
+                      - fnlz
+                # initialize environment and start logging
                 init:
-                  # initialize environment and logging
                   packages:
                     yum:
-                      awslogs: []
+                      amazon-cloudwatch-agent: []
+                      rsyslog: []
+                      rsyslog-logrotate: []
                       jq: []
-                      htop: []
                   groups:
                     apisocket: {}
                   users:
@@ -269,45 +270,90 @@ Resources:
                     /etc/awslogs/awscli.conf:
                         mode: "000400"
                         content: !Sub |
-                            [plugins]
-                            cwlogs = cwlogs
                             [default]
                             region = ${AWS::Region}
-                    /etc/awslogs/awslogs.conf:
-                        mode: "000400"
+                    /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json:
+                        mode: "00400"
                         content: !Sub |
-                            [general]
-                            state_file = /var/lib/awslogs/agent-state
-                            use_gzip_http_content_encoding = true
-                            queue_size = 10
-
-                            [cfn-init]
-                            file = /var/log/cfn-init.log
-                            log_group_name = ${EonDataWebLogGroup}
-                            log_stream_name = api cfn-init {instance_id}
-                            datetime_format = %Y-%m-%d %H:%M:%S,%f
-                            time_zone = UTC
-                            multi_line_start_pattern = {datetime_format}
-
-                            [sshd]
-                            file = /var/log/secure
-                            log_group_name = ${EonDataWebLogGroup}
-                            log_stream_name = api sshd {instance_id}
-                            datetime_format = %b %d %H:%M:%S
-
-                            [nginx_access]
-                            file = /var/log/nginx/access.log
-                            log_group_name = ${EonDataWebLogGroup}
-                            log_stream_name = api nginx_access {instance_id}
-                            datetime_format = %d/%b/%Y:%H:%M:%S %z
-                            time_zone = UTC
-
-                            [nginx_error]
-                            file = /var/log/nginx/error.log
-                            log_group_name = ${EonDataWebLogGroup}
-                            log_stream_name = api nginx_error {instance_id}
-                            datetime_format = %Y/%m/%d %H:%M:%S
-                            time_zone = UTC
+                            {
+                                "agent": {
+                                    "metrics_collection_interval": 300
+                                },
+                                "metrics": {
+                                    "namespace": "API",
+                                    "append_dimensions": {
+                                        "AutoScalingGroupName": "${!aws:AutoScalingGroupName}",
+                                        "InstanceId": "${!aws:InstanceId}",
+                                        "InstanceType": "${!aws:InstanceType}"
+                                    },
+                                    "metrics_collected": {
+                                        "cpu": {
+                                            "measurement": ["usage_active", "usage_idle", "usage_user", "usage_system", "usage_iowait", "usage_irq"],
+                                            "metrics_collection_interval": 60
+                                        },
+                                        "mem": {
+                                            "measurement": ["used_percent"],
+                                            "metrics_collection_interval": 60
+                                        },
+                                        "net": {
+                                            "measurement": ["bytes_sent", "bytes_recv", "err_in", "err_out", "drop_in", "drop_out"]
+                                        },
+                                        "disk": {
+                                            "measurement": ["used_percent"],
+                                            "metrics_collection_interval": 900
+                                        },
+                                        "diskio": {
+                                            "measurement": ["read_time", "write_time", "io_time", "read_bytes", "write_bytes"]
+                                        },
+                                        "netstat": {
+                                            "measurement": ["tcp_established", "tcp_close", "tcp_syn_sent", "tcp_syn_recv", "udp_socket"]
+                                        },
+                                        "processes": {
+                                            "measurement": ["running", "blocked", "zombies", "total"],
+                                            "metrics_collection_interval": 600
+                                        }
+                                    }
+                                },
+                                "logs": {
+                                    "logs_collected": {
+                                        "files": {
+                                            "collect_list": [
+                                                {
+                                                    "file_path": "/var/log/cfn-init.log",
+                                                    "log_group_name": "${EonDataWebLogGroup}",
+                                                    "log_stream_name": "cfn-init {instance_id}",
+                                                    "timestamp_format": "%Y-%m-%d %H:%M:%S,%f",
+                                                    "multi_line_start_pattern": "{timestamp_format}",
+                                                    "timezone": "UTC"
+                                                },
+                                                {
+                                                    "file_path": "/var/log/secure",
+                                                    "log_group_name": "${EonDataWebLogGroup}",
+                                                    "log_stream_name": "secure {instance_id}",
+                                                    "timestamp_format": "%b %d %H:%M:%S",
+                                                    "timezone": "UTC"
+                                                },
+                                                {
+                                                    "file_path": "/var/log/nginx/access.log",
+                                                    "log_group_name": "${EonDataWebLogGroup}",
+                                                    "log_stream_name": "nginx access {instance_id}",
+                                                    "timestamp_format": "%d/%b/%Y:%H:%M:%S %z",
+                                                    "timezone": "UTC"
+                                                },
+                                                {
+                                                    "file_path": "/var/log/nginx/error.log",
+                                                    "log_group_name": "${EonDataWebLogGroup}",
+                                                    "log_stream_name": "nginx error {instance_id}",
+                                                    "timestamp_format": "%d/%b/%Y:%H:%M:%S %z",
+                                                    "timezone": "UTC"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "log_stream_name": "logs {instance_id}",
+                                    "force_flush_interval": 15
+                                }
+                            }
                     /etc/systemd/system/eondata-api.socket:
                         mode: "000400"
                         content: !Sub |
@@ -356,6 +402,9 @@ Resources:
                             Type=oneshot
                             SyslogIdentifier=eondata-api-update
                             ExecStart=/bin/bash /root/apiUpdate.sh
+
+                            [Install]
+                            WantedBy=multi-user.target
                     /etc/systemd/system/eondata-api-update.timer:
                         mode: "000400"
                         content: !Sub |
@@ -363,29 +412,12 @@ Resources:
                             Description=Timer for EonData API automatic update
 
                             [Timer]
-                            OnBootSec=1min
-                            OnUnitActiveSec=1min
+                            OnStartupSec=1min
+                            OnUnitActiveSec=5min
                             Unit=eondata-api-update.service
 
                             [Install]
                             WantedBy=timers.target
-                    /root/finalServices.sh:
-                        mode: "000700"
-                        content: !Sub |
-                            #!/bin/bash
-                            systemctl daemon-reload
-
-                            # enable the services and sockets used by the api and the update script
-                            systemctl enable eondata-api.service
-                            systemctl enable eondata-api-update.service
-                            systemctl enable eondata-api.socket
-
-                            # run the update service to deploy the web api
-                            systemctl start eondata-api-update.service
-
-                            # start the automatic update service timer
-                            systemctl enable eondata-api-update.timer
-                            systemctl start eondata-api-update.timer
                     /root/apiUpdate.sh:
                         mode: "000700"
                         content: !Sub |
@@ -393,39 +425,39 @@ Resources:
                             TARGET_DIR="/home/eondata/webapi"
                             SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ $TARGET_DIR --delete --exact-timestamps"
 
-                            show_message() {
-                                echo "$(date +'%Y-%m-%d %H:%M:%S') $@"
-                            }
-
                             SYNC_NEEDED=$($SYNC_COMMAND --dryrun)
 
                             if [ -n "$SYNC_NEEDED" ]
                             then
                                 if [ -d "$TARGET_DIR" ]
                                 then
-                                    show_message "updating web api..."
+                                    echo "updating web api..."
+
+                                    # disable systemd service and socket
                                     systemctl stop eondata-api.socket
                                     systemctl stop eondata-api.service
                                 else
-                                    show_message "deploying web api..."
+                                    echo "deploying web api..."
                                 fi
 
+                                # sync files
                                 $SYNC_COMMAND
 
+                                # correct file ownership permissions
                                 chown -R eondata:eondata $TARGET_DIR
 
+                                # re-enable the socket
                                 systemctl start eondata-api.socket
 
-                                show_message "done."
-                            else
-                                show_message "no changes."
+                                echo "done."
                             fi
                     /root/r53update.sh:
                         mode: "000500"
                         content: !Sub |
                             #!/bin/bash
-                            PUB_IP=$( curl http://169.254.169.254/latest/meta-data/public-ipv4 )
-                            JQ_SET_IP=".ChangeBatch.Changes[0].ResourceRecordSet.ResourceRecords[0].Value=\"$PUB_IP\""
+                            TOKEN=$(curl -s --request PUT "http://169.254.169.254/latest/api/token" --header "X-aws-ec2-metadata-token-ttl-seconds: 19")
+                            PUB_IP4=$( curl -s http://169.254.169.254/latest/meta-data/public-ipv4 --header "X-aws-ec2-metadata-token: $TOKEN" )
+                            JQ_SET_IP=".ChangeBatch.Changes[0].ResourceRecordSet.ResourceRecords[0].Value=\"$PUB_IP4\""
                             R53_JSON=$( cat /root/r53set.json | jq -cr $JQ_SET_IP )
                             aws route53 change-resource-record-sets --cli-input-json "$R53_JSON"
                             R53_HOSTNAME=$( cat /root/r53set.json | jq -r .ChangeBatch.Changes[0].ResourceRecordSet.Name )
@@ -449,36 +481,59 @@ Resources:
                                     }]
                                 }
                             }
-                    /root/initLogs.sh:
+                    /root/finishInit.sh:
                         mode: "000700"
                         content: !Sub |
                             #!/bin/bash
+                            systemctl daemon-reload
+
+                            # increase sshd logging level
                             echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config
                             systemctl restart sshd
-                            systemctl enable awslogsd
-                            systemctl start awslogsd
+
+                            # start logging services
+                            systemctl enable rsyslog --now
+                            systemctl enable amazon-cloudwatch-agent --now
+
+                            # create app user home directory
+                            mkdir -m 0700 /home/eondata
+                            chown eondata:eondata /home/eondata
                   commands:
-                    awslogsinit:
-                        command: /root/initLogs.sh
+                    awsinitfin:
+                        command: '/root/finishInit.sh'
                     awsrt53set:
                         command: '/root/r53update.sh'
-                    eondatacreatehome:
-                        command: mkdir -m 0700 /home/eondata
-                    eondatasetowner:
-                        command: chown eondata:eondata /home/eondata
                     msrepoadd:
                         command: rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-                inst:
-                  # install and configure services
+                # install core server packages
+                nstl:
                   packages:
                     yum:
+                      nano: []
+                      nginx-core: []
                       aspnetcore-runtime-7.0: []
-                  commands:
-                    instwebsvr:
-                      command: amazon-linux-extras install -y nginx1
-                cfgs:
-                  # finalize configurations
+                # finalize build and start services
+                fnlz:
                   files:
+                    /etc/systemd/system/nginx.service:
+                        mode: "000400"
+                        content: !Sub |
+                            [Unit]
+                            Description=The NGINX HTTP and reverse proxy server
+                            After=syslog.target network-online.target remote-fs.target nss-lookup.target
+                            Wants=network-online.target
+
+                            [Service]
+                            Type=forking
+                            PIDFile=/run/nginx.pid
+                            ExecStartPre=/usr/sbin/nginx -t
+                            ExecStart=/usr/sbin/nginx
+                            ExecReload=/usr/sbin/nginx -s reload
+                            ExecStop=/bin/kill -s QUIT $MAINPID
+                            PrivateTmp=true
+
+                            [Install]
+                            WantedBy=multi-user.target
                     /etc/nginx/conf.d/eondata-api.conf:
                         mode: "000640"
                         content: !Sub |
@@ -524,15 +579,31 @@ Resources:
                                 <p>Redirecting to <a href="https://www.eondata.net">www.eondata.net</a>...</p>
                             </body>
                             </html>
+                    /root/finalizeBuild.sh:
+                        mode: "000700"
+                        content: !Sub |
+                            #!/bin/bash
+                            systemctl daemon-reload
+
+                            # allow nginx access to application socket
+                            usermod --append --groups apisocket nginx
+
+                            # start the web server
+                            systemctl enable nginx.service --now
+
+                            systemctl enable eondata-api.service
+                            systemctl enable eondata-api.socket
+                            
+                            # enable and run the update service to deploy the web api
+                            systemctl enable eondata-api-update.service --now
+
+                            # start the automatic update service timer
+                            systemctl enable eondata-api-update.timer --now
                   commands:
-                    addnginxtogrp:
-                      command: usermod --append --groups apisocket nginx
-                    # start aspnet core web api
-                    sysdfinalize:
-                      command: /root/finalServices.sh
-                    # restart web server to finish the startup process
-                    websrvrestart:
-                      command: systemctl restart nginx
+                    cleanr53scrpts:
+                      command: 'rm -f /root/r53*.*'
+                    finalizesvc:
+                      command: /root/finalizeBuild.sh
     EonDataApiHostEC2AutoScale:
         Type: AWS::AutoScaling::AutoScalingGroup
         Properties:
