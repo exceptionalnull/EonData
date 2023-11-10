@@ -56,9 +56,6 @@ builder.Services
     })
     .AddControllers();
 
-// debug!
-Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
-
 // build and run
 var app = builder.Build();
 app.UseCors();
