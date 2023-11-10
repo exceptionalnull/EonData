@@ -5,12 +5,12 @@
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06"
   PolicySchemaVersion="0.3.0.0"
   TenantId="eonid.onmicrosoft.com"
-  PolicyId="B2C_1A_ProfileEdit"
-  PublicPolicyUri="http://eonid.onmicrosoft.com/B2C_1A_ProfileEdit">
+  PolicyId="B2C_1A_PROFILEEDIT"
+  PublicPolicyUri="http://yourtenant.onmicrosoft.com/B2C_1A_PROFILEEDIT">
 
   <BasePolicy>
     <TenantId>eonid.onmicrosoft.com</TenantId>
-    <PolicyId>B2C_1A_TrustFrameworkExtensions</PolicyId>
+    <PolicyId>B2C_1A_TRUSTFRAMEWORKEXTENSIONS</PolicyId>
   </BasePolicy>
 
   <RelyingParty>
