@@ -1,5 +1,4 @@
 ﻿using EonData.ContactForm;
-using EonData.ContactForm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +35,7 @@ namespace EonData.Api.Controllers
 
         [HttpGet]
         [Route("")]
+        [Authorize]
         public async Task<IActionResult> ListMessages(CancellationToken cancellationToken)
         {
             return Ok("testing 1 2 3");

@@ -1,6 +1,4 @@
-﻿using EonData.ContactForm.Models;
-
-namespace EonData.ContactForm
+﻿namespace EonData.ContactForm
 {
     public interface IContactFormService
     {

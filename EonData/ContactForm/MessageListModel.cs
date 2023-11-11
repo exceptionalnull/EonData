@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EonData.ContactForm.Models
+namespace EonData.ContactForm
 {
     internal class MessageListModel
     {

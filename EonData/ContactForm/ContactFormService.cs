@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
-using EonData.ContactForm.Models;
-
 namespace EonData.ContactForm
 {
     public class ContactFormService : IContactFormService
