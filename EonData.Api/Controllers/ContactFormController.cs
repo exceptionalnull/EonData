@@ -2,7 +2,7 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
-using EonData.DomainEntities.ContactForm.Models;
+using EonData.ContactForm.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +46,8 @@ namespace EonData.Api.Controllers
             return Ok("testing 1 2 3");
         }
 
+        //public async Task<IActionResult> GetMessage()
+
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> SendMessage(ContactMessageModel message, CancellationToken cancellationToken)
@@ -75,6 +77,15 @@ namespace EonData.Api.Controllers
 
             return Ok();
         }
+
+        //private async Task ListMessages(CancellationToken cancellationToken)
+        //{
+        //    QueryRequest request = new()
+        //    {
+        //        TableName = CONTACT_MESSAGE_TABLE,
+        //        ProjectionExpression = ""
+        //    };
+        //}
 
         private async Task<int> GetTotalContactMessages(bool unreadOnly, CancellationToken cancellationToken)
         {
