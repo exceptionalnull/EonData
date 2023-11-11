@@ -8,6 +8,6 @@ namespace EonData.ContactForm.Models
 {
     internal class ContactMessageListViewModel
     {
-        public ICollection<ContactMessageModel>
+        //public ICollection<ContactMessageModel>
     }
 }

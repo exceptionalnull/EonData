@@ -1,9 +1,5 @@
-﻿using Amazon;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.Model;
-
+﻿using EonData.ContactForm;
 using EonData.ContactForm.Models;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +10,11 @@ namespace EonData.Api.Controllers
     [ApiController]
     public class ContactFormController : ControllerBase
     {
-        private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactForm";
-        private IAmazonDynamoDB _dynamoDB;
+        private IContactFormService contactForm;
 
-        public ContactFormController(IAmazonDynamoDB dynamoDB)
+        public ContactFormController(IContactFormService contactFormService)
         {
-            _dynamoDB = dynamoDB;
+            contactForm = contactFormService;
         }
 
         [HttpGet]
@@ -30,7 +25,7 @@ namespace EonData.Api.Controllers
             int messageCount = -1;
             try
             {
-                messageCount = await GetTotalContactMessages(unread, cancellationToken);
+                messageCount = await contactForm.GetTotalContactMessages(unread, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -45,8 +40,6 @@ namespace EonData.Api.Controllers
         {
             return Ok("testing 1 2 3");
         }
-
-        //public async Task<IActionResult> GetMessage()
 
         [HttpPost]
         [Route("")]
@@ -68,7 +61,7 @@ namespace EonData.Api.Controllers
 
             try
             {
-                await SaveContactMessageAsync(message, cancellationToken);
+                await contactForm.SaveContactMessageAsync(message, cancellationToken);
             }
             catch(Exception ex)
             {
@@ -76,53 +69,6 @@ namespace EonData.Api.Controllers
             }
 
             return Ok();
-        }
-
-        //private async Task ListMessages(CancellationToken cancellationToken)
-        //{
-        //    QueryRequest request = new()
-        //    {
-        //        TableName = CONTACT_MESSAGE_TABLE,
-        //        ProjectionExpression = ""
-        //    };
-        //}
-
-        private async Task<int> GetTotalContactMessages(bool unreadOnly, CancellationToken cancellationToken)
-        {
-            ScanRequest totalCountRequest = new()
-            {
-                TableName = CONTACT_MESSAGE_TABLE,
-                Select = Select.COUNT
-            };
-
-            if (unreadOnly)
-            {
-                totalCountRequest.FilterExpression = "#read = :read";
-                totalCountRequest.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
-                totalCountRequest.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = false } } };
-            }
-
-            var result = await _dynamoDB.ScanAsync(totalCountRequest, cancellationToken);
-            return result.Count;
-        }
-
-        private async Task SaveContactMessageAsync(ContactMessageModel message, CancellationToken cancellationToken)
-        {
-            await _dynamoDB.PutItemAsync(new PutItemRequest()
-            {
-                TableName = CONTACT_MESSAGE_TABLE,
-                Item = new Dictionary<string, AttributeValue>()
-                    {
-                        { "messageId", new AttributeValue(Guid.NewGuid().ToString()) },
-                        { "messageTimestamp", new AttributeValue(message.MessageTimestamp.ToString("s")) },
-                        { "contactAddress", new AttributeValue(message.ContactAddress) },
-                        { "contactName", new AttributeValue(message.ContactName) },
-                        { "formSource", new AttributeValue(message.FormSource) },
-                        { "requestSource", new AttributeValue(message.RequestSource) },
-                        { "isRead", new AttributeValue() { BOOL = false } },
-                        { "messageContent", new AttributeValue(message.MessageContent) }
-                    }
-            });
         }
     }
 }
