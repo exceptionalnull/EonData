@@ -15,10 +15,8 @@ namespace EonData.ContactForm
         private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactForm";
 
         private readonly IAmazonDynamoDB db;
-        public ContactFormService(IAmazonDynamoDB dynamoDb)
-        {
-            db = dynamoDb;
-        }
+
+        public ContactFormService(IAmazonDynamoDB dynamoDb) => db = dynamoDb;
 
         public async Task<int> GetTotalContactMessages(bool unreadOnly, CancellationToken cancellationToken)
         {
@@ -39,7 +37,7 @@ namespace EonData.ContactForm
             return result.Count;
         }
 
-        public async Task SaveContactMessageAsync(ContactMessageModel message, CancellationToken cancellationToken)
+        public async Task SaveContactMessageAsync(SendMessageModel message, string requestSource, CancellationToken cancellationToken)
         {
             await db.PutItemAsync(new PutItemRequest()
             {
@@ -47,24 +45,24 @@ namespace EonData.ContactForm
                 Item = new Dictionary<string, AttributeValue>()
                     {
                         { "messageId", new AttributeValue(Guid.NewGuid().ToString()) },
-                        { "messageTimestamp", new AttributeValue(message.MessageTimestamp.ToString("s")) },
+                        { "messageTimestamp", new AttributeValue(DateTime.UtcNow.ToString("s")) },
                         { "contactAddress", new AttributeValue(message.ContactAddress) },
                         { "contactName", new AttributeValue(message.ContactName) },
                         { "formSource", new AttributeValue(message.FormSource) },
-                        { "requestSource", new AttributeValue(message.RequestSource) },
+                        { "requestSource", new AttributeValue(requestSource) },
                         { "isRead", new AttributeValue() { BOOL = false } },
                         { "messageContent", new AttributeValue(message.MessageContent) }
                     }
             });
         }
 
-        //private async Task ListMessages(CancellationToken cancellationToken)
-        //{
-        //    QueryRequest request = new()
-        //    {
-        //        TableName = CONTACT_MESSAGE_TABLE,
-        //        ProjectionExpression = ""
-        //    };
-        //}
+        private async Task ListMessages(CancellationToken cancellationToken)
+        {
+            QueryRequest request = new()
+            {
+                TableName = CONTACT_MESSAGE_TABLE,
+                ProjectionExpression = "messageId, messageTimestamp, "
+            };
+        }
     }
 }

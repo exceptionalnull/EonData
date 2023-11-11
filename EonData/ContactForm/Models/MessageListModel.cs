@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace EonData.ContactForm.Models
 {
-    public class ContactMessageModel
+    internal class MessageListModel
     {
         public Guid MessageId { get; set; }
-        public string? ContactName { get; set; }
-        public string? ContactAddress { get; set; }
-        public string? MessageContent { get; set; }
-        public string? FormSource { get; set; }
-        public string? RequestSource { get; set; }
         public DateTime MessageTimestamp { get; set; }
+        public string ContactName { get; set; }
+        public string ContactAddress { get; set; }
         public bool isRead { get; set; }
     }
 }

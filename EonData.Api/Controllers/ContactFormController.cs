@@ -43,25 +43,17 @@ namespace EonData.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> SendMessage(ContactMessageModel message, CancellationToken cancellationToken)
+        public async Task<IActionResult> SendMessage(SendMessageModel message, CancellationToken cancellationToken)
         {
-            if (message == null || (message.ContactName?.Length ?? 0) == 0 || (message.ContactAddress?.Length ?? 0) == 0 || (message.MessageContent?.Length ?? 0) == 0 || (message.FormSource?.Length ?? 0) == 0)
+            if (message == null)
             {
-                return BadRequest("Message data is missing.");
+                return BadRequest();
             }
-
-            if (message.ContactName!.Length > 250 || message.ContactAddress!.Length > 250 || message.MessageContent!.Length > 7500 || message.FormSource!.Length > 10)
-            {
-                return BadRequest("Message data exceeds limits.");
-            }
-
-            // store values needed for a new message record
-            message.RequestSource = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-            message.MessageTimestamp = DateTime.UtcNow;
 
             try
             {
-                await contactForm.SaveContactMessageAsync(message, cancellationToken);
+                string rSource = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+                await contactForm.SaveContactMessageAsync(message, rSource, cancellationToken);
             }
             catch(Exception ex)
             {
