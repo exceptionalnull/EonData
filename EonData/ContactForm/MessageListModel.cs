@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EonData.ContactForm
 {
-    internal class MessageListModel
+    public class MessageListModel
     {
         public Guid MessageId { get; set; }
         public DateTime MessageTimestamp { get; set; }

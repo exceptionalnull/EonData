@@ -766,10 +766,12 @@ Resources:
                     - Sid: EonDataWebDynamoDbContactForm
                       Effect: Allow
                       Action:
+                        - dynamodb:GetItem
                         - dynamodb:PutItem
+                        - dynamodb:UpdateItem
                         - dynamodb:Scan
                       Resource:
-                        - !Sub arn:aws:dynamodb:*:*:table/EonDataWebContactForm
+                        - !Sub arn:aws:dynamodb:*:*:table/EonDataWebContactMessages
     EonDataWebIAMPolicyRt53:
         Type: AWS::IAM::Policy
         Properties:
@@ -794,19 +796,15 @@ Resources:
     EonDataWebDynDbContactForm:
         Type: AWS::DynamoDB::Table
         Properties:
-            TableName: EonDataWebContactForm
+            TableName: EonDataWebContactMessages
             BillingMode: PAY_PER_REQUEST
             TableClass: STANDARD
             AttributeDefinitions:
                 - AttributeName: messageId
                   AttributeType: S
-                - AttributeName: messageTimestamp
-                  AttributeType: S
             KeySchema:
                 - AttributeName: messageId
                   KeyType: HASH
-                - AttributeName: messageTimestamp
-                  KeyType: RANGE
     EonDataOpenAIAPIKeySecret:
         Type: AWS::SecretsManager::Secret
         Properties:

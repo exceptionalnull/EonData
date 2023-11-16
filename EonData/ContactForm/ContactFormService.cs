@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
@@ -10,34 +11,55 @@ namespace EonData.ContactForm
 {
     public class ContactFormService : IContactFormService
     {
-        private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactForm";
+        private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
 
         private readonly IAmazonDynamoDB db;
 
         public ContactFormService(IAmazonDynamoDB dynamoDb) => db = dynamoDb;
 
-        public async Task<int> GetTotalContactMessages(bool unreadOnly, CancellationToken cancellationToken)
+        public async Task<ContactMessage?> GetContactMessageAsync(Guid messageId, CancellationToken cancellationToken)
         {
-            ScanRequest totalCountRequest = new()
+            GetItemRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
-                Select = Select.COUNT
+                Key = { { "messageId", new AttributeValue(messageId.ToString()) } },
+                ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, formSource, requestSource, isRead, messageContent"
             };
 
-            if (unreadOnly)
+            var result = await db.GetItemAsync(request, cancellationToken);
+            if (result.IsItemSet)
             {
-                totalCountRequest.FilterExpression = "#read = :read";
-                totalCountRequest.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
-                totalCountRequest.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = false } } };
+                return new ContactMessage()
+                {
+                    MessageId = new Guid(result.Item["messageId"].S),
+                    MessageTimestamp = DateTime.Parse(result.Item["messageTimestamp"].S),
+                    ContactAddress = result.Item["contactAddress"].S,
+                    ContactName = result.Item["contactName"].S,
+                    FormSource = result.Item["formSource"].S,
+                    RequestSource = result.Item["requestSource"].S,
+                    isRead = result.Item["isRead"].BOOL,
+                    MessageContent = result.Item["messageContent"].S
+                };
             }
+            return null;
+        }
 
-            var result = await db.ScanAsync(totalCountRequest, cancellationToken);
-            return result.Count;
+        public async Task MarkAsReadAsync(Guid messageId, CancellationToken cancellationToken)
+        {
+            UpdateItemRequest request = new()
+            {
+                TableName = CONTACT_MESSAGE_TABLE,
+                Key = { { "messageId", new AttributeValue(messageId.ToString()) } },
+                ExpressionAttributeNames = { { "#R", "isRead" } },
+                UpdateExpression = "SET #R = :is_r",
+                ExpressionAttributeValues = { { ":is_r", new AttributeValue() { BOOL = true } } }
+            };
+            await db.UpdateItemAsync(request, cancellationToken);
         }
 
         public async Task SaveContactMessageAsync(SendMessageModel message, string requestSource, CancellationToken cancellationToken)
         {
-            await db.PutItemAsync(new PutItemRequest()
+            PutItemRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
                 Item = new Dictionary<string, AttributeValue>()
@@ -51,16 +73,47 @@ namespace EonData.ContactForm
                         { "isRead", new AttributeValue() { BOOL = false } },
                         { "messageContent", new AttributeValue(message.MessageContent) }
                     }
+            };
+            await db.PutItemAsync(request, cancellationToken);
+        }
+
+        public async Task<int> GetTotalContactMessagesAsync(bool unreadOnly, CancellationToken cancellationToken)
+        {
+            ScanRequest totalRequest = getScan(unreadOnly);
+            totalRequest.Select = Select.COUNT;
+
+            var result = await db.ScanAsync(totalRequest, cancellationToken);
+            return result.Count;
+        }
+
+        public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool unreadOnly, CancellationToken cancellationToken)
+        {
+            ScanRequest request = getScan(unreadOnly);
+            request.Select = Select.SPECIFIC_ATTRIBUTES;
+            request.AttributesToGet = new() { "messageId", "messageTimestamp", "contactAddress", "contactName", "isRead" };
+
+            var response = await db.ScanAsync(request, cancellationToken);
+
+            return response.Items.Select<Dictionary<string, AttributeValue>, MessageListModel>(x => new MessageListModel()
+            {
+                MessageId = new Guid(x["messageId"].S),
+                MessageTimestamp = DateTime.Parse(x["messageTimestamp"].S),
+                ContactAddress = x["contactAddress"].S,
+                ContactName = x["contactName"].S,
+                isRead = x["isRead"].BOOL
             });
         }
 
-        private async Task ListMessages(CancellationToken cancellationToken)
+        private ScanRequest getScan(bool unreadOnly)
         {
-            QueryRequest request = new()
+            ScanRequest request = new(CONTACT_MESSAGE_TABLE);
+            if (unreadOnly)
             {
-                TableName = CONTACT_MESSAGE_TABLE,
-                ProjectionExpression = "messageId, messageTimestamp, "
-            };
+                request.FilterExpression = "#read = :read";
+                request.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
+                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = false } } };
+            }
+            return request;
         }
     }
 }

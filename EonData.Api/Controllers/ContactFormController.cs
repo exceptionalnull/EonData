@@ -1,6 +1,7 @@
 ﻿using EonData.ContactForm;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EonData.Api.Controllers
@@ -24,21 +25,31 @@ namespace EonData.Api.Controllers
             int messageCount = -1;
             try
             {
-                messageCount = await contactForm.GetTotalContactMessages(unread, cancellationToken);
+                messageCount = await contactForm.GetTotalContactMessagesAsync(unread, cancellationToken);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
+
             return Ok(messageCount);
         }
 
         [HttpGet]
         [Route("")]
         [Authorize]
-        public async Task<IActionResult> ListMessages(CancellationToken cancellationToken)
+        public async Task<IActionResult> ListMessages(bool? unread, CancellationToken cancellationToken)
         {
-            return Ok("testing 1 2 3");
+            IEnumerable<MessageListModel> messages;
+            try
+            {
+                messages = await contactForm.ListMessagesAsync(unread ?? false, cancellationToken);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            return Ok(messages);
         }
 
         [HttpPost]
@@ -47,7 +58,7 @@ namespace EonData.Api.Controllers
         {
             if (message == null)
             {
-                return BadRequest();
+                return BadRequest("no message.");
             }
 
             try
@@ -56,6 +67,42 @@ namespace EonData.Api.Controllers
                 await contactForm.SaveContactMessageAsync(message, rSource, cancellationToken);
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("message")]
+        [Authorize]
+        public async Task<IActionResult> GetMessage(Guid id, CancellationToken cancellationToken)
+        {
+            ContactMessage? message;
+            try
+            {
+                message = await contactForm.GetContactMessageAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
+            return Ok(message);
+        }
+
+        [HttpPut]
+        [Route("setread")]
+        [Authorize]
+        public async Task<IActionResult> MarkAsRead(Guid id, CancellationToken cancellationToken)
+        {
+            
+            try
+            {
+                await contactForm.MarkAsReadAsync(id, cancellationToken);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
