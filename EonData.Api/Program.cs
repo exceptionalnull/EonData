@@ -66,9 +66,10 @@ app.UseCors();
 // forward 
 app.UseForwardedHeaders();
 
+string apiver = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("X-EonDataApi-Version", System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown");
+    context.Response.Headers.Add("X-EonDataApi-Version", apiver);
     await next.Invoke();
 });
 
