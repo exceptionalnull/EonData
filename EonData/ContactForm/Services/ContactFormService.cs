@@ -14,6 +14,7 @@ namespace EonData.ContactForm.Services
     public class ContactFormService : IContactFormService
     {
         private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
+        private const int MESSAGES_PER_PAGE = 2;
 
         private readonly IAmazonDynamoDB db;
 
@@ -81,39 +82,62 @@ namespace EonData.ContactForm.Services
 
         public async Task<int> GetTotalContactMessagesAsync(bool? unread, CancellationToken cancellationToken)
         {
-            ScanRequest totalRequest = getScanRequest(unread);
-            totalRequest.Select = Select.COUNT;
-
-            var result = await db.ScanAsync(totalRequest, cancellationToken);
-            return result.Count;
-        }
-        public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool? unread, CancellationToken cancellationToken)
-        {
-            ScanRequest request = getScanRequest(unread);
-            request.ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, isRead";
-
-            var response = await db.ScanAsync(request, cancellationToken);
-
-            return response.Items.Select<Dictionary<string, AttributeValue>, MessageListModel>(x => new MessageListModel()
+            ScanRequest request = new(CONTACT_MESSAGE_TABLE)
             {
-                MessageId = new Guid(x["messageId"].S),
-                MessageTimestamp = DateTime.Parse(x["messageTimestamp"].S),
-                ContactAddress = x["contactAddress"].S,
-                ContactName = x["contactName"].S,
-                isRead = x["isRead"].BOOL
-            });
-        }
-
-        private ScanRequest getScanRequest(bool? unread)
-        {
-            ScanRequest request = new(CONTACT_MESSAGE_TABLE);
+                TableName = CONTACT_MESSAGE_TABLE,
+                Select = Select.COUNT
+            };
             if (unread != null)
             {
                 request.FilterExpression = "#read = :read";
                 request.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
                 request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = !(bool)unread } } };
             }
-            return request;
+            var result = await db.ScanAsync(request, cancellationToken);
+            return result.Count;
+        }
+
+        /// <summary>
+        /// Gets a page of messages for use in a display list.
+        /// </summary>
+        /// <param name="unread">When null this will retrieve all messages. Specify true or false to retreive messages based on the unread status.</param>
+        /// <param name="startKey">Specify a value here to continue pagination of results.</param>
+        /// <param name="cancellationToken"><inheritdoc/></param>
+        /// <returns>An object with the result messages and the start key value to use for the next page.</returns>
+        public async Task<MessageListResponse> ListMessagesAsync(bool? unread, Guid? startKey, CancellationToken cancellationToken)
+        {
+            ScanRequest request = new()
+            {
+                TableName = CONTACT_MESSAGE_TABLE,
+                Limit = MESSAGES_PER_PAGE,
+                ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, isRead"
+            };
+
+            if (unread != null)
+            {
+                request.FilterExpression = "#read = :read";
+                request.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
+                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = !(bool)unread } } };
+            }
+
+            if (startKey != null)
+            {
+                request.ExclusiveStartKey = new Dictionary<string, AttributeValue>() { { "messageId", new AttributeValue(startKey.ToString()) } };
+            }
+            var response = await db.ScanAsync(request, cancellationToken);
+
+            var messages = response.Items.Select<Dictionary<string, AttributeValue>, MessageListModel>(itm => new MessageListModel()
+            {
+                MessageId = new Guid(itm["messageId"].S),
+                MessageTimestamp = DateTime.Parse(itm["messageTimestamp"].S),
+                ContactAddress = itm["contactAddress"].S,
+                ContactName = itm["contactName"].S,
+                isRead = itm["isRead"].BOOL
+            });
+
+            string? lastEvaluatedKey = (response.LastEvaluatedKey.ContainsKey("messageId")) ? response.LastEvaluatedKey["messageId"].S : null;
+
+            return new MessageListResponse(messages, lastEvaluatedKey);
         }
     }
 }
