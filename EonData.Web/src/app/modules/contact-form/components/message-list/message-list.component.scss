@@ -17,6 +17,18 @@ $messagelist-rowcolor: darken($secondary-accent-color, 13%);
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 300px;
+  width: 100%;
   height: auto;
+  order: 2;
+}
+
+.container {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+table {
+  order: 1;
 }
