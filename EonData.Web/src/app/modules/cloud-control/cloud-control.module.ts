@@ -10,6 +10,6 @@ import { CloudControlRoutingModule } from './cloud-control-routing.module';
     CommonModule,
     CloudControlRoutingModule
   ],
-  exports:[CloudControlRoutingModule]
+  exports:[]
 })
 export class CloudControlModule { }

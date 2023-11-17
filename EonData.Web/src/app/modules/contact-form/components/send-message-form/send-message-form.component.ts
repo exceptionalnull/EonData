@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ContactMessageModel } from '../../models/ContactMessageModel';
 import { ContactService } from '../../contact-form.service';
+import { SendMessageModel } from '../../models/SendMessageModel';
 
 @Component({
   selector: 'app-contact-send-message',
@@ -9,7 +9,7 @@ import { ContactService } from '../../contact-form.service';
 })
 export class SendMessageFormComponent implements OnInit {
   @Input() source: string = '';
-  public model!: ContactMessageModel;
+  public model!: SendMessageModel;
 
   constructor(private contactService: ContactService) { }
 
@@ -18,14 +18,13 @@ export class SendMessageFormComponent implements OnInit {
   }
 
   resetForm() {
-    this.model = new ContactMessageModel();
-    this.model.formSource = this.source;
+    this.model = new SendMessageModel(this.source);
   }
 
   sendMessage() {
     this.contactService.submitContactForm(this.model).subscribe(
       response => {
-        console.log("contact message sent successfully");
+        console.log(response);
         this.resetForm();
       },
       error => {
