@@ -43,7 +43,7 @@ export class MsalConfig {
       allowNativeBroker: false,
       loggerOptions: {
         loggerCallback: MsalConfig.authLogMessage,
-        logLevel: (environment.production) ? LogLevel.Error : LogLevel.Verbose,
+        logLevel: (environment.production) ? LogLevel.Error : LogLevel.Warning,
         piiLoggingEnabled: false
       }
     }

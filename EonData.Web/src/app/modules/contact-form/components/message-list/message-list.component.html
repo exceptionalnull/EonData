@@ -1,1 +1,22 @@
-<p>message-list works!</p>
+<table *ngIf="model">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let message of model" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
+            <td>{{message.contactName}}</td>
+            <td>{{message.contactAddress}}</td>
+            <td>{{message.messageTimestamp | date:'short'}}</td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="readMessage" class="message-box">
+    <h2>{{readMessage.contactName}}</h2>
+    <p>{{readMessage.contactAddress}}</p>
+    <p>{{readMessage.messageTimestamp | date:'short'}}</p>
+    <p>{{readMessage.messageContent}}</p>
+</div>
