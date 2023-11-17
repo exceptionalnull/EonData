@@ -29,10 +29,10 @@ export class ContactService {
   }
 
   getMessage(messageId: string): Observable<ContactMessageModel | null> {
-    return this.http.get<ContactMessageModel | null>(`${this.contactFormApiEndpoint}/message?id=${messageId}`);
+    return this.http.get<ContactMessageModel | null>(`${this.contactFormApiEndpoint}/${messageId}`);
   }
 
   setRead(messageId: string): Observable<object> {
-    return this.http.put(`${this.contactFormApiEndpoint}/setread`, `id=${messageId}`);
+    return this.http.put(`${this.contactFormApiEndpoint}/${messageId}/setread`, '');
   }
 }

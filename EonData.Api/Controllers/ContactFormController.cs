@@ -21,7 +21,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("total")]
         [Authorize]
-        public async Task<IActionResult> GetTotal(bool unread, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetTotal(bool? unread, CancellationToken cancellationToken)
         {
             int messageCount = -1;
             try
@@ -44,7 +44,7 @@ namespace EonData.Api.Controllers
             IEnumerable<MessageListModel> messages;
             try
             {
-                messages = await contactForm.ListMessagesAsync(unread ?? false, cancellationToken);
+                messages = await contactForm.ListMessagesAsync(unread, cancellationToken);
             }
             catch(Exception ex)
             {
@@ -76,7 +76,7 @@ namespace EonData.Api.Controllers
         }
 
         [HttpGet]
-        [Route("message")]
+        [Route("{id}")]
         [Authorize]
         public async Task<IActionResult> GetMessage(Guid id, CancellationToken cancellationToken)
         {
@@ -94,11 +94,10 @@ namespace EonData.Api.Controllers
         }
 
         [HttpPut]
-        [Route("setread")]
+        [Route("{id}/setread")]
         [Authorize]
         public async Task<IActionResult> MarkAsRead(Guid id, CancellationToken cancellationToken)
         {
-            
             try
             {
                 await contactForm.MarkAsReadAsync(id, cancellationToken);

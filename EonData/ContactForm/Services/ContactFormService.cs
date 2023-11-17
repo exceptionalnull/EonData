@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+
 using EonData.ContactForm.Models;
 
 namespace EonData.ContactForm.Services
@@ -51,9 +52,9 @@ namespace EonData.ContactForm.Services
             {
                 TableName = CONTACT_MESSAGE_TABLE,
                 Key = { { "messageId", new AttributeValue(messageId.ToString()) } },
-                ExpressionAttributeNames = { { "#R", "isRead" } },
-                UpdateExpression = "SET #R = :is_r",
-                ExpressionAttributeValues = { { ":is_r", new AttributeValue() { BOOL = true } } }
+                UpdateExpression = "SET isRead = :is_r",
+                ExpressionAttributeValues = { { ":is_r", new AttributeValue() { BOOL = true } } },
+                ConditionExpression = "attribute_exists(messageId)"
             };
             await db.UpdateItemAsync(request, cancellationToken);
         }
@@ -86,7 +87,6 @@ namespace EonData.ContactForm.Services
             var result = await db.ScanAsync(totalRequest, cancellationToken);
             return result.Count;
         }
-
         public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool? unread, CancellationToken cancellationToken)
         {
             ScanRequest request = getScanRequest(unread);
@@ -111,7 +111,7 @@ namespace EonData.ContactForm.Services
             {
                 request.FilterExpression = "#read = :read";
                 request.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
-                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = (bool)unread } } };
+                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = !(bool)unread } } };
             }
             return request;
         }
