@@ -8,5 +8,7 @@ export const environment : Environment = {
     tenantName: 'eonid',
     appId: '385afbcc-67d0-4337-af02-94715a52d794'
   },
-  version: EnvironmentConstants.appVersion
+  /* constants */
+  version: EnvironmentConstants.appVersion,
+  apiVersion: EnvironmentConstants.apiVersion
 };
