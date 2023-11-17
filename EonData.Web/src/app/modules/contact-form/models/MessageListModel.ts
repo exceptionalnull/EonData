@@ -1,13 +1,10 @@
-export class ContactMessageModel {
+export class MessageListModel {
   messageId?: string;
   messageTimestamp?: Date;
   contactName?: string;
   contactAddress?: string;
-  messageContent?: string;
-  formSource?: string;
   isRead?: boolean;
-
-  constructor(partial?: Partial<ContactMessageModel>) {
+  constructor(partial?: Partial<MessageListModel>) {
     Object.assign(this, partial);
   }
 }
