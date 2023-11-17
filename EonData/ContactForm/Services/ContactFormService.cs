@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using EonData.ContactForm.Models;
 
-namespace EonData.ContactForm
+namespace EonData.ContactForm.Services
 {
     public class ContactFormService : IContactFormService
     {
@@ -17,7 +18,7 @@ namespace EonData.ContactForm
 
         public ContactFormService(IAmazonDynamoDB dynamoDb) => db = dynamoDb;
 
-        public async Task<ContactMessage?> GetContactMessageAsync(Guid messageId, CancellationToken cancellationToken)
+        public async Task<ContactMessageModel?> GetContactMessageAsync(Guid messageId, CancellationToken cancellationToken)
         {
             GetItemRequest request = new()
             {
@@ -29,7 +30,7 @@ namespace EonData.ContactForm
             var result = await db.GetItemAsync(request, cancellationToken);
             if (result.IsItemSet)
             {
-                return new ContactMessage()
+                return new ContactMessageModel()
                 {
                     MessageId = new Guid(result.Item["messageId"].S),
                     MessageTimestamp = DateTime.Parse(result.Item["messageTimestamp"].S),
@@ -77,20 +78,19 @@ namespace EonData.ContactForm
             await db.PutItemAsync(request, cancellationToken);
         }
 
-        public async Task<int> GetTotalContactMessagesAsync(bool unreadOnly, CancellationToken cancellationToken)
+        public async Task<int> GetTotalContactMessagesAsync(bool? unread, CancellationToken cancellationToken)
         {
-            ScanRequest totalRequest = getScan(unreadOnly);
+            ScanRequest totalRequest = getScanRequest(unread);
             totalRequest.Select = Select.COUNT;
 
             var result = await db.ScanAsync(totalRequest, cancellationToken);
             return result.Count;
         }
 
-        public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool unreadOnly, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool? unread, CancellationToken cancellationToken)
         {
-            ScanRequest request = getScan(unreadOnly);
-            request.Select = Select.SPECIFIC_ATTRIBUTES;
-            request.AttributesToGet = new() { "messageId", "messageTimestamp", "contactAddress", "contactName", "isRead" };
+            ScanRequest request = getScanRequest(unread);
+            request.ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, isRead";
 
             var response = await db.ScanAsync(request, cancellationToken);
 
@@ -104,14 +104,14 @@ namespace EonData.ContactForm
             });
         }
 
-        private ScanRequest getScan(bool unreadOnly)
+        private ScanRequest getScanRequest(bool? unread)
         {
             ScanRequest request = new(CONTACT_MESSAGE_TABLE);
-            if (unreadOnly)
+            if (unread != null)
             {
                 request.FilterExpression = "#read = :read";
                 request.ExpressionAttributeNames = new Dictionary<string, string>() { { "#read", "isRead" } };
-                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = false } } };
+                request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = (bool)unread } } };
             }
             return request;
         }

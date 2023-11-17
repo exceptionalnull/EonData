@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="CloudControl\AWS\" />
-    <Folder Include="ContactForm\Models\" />
   </ItemGroup>
 
 </Project>

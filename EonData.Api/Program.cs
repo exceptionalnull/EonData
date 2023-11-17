@@ -2,7 +2,7 @@ using Amazon.DynamoDBv2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Identity.Web;
-using EonData.ContactForm;
+using EonData.ContactForm.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

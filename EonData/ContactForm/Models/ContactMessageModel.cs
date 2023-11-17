@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EonData.ContactForm
+namespace EonData.ContactForm.Models
 {
-    public class ContactMessage
+    public class ContactMessageModel
     {
         public Guid MessageId { get; set; }
         public string? ContactName { get; set; }

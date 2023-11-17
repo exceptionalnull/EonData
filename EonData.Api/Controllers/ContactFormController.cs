@@ -1,4 +1,5 @@
-﻿using EonData.ContactForm;
+﻿using EonData.ContactForm.Models;
+using EonData.ContactForm.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -79,7 +80,7 @@ namespace EonData.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetMessage(Guid id, CancellationToken cancellationToken)
         {
-            ContactMessage? message;
+            ContactMessageModel? message;
             try
             {
                 message = await contactForm.GetContactMessageAsync(id, cancellationToken);
