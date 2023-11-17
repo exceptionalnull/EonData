@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace EonData.Api.Controllers
 {
@@ -16,6 +17,29 @@ namespace EonData.Api.Controllers
         public ContactFormController(IContactFormService contactFormService)
         {
             contactForm = contactFormService;
+        }
+
+        [HttpPost]
+        [Route("")]
+        [EnableRateLimiting("contactMessageLimit")]
+        public async Task<IActionResult> SendMessage(SendMessageModel message, CancellationToken cancellationToken)
+        {
+            if (message == null)
+            {
+                return BadRequest("no message.");
+            }
+
+            try
+            {
+                string rSource = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
+                await contactForm.SaveContactMessageAsync(message, rSource, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+
+            return Ok();
         }
 
         [HttpGet]
@@ -53,27 +77,7 @@ namespace EonData.Api.Controllers
             return Ok(messages);
         }
 
-        [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> SendMessage(SendMessageModel message, CancellationToken cancellationToken)
-        {
-            if (message == null)
-            {
-                return BadRequest("no message.");
-            }
-
-            try
-            {
-                string rSource = HttpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty;
-                await contactForm.SaveContactMessageAsync(message, rSource, cancellationToken);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-
-            return Ok();
-        }
+        
 
         [HttpGet]
         [Route("{id}")]
