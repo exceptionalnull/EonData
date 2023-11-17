@@ -4,8 +4,7 @@ import { MessageListComponent } from './components/message-list/message-list.com
 import { SendMessageFormComponent } from './components/send-message-form/send-message-form.component';
 import { FormsModule } from '@angular/forms';
 import { NewMessageNotificationComponent } from './components/new-message-notification/new-message-notification.component';
-
-
+import { ContactFormRoutingModule } from './contact-form-routing.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +14,8 @@ import { NewMessageNotificationComponent } from './components/new-message-notifi
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ContactFormRoutingModule
   ],
   exports: [
     SendMessageFormComponent,

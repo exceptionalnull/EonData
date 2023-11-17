@@ -7,10 +7,12 @@ import { HomeComponent } from './components/home/home.component';
 
 // application level routing definition
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
   { path: 'clouds', loadChildren: () => import('./modules/cloud-control/cloud-control.module').then(m => m.CloudControlModule), canActivate: [MsalGuard] },
+  { path: 'messages', loadChildren: () => import('./modules/contact-form/contact-form.module').then(m => m.ContactFormModule), canActivate: [MsalGuard] }
   { path: 'nms', loadChildren: () => import('./modules/nms-tools/nms-tools.module').then(m => m.NmsToolsModule) }
 ];
 

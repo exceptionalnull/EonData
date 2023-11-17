@@ -1,8 +1,9 @@
 using Amazon.DynamoDBv2;
-using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Identity.Web;
+using EonData.ContactForm.Services;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,12 +27,16 @@ builder.Services
         builder.Configuration.Bind("AzureAdB2C", options);
     });
 
+// add cloudwatch logging
 builder.Logging.AddAWSProvider();
 
 // add AWS services
 builder.Services
-    //.AddAWSService<IAmazonS3>()
     .AddAWSService<IAmazonDynamoDB>();
+
+// add application services
+builder.Services
+    .AddTransient<IContactFormService, ContactFormService>();
 
 // configure forwarded headers so that client details are correctly configured through the reverse proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; });
@@ -56,11 +61,28 @@ builder.Services
     })
     .AddControllers();
 
+builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "contactMessageLimit", options =>
+{
+    options.PermitLimit = 3;
+    options.Window = TimeSpan.FromHours(12);
+    options.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+    options.QueueLimit = 1;
+}));
+
 // build and run
 var app = builder.Build();
 app.UseCors();
 // forward 
 app.UseForwardedHeaders();
+app.UseRateLimiter();
+
+string apiver = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-EonDataApi-Version", apiver);
+    await next.Invoke();
+});
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

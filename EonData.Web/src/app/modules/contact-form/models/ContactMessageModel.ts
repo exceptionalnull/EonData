@@ -1,11 +1,11 @@
 export class ContactMessageModel {
   messageId?: string;
-  messageTimestamp: Date = new Date();
+  messageTimestamp?: Date;
   contactName?: string;
   contactAddress?: string;
   messageContent?: string;
   formSource?: string;
-  isRead: boolean = false;
+  isRead?: boolean;
 
   constructor(partial?: Partial<ContactMessageModel>) {
     Object.assign(this, partial);
