@@ -18,11 +18,13 @@ builder.Services
 // add authentication
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(options => {
+    .AddMicrosoftIdentityWebApi(options =>
+    {
         // jwtbearer options
         builder.Configuration.Bind("AzureAdB2C", options);
     },
-    options => {
+    options =>
+    {
         // ms identity options
         builder.Configuration.Bind("AzureAdB2C", options);
     });
@@ -61,21 +63,24 @@ builder.Services
     })
     .AddControllers();
 
-builder.Services.AddRateLimiter(_ => _.AddFixedWindowLimiter(policyName: "contactMessageLimit", options =>
-{
-    options.PermitLimit = 3;
-    options.Window = TimeSpan.FromHours(12);
-    options.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
-    options.QueueLimit = 1;
-}));
+builder.Services.AddRateLimiter(rlo => rlo
+        // rate limit for sending contact messages
+        .AddTokenBucketLimiter(policyName: "contactMessageLimit", options =>
+        {
+            options.ReplenishmentPeriod = TimeSpan.FromHours(32);
+            options.TokenLimit = 5;
+            options.TokensPerPeriod = 1;
+            options.QueueLimit = 0;
+        })
+    );
 
-// build and run
+// build app
 var app = builder.Build();
 app.UseCors();
-// forward 
 app.UseForwardedHeaders();
 app.UseRateLimiter();
 
+// add a custom header to every response to show the api version
 string apiver = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
 app.Use(async (context, next) =>
 {
@@ -83,6 +88,7 @@ app.Use(async (context, next) =>
     await next.Invoke();
 });
 
+// finish building and run
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
