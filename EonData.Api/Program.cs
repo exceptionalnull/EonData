@@ -65,6 +65,13 @@ var app = builder.Build();
 app.UseCors();
 // forward 
 app.UseForwardedHeaders();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-EonDataApi-Version", System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown");
+    await next.Invoke();
+});
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
