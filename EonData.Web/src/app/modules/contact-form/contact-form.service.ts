@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { SendMessageModel } from './models/SendMessageModel';
-import { MessageListModel } from './models/MessageListModel';
 import { ContactMessageModel } from './models/ContactMessageModel';
+import { MessageListResponseModel } from './models/MessageListResponseModel';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,13 @@ export class ContactService {
   }
 
   getMessageCount(unread?: boolean): Observable<number> {
-    const unreadParam = (unread != null) ? `?unread=${unread}` : '';
+    const unreadParam = (unread !== undefined) ? `?unread=${unread}` : '';
     return this.http.get<number>(`${this.contactFormApiEndpoint}/total${unreadParam}`);
   }
 
-  getMessageList(unread?: boolean): Observable<MessageListModel[]> {
-    const unreadParam = (unread != null) ? `?unread=${unread}` : '';
-    return this.http.get<MessageListModel[]>(`${this.contactFormApiEndpoint}${unreadParam}`);
+  getMessageList(unread?: boolean): Observable<MessageListResponseModel> {
+    const unreadParam = (unread !== undefined) ? `?unread=${unread}` : '';
+    return this.http.get<MessageListResponseModel>(`${this.contactFormApiEndpoint}${unreadParam}`);
   }
 
   getMessage(messageId: string): Observable<ContactMessageModel | null> {

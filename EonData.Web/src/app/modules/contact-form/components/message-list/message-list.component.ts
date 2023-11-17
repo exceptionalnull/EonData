@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ContactService } from '../../contact-form.service';
 import { MessageListModel } from '../../models/MessageListModel';
 import { ContactMessageModel } from '../../models/ContactMessageModel';
+import { MessageListResponseModel } from '../../models/MessageListResponseModel';
 
 @Component({
   selector: 'app-message-list',
@@ -9,16 +10,33 @@ import { ContactMessageModel } from '../../models/ContactMessageModel';
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
-  public model?: MessageListModel[];
+  public model?: MessageListResponseModel;
   public readMessage?: ContactMessageModel;
+  public unreadFilter: string = "none";
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contactService.getMessageList().subscribe(response => { this.model = response; })
+    this.updateData();
+  }
+
+  updateData() {
+    this.readMessage = undefined;
+    let unread: boolean | undefined;
+    if (this.unreadFilter === "true") {
+      unread = true;
+    }
+    else if (this.unreadFilter === "false") {
+      unread = false;
+    }
+    this.contactService.getMessageList(unread).subscribe(response => { this.model = response; })
   }
 
   getRowClass(message: MessageListModel) {
-    return (message.isRead) ? "unread" : "read";
+    return {
+      'list-unread': !message.isRead,
+      'list-read': message.isRead,
+      'list-selected': message.messageId === this.readMessage?.messageId
+    }
   }
 
   selectMessage(messageId: string) {
@@ -35,7 +53,7 @@ export class MessageListComponent implements OnInit {
 
   markAsRead(messageId: string) {
     this.contactService.setRead(messageId).subscribe(() => {
-      const message = this.model?.find(m => m.messageId === messageId);
+      const message = this.model?.messages?.find(m => m.messageId === messageId);
       if (message) {
         message.isRead = true;
       }

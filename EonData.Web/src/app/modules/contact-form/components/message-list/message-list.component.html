@@ -1,22 +1,31 @@
-<div class="container">
-    <div *ngIf="!model">No messages.</div>
-    <table *ngIf="model">
-        <thead>
-            <tr>
-                <th>Timestamp</th>
-                <th>Name</th>
-                <th>Address</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let message of model" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
-                <td>{{message.messageTimestamp | date:'short'}}</td>
-                <td>{{message.contactName}}</td>
-                <td>{{message.contactAddress}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div *ngIf="readMessage" class="message-box">
+<div class="messagelist-container">
+    <div class="messagelist-sidebar">
+        <div class="messagelist-filters">
+            <select [(ngModel)]="unreadFilter" (change)="updateData()">
+                <option value="none">All messages</option>
+                <option value="true">Unread only</option>
+                <option value="false">Read only</option>
+            </select>
+        </div>
+        <div *ngIf="(model?.messages?.length ?? 0) == 0">No messages.</div>
+        <table *ngIf="(model?.messages?.length ?? 0) > 0">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let message of model?.messages" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
+                    <td>{{message.messageTimestamp | date:'short'}}</td>
+                    <td>{{message.contactName}}</td>
+                    <td>{{message.contactAddress}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="readMessage" class="messagelist-viewer">
         <p>{{readMessage.contactName}} ({{readMessage.contactAddress}})</p>
         <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}@{{readMessage.formSource}})</p>
         <p>{{readMessage.messageContent}}</p>

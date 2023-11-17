@@ -2,17 +2,33 @@
 
 $messagelist-rowcolor: darken($secondary-accent-color, 13%);
 
-.unread {
-  background-color: $messagelist-rowcolor;
-  color: invert($messagelist-rowcolor);
-}
-
-.read {
+.list-unread {
   background-color: invert($messagelist-rowcolor);
   color: $messagelist-rowcolor;
 }
 
-.message-box {
+.list-read {
+  background-color: $messagelist-rowcolor;
+  color: invert($messagelist-rowcolor);
+}
+
+.list-selected {
+  border: 1px solid orange;
+}
+
+.messagelist-sidebar {
+  flex-direction: column;
+
+  div.messagelist-filters {
+    order: 1;
+  }
+
+  table {
+    order: 2;
+  }
+}
+
+.messagelist-view {
   margin-left: 20px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -22,13 +38,8 @@ $messagelist-rowcolor: darken($secondary-accent-color, 13%);
   order: 2;
 }
 
-.container {
+.messagelist-container {
   margin-top: 13px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-}
-
-table {
-  order: 1;
 }
