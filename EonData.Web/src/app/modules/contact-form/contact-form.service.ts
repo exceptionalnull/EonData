@@ -23,9 +23,17 @@ export class ContactService {
     return this.http.get<number>(`${this.contactFormApiEndpoint}/total${unreadParam}`);
   }
 
-  getMessageList(unread?: boolean): Observable<MessageListResponseModel> {
-    const unreadParam = (unread !== undefined) ? `?unread=${unread}` : '';
-    return this.http.get<MessageListResponseModel>(`${this.contactFormApiEndpoint}${unreadParam}`);
+  getMessageList(unread?: boolean, pagekey?: string): Observable<MessageListResponseModel> {
+    const params: string[] = [];
+    if (unread !== undefined) {
+      params.push(`unread=${unread}`);
+    }
+    if (pagekey !== undefined) {
+      params.push(`startKey=${pagekey}`);
+    }
+
+    const urlParam = (params.length > 0) ? `?${params.join("&")}` : "";
+    return this.http.get<MessageListResponseModel>(`${this.contactFormApiEndpoint}${urlParam}`);
   }
 
   getMessage(messageId: string): Observable<ContactMessageModel | null> {

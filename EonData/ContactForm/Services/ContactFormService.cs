@@ -14,7 +14,7 @@ namespace EonData.ContactForm.Services
     public class ContactFormService : IContactFormService
     {
         private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
-        private const int MESSAGES_PER_PAGE = 2;
+        private const int MESSAGES_PER_PAGE = 15;
 
         private readonly IAmazonDynamoDB db;
 
@@ -136,7 +136,6 @@ namespace EonData.ContactForm.Services
             });
 
             string? lastEvaluatedKey = (response.LastEvaluatedKey.ContainsKey("messageId")) ? response.LastEvaluatedKey["messageId"].S : null;
-
             return new MessageListResponse(messages, lastEvaluatedKey);
         }
     }

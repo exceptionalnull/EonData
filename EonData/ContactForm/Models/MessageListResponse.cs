@@ -20,12 +20,12 @@ namespace EonData.ContactForm.Models
         /// <summary>
         /// The start value to be used for the next page's request
         /// </summary>
-        public Guid? StartKeyValue { get; set; }
+        public Guid? StartKey { get; set; }
 
         internal MessageListResponse(IEnumerable<MessageListModel> results, string? lastEvalutedKey)
         {
             Messages = results;
-            StartKeyValue = (lastEvalutedKey != null) ? new Guid(lastEvalutedKey) : null;
+            StartKey = (lastEvalutedKey != null) ? new Guid(lastEvalutedKey) : null;
         }
     }
 }

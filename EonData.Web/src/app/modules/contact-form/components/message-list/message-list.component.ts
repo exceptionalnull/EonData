@@ -12,23 +12,50 @@ import { MessageListResponseModel } from '../../models/MessageListResponseModel'
 export class MessageListComponent implements OnInit {
   public model?: MessageListResponseModel;
   public readMessage?: ContactMessageModel;
-  public unreadFilter: string = "none";
+  public unreadFilter: string = "all";
+  public currentPageKey?: string;
+  public isFirstPage: boolean = true;
+  public pageKeys: string[] = [];
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
     this.updateData();
   }
 
-  updateData() {
+  updateData(pageKey?: string) {
     this.readMessage = undefined;
+
     let unread: boolean | undefined;
-    if (this.unreadFilter === "true") {
-      unread = true;
-    }
-    else if (this.unreadFilter === "false") {
+    if (this.unreadFilter === "read") {
       unread = false;
     }
-    this.contactService.getMessageList(unread).subscribe(response => { this.model = response; })
+    else if (this.unreadFilter === "unread") {
+      unread = true;
+    }
+    
+    this.isFirstPage = (pageKey === undefined);
+    
+    this.contactService.getMessageList(unread, pageKey).subscribe(response => { this.model = response; })
+  }
+
+  nextPage() {
+    if (this.currentPageKey !== undefined) {
+      this.pageKeys.push(this.currentPageKey);
+    }
+    this.currentPageKey = this.model?.startKey;
+    this.updateData(this.model?.startKey)
+  }
+
+  setFilter() {
+    this.pageKeys = [];
+    this.currentPageKey = undefined;
+    this.updateData();
+  }
+
+  prevPage() {
+    const prevPageKey = (this.pageKeys.length > 0) ? this.pageKeys.pop() : undefined;
+    this.currentPageKey = prevPageKey;
+    this.updateData(prevPageKey);
   }
 
   getRowClass(message: MessageListModel) {
