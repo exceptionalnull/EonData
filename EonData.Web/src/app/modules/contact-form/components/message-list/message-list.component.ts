@@ -11,7 +11,7 @@ import { ContactMessageModel } from '../../models/ContactMessageModel';
 export class MessageListComponent implements OnInit {
   public messages: MessageListModel[] = [];
   public readMessage?: ContactMessageModel;
-  public unreadFilter: string = "all";
+  public unreadFilter: string = "unread";
   public currentPage: number = 1;
   public finalPage: boolean = true;
   public pageMessages: MessageListModel[] = [];
