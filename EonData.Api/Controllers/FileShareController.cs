@@ -1,17 +1,53 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EonData.FileShare.Models;
+using EonData.FileShare.Services;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EonData.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("fshare")]
     [ApiController]
     public class FileShareController : ControllerBase
     {
+        private IEonShareService eonShare;
+
+        public FileShareController(IEonShareService fileShare) => eonShare = fileShare;
+
         [HttpGet]
         [Route("")]
-        public Task<IActionResult> GetFileShareDetails()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFileShareDetails(CancellationToken cancellationToken)
         {
+            IEnumerable<ShareFolderModel> result;
+            try
+            {
+                result = await eonShare.GetFileShareAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
 
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("files/{objectKey}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DownloadFile(string objectKey, CancellationToken cancellationToken)
+        {
+            string signedUrl;
+            try
+            {
+                signedUrl = await eonShare.GetSignedUrlAsync(objectKey, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            return Redirect(signedUrl);
         }
     }
 }

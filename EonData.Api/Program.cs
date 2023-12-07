@@ -41,7 +41,8 @@ builder.Services
 
 // add application services
 builder.Services
-    .AddTransient<IContactFormService, ContactFormService>();
+    .AddTransient<IContactFormService, ContactFormService>()
+    .AddTransient<IEonShareService, EonShareService>();
 
 // configure forwarded headers so that client details are correctly configured through the reverse proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options => { options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto; });

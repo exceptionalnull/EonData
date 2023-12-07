@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace EonData.FileShare.Services
 {
-    public class EonShareService
+    public class EonShareService : IEonShareService
     {
         private const string EONSHARE_S3_BUCKET = "eonshare";
         private readonly IAmazonS3 s3Client;
@@ -39,7 +39,8 @@ namespace EonData.FileShare.Services
             return folders;
         }
 
-        public async Task<string> GetSignedUrlAsync(string file, CancellationToken cancellationToken) {
+        public async Task<string> GetSignedUrlAsync(string file, CancellationToken cancellationToken)
+        {
             var req = new GetPreSignedUrlRequest()
             {
                 BucketName = EONSHARE_S3_BUCKET,
