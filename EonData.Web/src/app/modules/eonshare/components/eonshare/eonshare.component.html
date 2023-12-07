@@ -1,4 +1,5 @@
 <div>Folder: /{{currentFolderKey}}</div>
 <div *ngIf="(fileShare?.length ?? 0) > 0">
-    <div *ngFor="let file of getFiles()">{{file.name}}</div>
+    <div *ngFor="let folder of getSubfolders()"><a [routerLink]="folder">{{folder}}</a></div>
+    <div *ngFor="let file of getFiles()"><a [href]="getDownloadUrl(file.name)" target="_blank">{{file.name}}</a> - {{file.size}}</div>
 </div>

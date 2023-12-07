@@ -14,4 +14,8 @@ export class EonShareService {
   getFileShare(): Observable<ShareFolderModel[]> {
     return this.http.get<ShareFolderModel[]>(this.eonShareApiEndpoint);
   }
+
+  getDownloadUrl(objectKey: string): string {
+    return this.eonShareApiEndpoint + '/files/' + objectKey;
+  }
 }
