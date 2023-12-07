@@ -1,22 +1,35 @@
-<table *ngIf="model">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Timestamp</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let message of model" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
-            <td>{{message.contactName}}</td>
-            <td>{{message.contactAddress}}</td>
-            <td>{{message.messageTimestamp | date:'short'}}</td>
-        </tr>
-    </tbody>
-</table>
-<div *ngIf="readMessage" class="message-box">
-    <h2>{{readMessage.contactName}}</h2>
-    <p>{{readMessage.contactAddress}}</p>
-    <p>{{readMessage.messageTimestamp | date:'short'}}</p>
-    <p>{{readMessage.messageContent}}</p>
+<div class="messagelist-container">
+    <div class="messagelist-sidebar">
+        <div class="messagelist-filters">
+            <select class="messagelist-unreadfilter" [(ngModel)]="unreadFilter" (change)="setFilter()">
+                <option value="all">All messages</option>
+                <option value="unread">Unread only</option>
+                <option value="read">Read only</option>
+            </select>
+            <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="prevPage()">Prev page</button></div>
+            <div class="messagelist-nextpage"><button [disabled]="this.finalPage" (click)="nextPage()">Next page</button></div>
+        </div>
+        <div *ngIf="(this.messages?.length ?? 0) == 0">No messages.</div>
+        <table *ngIf="(this.messages?.length ?? 0) > 0">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let message of this.pageMessages" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
+                    <td>{{message.messageTimestamp | date:'short'}}</td>
+                    <td>{{message.contactName}}</td>
+                    <td>{{message.contactAddress}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="readMessage" class="messagelist-viewer">
+        <p>{{readMessage.contactName}} ({{readMessage.contactAddress}})</p>
+        <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}&commat;{{readMessage.formSource}})</p>
+        <p>{{readMessage.messageContent}}</p>
+    </div>
 </div>

@@ -5,6 +5,7 @@ export class ContactMessageModel {
   contactAddress?: string;
   messageContent?: string;
   formSource?: string;
+  requestSource?: string;
   isRead?: boolean;
 
   constructor(partial?: Partial<ContactMessageModel>) {

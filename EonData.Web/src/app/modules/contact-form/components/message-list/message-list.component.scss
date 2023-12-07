@@ -1,16 +1,60 @@
-.read {
-  background-color: #d4edda; /* light green */
+@import '../../../../../variables';
+
+$messagelist-rowcolor: darken($secondary-accent-color, 13%);
+
+.list-unread {
+  background-color: invert($messagelist-rowcolor);
+  color: $messagelist-rowcolor;
 }
 
-.unread {
-  background-color: #f8d7da; /* light red */
+.list-read {
+  background-color: $messagelist-rowcolor;
+  color: invert($messagelist-rowcolor);
 }
 
-.message-box {
+.list-selected {
+  border: 1px solid orange;
+}
+
+.messagelist-sidebar {
+  flex-direction: column;
+
+  table {
+    order: 2;
+  }
+}
+
+div.messagelist-filters {
+  order: 1;
+  flex-direction: row;
+  display: flex;
+
+  .messagelist-unreadfilter {
+    order: 1;
+  }
+
+  .messagelist-prevpage {
+    order: 2;
+  }
+
+  .messagelist-nextpage {
+    order: 3;
+  }
+}
+
+
+.messagelist-view {
   margin-left: 20px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 300px;
+  width: 100%;
   height: auto;
+  order: 2;
+}
+
+.messagelist-container {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: row;
 }

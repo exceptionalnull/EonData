@@ -9,16 +9,74 @@ import { ContactMessageModel } from '../../models/ContactMessageModel';
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
-  public model?: MessageListModel[];
+  public messages: MessageListModel[] = [];
   public readMessage?: ContactMessageModel;
+  public unreadFilter: string = "all";
+  public currentPage: number = 1;
+  public finalPage: boolean = true;
+  public pageMessages: MessageListModel[] = [];
+
+  private readonly pageLimit: number = 15;
+
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contactService.getMessageList().subscribe(response => { this.model = response; })
+    this.updateData();
+    this.pageMessages = this.getPageMessages();
+  }
+
+  updateData(pageKey?: string) {
+    this.readMessage = undefined;
+
+    let unread: boolean | undefined;
+    if (this.unreadFilter === "read") {
+      unread = false;
+    }
+    else if (this.unreadFilter === "unread") {
+      unread = true;
+    }
+    
+    this.contactService.getMessageList(unread, pageKey).subscribe(response => {
+      console.log(response);
+      this.messages = response;
+      this.currentPage = 1;
+      this.pageMessages = this.getPageMessages();
+    })
+  }
+
+  getPageMessages(): MessageListModel[] {
+    const startIndex: number = (this.currentPage - 1) * this.pageLimit;
+    const endIndex: number = Math.min(startIndex + this.pageLimit - 1, this.messages.length);
+    this.finalPage = (endIndex == this.messages.length);
+    console.log(startIndex);
+    console.log(endIndex);
+    return this.messages.slice(startIndex, endIndex);
+  }
+
+  nextPage() {
+    if (!this.finalPage) {
+      this.currentPage++;
+      this.pageMessages = this.getPageMessages();
+    }
+  }
+
+  setFilter() {
+    this.updateData();
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.pageMessages = this.getPageMessages();
+    }
   }
 
   getRowClass(message: MessageListModel) {
-    return (message.isRead) ? "unread" : "read";
+    return {
+      'list-unread': !message.isRead,
+      'list-read': message.isRead,
+      'list-selected': message.messageId === this.readMessage?.messageId
+    }
   }
 
   selectMessage(messageId: string) {
@@ -35,7 +93,7 @@ export class MessageListComponent implements OnInit {
 
   markAsRead(messageId: string) {
     this.contactService.setRead(messageId).subscribe(() => {
-      const message = this.model?.find(m => m.messageId === messageId);
+      const message = this.messages?.find(m => m.messageId === messageId);
       if (message) {
         message.isRead = true;
       }
