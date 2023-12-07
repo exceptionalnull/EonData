@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { EonshareRoutingModule } from './eonshare-routing.module';
-import { EonshareComponent } from './components/eonshare/eonshare.component';
+import { EonShareComponent } from './components/eonshare/eonshare.component';
 
 
 @NgModule({
   declarations: [
-    EonshareComponent
+    EonShareComponent
   ],
   imports: [
     CommonModule,

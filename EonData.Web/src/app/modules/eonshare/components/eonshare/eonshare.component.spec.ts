@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EonshareComponent } from './eonshare.component';
+import { EonShareComponent } from './eonshare.component';
 
 describe('EonshareComponent', () => {
-  let component: EonshareComponent;
-  let fixture: ComponentFixture<EonshareComponent>;
+  let component: EonShareComponent;
+  let fixture: ComponentFixture<EonShareComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EonshareComponent]
+      declarations: [EonShareComponent]
     });
-    fixture = TestBed.createComponent(EonshareComponent);
+    fixture = TestBed.createComponent(EonShareComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

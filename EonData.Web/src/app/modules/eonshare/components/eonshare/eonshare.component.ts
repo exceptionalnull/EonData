@@ -9,26 +9,30 @@ import { ShareFileModel } from '../../models/ShareFileModel';
   templateUrl: './eonshare.component.html',
   styleUrls: ['./eonshare.component.scss']
 })
-export class EonshareComponent implements OnInit {
+export class EonShareComponent implements OnInit {
   public fileShare: ShareFolderModel[] = [];
   public currentFolderKey: string = '';
   constructor(private fileService: EonShareService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.currentFolderKey = this.route.snapshot.paramMap.get('objectKey') ?? '';
-    this.fileService.getFileShare().subscribe(response => {
-      this.fileShare = response;
-      if (this.currentFolderKey != "" && !this.fileShare.some(folder => folder.prefix === this.currentFolderKey)) {
-        // folder doesn't exist so redirect to the base URL
-        this.router.navigate(['fshare']);
-      }
+
+    this.route.paramMap.subscribe(params => {
+      this.currentFolderKey = params.get('objectKey') ?? '';
+      this.fileService.getFileShare().subscribe(response => {
+        this.fileShare = response;
+        if (this.currentFolderKey != "" && !this.fileShare.some(folder => folder.prefix === this.currentFolderKey)) {
+          // folder doesn't exist so redirect to the base URL
+          this.router.navigate(['fshare']);
+        }
+      });
     });
   }
 
   getSubfolders(): string[] {
     return this.fileShare
-      .filter(folder => folder.prefix.startsWith(this.currentFolderKey) && folder.prefix !== this.currentFolderKey && !folder.prefix.includes("/", this.currentFolderKey.length))
-      .map(folder => folder.prefix);
+      .filter(folder => folder.prefix.startsWith(this.currentFolderKey) && folder.prefix !== this.currentFolderKey && !folder.prefix.includes("/", this.currentFolderKey.length+1))
+      .map(folder => folder.prefix.substring(folder.prefix.lastIndexOf("/") + 1));
   }
 
 

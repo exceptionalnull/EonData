@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { EonshareComponent } from './components/eonshare/eonshare.component';
+import { RouterModule, Routes, UrlSegment } from '@angular/router';
+import { EonShareComponent } from './components/eonshare/eonshare.component';
+
+export function MultiSegmentUrlMatcher(url: UrlSegment[]) {
+  return { consumed: url, posParams: { objectKey: new UrlSegment(url.map(segment => segment.path).join('/'), {}) } };
+}
 
 const routes: Routes = [
-  { path: '', component: EonshareComponent },
-  { path: ':objectKey', component: EonshareComponent }
+  { path: '', component: EonShareComponent },
+  { matcher: MultiSegmentUrlMatcher, component: EonShareComponent}
+  /*{ path: ':objectKey', component: EonshareComponent }*/
 ];
 
 @NgModule({
