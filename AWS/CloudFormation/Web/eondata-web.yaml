@@ -749,9 +749,9 @@ Resources:
                     - Sid: EonShareS3List
                       Effect: Allow
                       Action:
-                        - s3:ListObject
+                        - s3:ListBucket
                       Resource:
-                        - !Sub arn:aws:s3:::${EonDataFileShareBucketName}
+                        - !Sub arn:aws:s3:::${EonDataFileShareBucketName}*
     EonDataWebIAMPolicyWriteLogs:
         Type: AWS::IAM::Policy
         Properties:
