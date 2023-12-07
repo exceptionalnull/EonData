@@ -63,18 +63,18 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("")]
         [Authorize]
-        public async Task<IActionResult> ListMessages(bool? unread, Guid? startKey, CancellationToken cancellationToken)
+        public async Task<IActionResult> ListMessages(bool? unread, CancellationToken cancellationToken)
         {
-            MessageListResponse response;
+            IEnumerable<MessageListModel> result;
             try
             {
-                response = await contactForm.ListMessagesAsync(unread, startKey, cancellationToken);
+                result = await contactForm.ListMessagesAsync(unread, cancellationToken);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
-            return Ok(response);
+            return Ok(result);
         }
 
         [HttpGet]

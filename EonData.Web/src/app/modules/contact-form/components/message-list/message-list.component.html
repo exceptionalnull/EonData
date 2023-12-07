@@ -6,11 +6,11 @@
                 <option value="unread">Unread only</option>
                 <option value="read">Read only</option>
             </select>
-            <div class="messagelist-prevpage"><button [disabled]="isFirstPage" (click)="prevPage()">Prev page</button></div>
-            <div class="messagelist-nextpage"><button [disabled]="model?.startKey == undefined" (click)="nextPage()">Next page</button></div>
+            <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="prevPage()">Prev page</button></div>
+            <div class="messagelist-nextpage"><button [disabled]="this.finalPage" (click)="nextPage()">Next page</button></div>
         </div>
-        <div *ngIf="(model?.messages?.length ?? 0) == 0">No messages.</div>
-        <table *ngIf="(model?.messages?.length ?? 0) > 0">
+        <div *ngIf="(this.messages?.length ?? 0) == 0">No messages.</div>
+        <table *ngIf="(this.messages?.length ?? 0) > 0">
             <thead>
                 <tr>
                     <th>Timestamp</th>
@@ -19,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let message of model?.messages" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
+                <tr *ngFor="let message of this.pageMessages" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
                     <td>{{message.messageTimestamp | date:'short'}}</td>
                     <td>{{message.contactName}}</td>
                     <td>{{message.contactAddress}}</td>
@@ -29,10 +29,7 @@
     </div>
     <div *ngIf="readMessage" class="messagelist-viewer">
         <p>{{readMessage.contactName}} ({{readMessage.contactAddress}})</p>
-        <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}@{{readMessage.formSource}})</p>
+        <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}&commat;{{readMessage.formSource}})</p>
         <p>{{readMessage.messageContent}}</p>
     </div>
-    <ul>
-        <li *ngFor="let mid of pageKeys">{{mid}}</li>
-    </ul>
 </div>

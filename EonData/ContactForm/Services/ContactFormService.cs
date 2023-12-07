@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,12 +15,18 @@ namespace EonData.ContactForm.Services
     public class ContactFormService : IContactFormService
     {
         private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
-        private const int MESSAGES_PER_PAGE = 15;
+        private const int READ_LIMIT = 50;
 
         private readonly IAmazonDynamoDB db;
 
         public ContactFormService(IAmazonDynamoDB dynamoDb) => db = dynamoDb;
 
+        /// <summary>
+        /// Gets a specific contact message.
+        /// </summary>
+        /// <param name="messageId">Message ID to retrieve.</param>
+        /// <param name="cancellationToken"><inheritdoc/></param>
+        /// <returns>The message details or null if the ID does not exist.</returns>
         public async Task<ContactMessageModel?> GetContactMessageAsync(Guid messageId, CancellationToken cancellationToken)
         {
             GetItemRequest request = new()
@@ -47,6 +54,12 @@ namespace EonData.ContactForm.Services
             return null;
         }
 
+        /// <summary>
+        /// Marks a message as having been read.
+        /// </summary>
+        /// <param name="messageId">Message to update the unread status of.</param>
+        /// <param name="cancellationToken"><inheritdoc/></param>
+        /// <returns></returns>
         public async Task MarkAsReadAsync(Guid messageId, CancellationToken cancellationToken)
         {
             UpdateItemRequest request = new()
@@ -60,6 +73,13 @@ namespace EonData.ContactForm.Services
             await db.UpdateItemAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Writes a contact message to the dynamodb table.
+        /// </summary>
+        /// <param name="message">Message details.</param>
+        /// <param name="requestSource">Source of the message.</param>
+        /// <param name="cancellationToken"><inheritdoc/></param>
+        /// <returns></returns>
         public async Task SaveContactMessageAsync(SendMessageModel message, string requestSource, CancellationToken cancellationToken)
         {
             PutItemRequest request = new()
@@ -80,6 +100,12 @@ namespace EonData.ContactForm.Services
             await db.PutItemAsync(request, cancellationToken);
         }
 
+        /// <summary>
+        /// Gets the count of contact messages. Can be filtered by unread status.
+        /// </summary>
+        /// <param name="unread">When null this will retrieve all messages. Specify true or false to retreive messages based on the unread status.</param>
+        /// <param name="cancellationToken"><inheritdoc/></param>
+        /// <returns>Number of messages in the table.</returns>
         public async Task<int> GetTotalContactMessagesAsync(bool? unread, CancellationToken cancellationToken)
         {
             ScanRequest request = new(CONTACT_MESSAGE_TABLE)
@@ -87,6 +113,8 @@ namespace EonData.ContactForm.Services
                 TableName = CONTACT_MESSAGE_TABLE,
                 Select = Select.COUNT
             };
+
+            // add filter if necessary
             if (unread != null)
             {
                 request.FilterExpression = "#read = :read";
@@ -98,21 +126,38 @@ namespace EonData.ContactForm.Services
         }
 
         /// <summary>
-        /// Gets a page of messages for use in a display list.
+        /// Gets all of the contact messages
         /// </summary>
         /// <param name="unread">When null this will retrieve all messages. Specify true or false to retreive messages based on the unread status.</param>
-        /// <param name="startKey">Specify a value here to continue pagination of results.</param>
         /// <param name="cancellationToken"><inheritdoc/></param>
         /// <returns>An object with the result messages and the start key value to use for the next page.</returns>
-        public async Task<MessageListResponse> ListMessagesAsync(bool? unread, Guid? startKey, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MessageListModel>> ListMessagesAsync(bool? unread, CancellationToken cancellationToken)
+        {
+            string? lastEvaluatedKey = null;
+            List<MessageListModel> messages = new();
+            do
+            {
+                var result = await ReadMessagesAsync(unread, lastEvaluatedKey, cancellationToken);
+                lastEvaluatedKey = result.Item2;
+                if ((result.Item1?.Count() ?? 0) > 0)
+                {
+                    messages.AddRange(result.Item1!);
+                }
+            } while (lastEvaluatedKey != null);
+            return messages;
+        }
+
+        // reads a batch of messages from the dynamodb table
+        private async Task<Tuple<IEnumerable<MessageListModel>, string?>> ReadMessagesAsync(bool? unread, string? startKey, CancellationToken cancellationToken)
         {
             ScanRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
-                Limit = MESSAGES_PER_PAGE,
+                Limit = READ_LIMIT,
                 ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, isRead"
             };
 
+            // filter if necessary
             if (unread != null)
             {
                 request.FilterExpression = "#read = :read";
@@ -120,12 +165,15 @@ namespace EonData.ContactForm.Services
                 request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = !(bool)unread } } };
             }
 
+            // handle pagination
             if (startKey != null)
             {
                 request.ExclusiveStartKey = new Dictionary<string, AttributeValue>() { { "messageId", new AttributeValue(startKey.ToString()) } };
             }
+
             var response = await db.ScanAsync(request, cancellationToken);
 
+            // process results
             var messages = response.Items.Select<Dictionary<string, AttributeValue>, MessageListModel>(itm => new MessageListModel()
             {
                 MessageId = new Guid(itm["messageId"].S),
@@ -134,9 +182,8 @@ namespace EonData.ContactForm.Services
                 ContactName = itm["contactName"].S,
                 isRead = itm["isRead"].BOOL
             });
-
             string? lastEvaluatedKey = (response.LastEvaluatedKey.ContainsKey("messageId")) ? response.LastEvaluatedKey["messageId"].S : null;
-            return new MessageListResponse(messages, lastEvaluatedKey);
+            return Tuple.Create(messages, lastEvaluatedKey);
         }
     }
 }

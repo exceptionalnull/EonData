@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ContactService } from '../../contact-form.service';
 import { MessageListModel } from '../../models/MessageListModel';
 import { ContactMessageModel } from '../../models/ContactMessageModel';
-import { MessageListResponseModel } from '../../models/MessageListResponseModel';
 
 @Component({
   selector: 'app-message-list',
@@ -10,16 +9,20 @@ import { MessageListResponseModel } from '../../models/MessageListResponseModel'
   styleUrls: ['./message-list.component.scss']
 })
 export class MessageListComponent implements OnInit {
-  public model?: MessageListResponseModel;
+  public messages: MessageListModel[] = [];
   public readMessage?: ContactMessageModel;
   public unreadFilter: string = "all";
-  public currentPageKey?: string;
-  public isFirstPage: boolean = true;
-  public pageKeys: string[] = [];
+  public currentPage: number = 1;
+  public finalPage: boolean = true;
+  public pageMessages: MessageListModel[] = [];
+
+  private readonly pageLimit: number = 15;
+
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
     this.updateData();
+    this.pageMessages = this.getPageMessages();
   }
 
   updateData(pageKey?: string) {
@@ -33,29 +36,39 @@ export class MessageListComponent implements OnInit {
       unread = true;
     }
     
-    this.isFirstPage = (pageKey === undefined);
-    
-    this.contactService.getMessageList(unread, pageKey).subscribe(response => { this.model = response; })
+    this.contactService.getMessageList(unread, pageKey).subscribe(response => {
+      console.log(response);
+      this.messages = response;
+      this.currentPage = 1;
+      this.pageMessages = this.getPageMessages();
+    })
+  }
+
+  getPageMessages(): MessageListModel[] {
+    const startIndex: number = (this.currentPage - 1) * this.pageLimit;
+    const endIndex: number = Math.min(startIndex + this.pageLimit - 1, this.messages.length);
+    this.finalPage = (endIndex == this.messages.length);
+    console.log(startIndex);
+    console.log(endIndex);
+    return this.messages.slice(startIndex, endIndex);
   }
 
   nextPage() {
-    if (this.currentPageKey !== undefined) {
-      this.pageKeys.push(this.currentPageKey);
+    if (!this.finalPage) {
+      this.currentPage++;
+      this.pageMessages = this.getPageMessages();
     }
-    this.currentPageKey = this.model?.startKey;
-    this.updateData(this.model?.startKey)
   }
 
   setFilter() {
-    this.pageKeys = [];
-    this.currentPageKey = undefined;
     this.updateData();
   }
 
   prevPage() {
-    const prevPageKey = (this.pageKeys.length > 0) ? this.pageKeys.pop() : undefined;
-    this.currentPageKey = prevPageKey;
-    this.updateData(prevPageKey);
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.pageMessages = this.getPageMessages();
+    }
   }
 
   getRowClass(message: MessageListModel) {
@@ -80,7 +93,7 @@ export class MessageListComponent implements OnInit {
 
   markAsRead(messageId: string) {
     this.contactService.setRead(messageId).subscribe(() => {
-      const message = this.model?.messages?.find(m => m.messageId === messageId);
+      const message = this.messages?.find(m => m.messageId === messageId);
       if (message) {
         message.isRead = true;
       }
