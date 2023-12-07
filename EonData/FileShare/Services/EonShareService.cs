@@ -20,20 +20,24 @@ namespace EonData.FileShare.Services
 
         public async Task<IEnumerable<ShareFolderModel>> GetFileShareAsync(CancellationToken cancellationToken)
         {
+            // list the S3Objects in the share bucket
             var req = new ListObjectsV2Request()
             {
                 BucketName = EONSHARE_S3_BUCKET
             };
             var resp = await s3Client.ListObjectsV2Async(req, cancellationToken);
-            var files = resp.S3Objects.Select(o => new ShareFileModel
+
+            // convert S3Objects to ShareFileModels
+            var files = resp.S3Objects.Select(GetFileModel);
+
+            // process the ShareFileModels into the full fileshare data structure
+            var folders = files.GroupBy(f => f.Prefix).Select(g => new ShareFolderModel()
             {
-                Name = o.Key,
-                Size = o.Size
-            });
-            var folders = files.GroupBy(f => GetPrefix(f.Name)).Select(g => new ShareFolderModel
-            {
+                Name = g.Key.Substring(g.Key.LastIndexOf('/') + 1),
                 Prefix = g.Key,
-                Files = g.ToList()
+                // when Name == empty it is the directory details...
+                Files = g.Where(g => g.Name != string.Empty).ToList(),
+                LastModified = g.Where(g => g.Name == string.Empty).FirstOrDefault()?.LastModified
             });
 
             return folders;
@@ -56,10 +60,17 @@ namespace EonData.FileShare.Services
             return shareUrl;
         }
 
-        private string GetPrefix(string key)
+        private ShareFileModel GetFileModel(S3Object fileObject)
         {
-            var lastIndex = key.LastIndexOf('/');
-            return lastIndex >= 0 ? key.Substring(0, lastIndex) : string.Empty;
+            int lastSep = fileObject.Key.LastIndexOf('/');
+            return new ShareFileModel()
+            {
+                Key = fileObject.Key,
+                Name = fileObject.Key.Substring(lastSep + 1),
+                Prefix = (lastSep > 0) ? fileObject.Key.Substring(0, lastSep) : string.Empty,
+                Size = fileObject.Size,
+                LastModified = fileObject.LastModified
+            };
         }
     }
 }

@@ -8,7 +8,9 @@ namespace EonData.FileShare.Models
 {
     public class ShareFolderModel
     {
+        public string Name { get; set; }
         public string Prefix { get; set; }
         public IEnumerable<ShareFileModel> Files { get; set; }
+        public DateTime? LastModified { get; set; }
     }
 }
