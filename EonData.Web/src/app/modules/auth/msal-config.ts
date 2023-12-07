@@ -15,6 +15,7 @@ export class MsalConfig {
       { httpMethod: "POST", scopes: null },
       { httpMethod: "GET", scopes: [MsalConfig.apiScopeUri] },
     ]],
+    [`${environment.apiUrl}/fshare*`, null],
     // api requires auth by default
     [`${environment.apiUrl}/*`, [MsalConfig.apiScopeUri]],
     // scopes for ms graph

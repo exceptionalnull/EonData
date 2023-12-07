@@ -4,6 +4,17 @@ body {
   background-color: $primary-background-color2;
   color: $primary-color;
 
+  a {
+      color: mediumblue;
+      &:visited {
+          color: rebeccapurple;
+      }
+      &:hover {
+          color: limegreen;
+      }
+  }
+  
+
   font: {
     family: 'Montserrat', sans-serif;
   }
