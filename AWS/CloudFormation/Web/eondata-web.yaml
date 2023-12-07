@@ -8,6 +8,10 @@ Parameters:
         Description: Name of the S3 bucket that will host the angular webapp.
         Type: String
         Default: eondataweb
+    EonDataFileShareBucketName:
+        Description: Name of the S3 bucket that will host the files to share via the web app
+        Type: String
+        Default: eonshare
     EonDataWebDataBucketName:
         Description: Name of the S3 bucket that stores data used by the website.
         Type: String
@@ -61,6 +65,11 @@ Resources:
                         AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${EonDataWebOriginAccess}
                       Action: "s3:GetObject"
                       Resource: !Join ["", ["arn:aws:s3:::", !Ref EonDataWebAppBucketName, "/*"]]
+    EonDataFileShareS3Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Ref EonDataFileShareBucketName
+            AccessControl: Private
     EonDataWebDataS3Bucket:
         Type: AWS::S3::Bucket
         DeletionPolicy: Retain
@@ -731,6 +740,18 @@ Resources:
                         - s3:ListBucket
                       Resource:
                         - !Sub arn:aws:s3:::${EonDataWebDataBucketName}*
+                    - Sid: EonShareS3Read
+                      Effect: Allow
+                      Action:
+                        - s3:GetObject
+                      Resource:
+                        - !Sub arn:aws:s3:::${EonDataFileShareBucketName}/*
+                    - Sid: EonShareS3List
+                      Effect: Allow
+                      Action:
+                        - s3:ListObject
+                      Resource:
+                        - !Sub arn:aws:s3:::${EonDataFileShareBucketName}
     EonDataWebIAMPolicyWriteLogs:
         Type: AWS::IAM::Policy
         Properties:
