@@ -21,6 +21,7 @@
     "@azure/msal-angular": "^3.0.1",
     "@azure/msal-browser": "^3.0.1",
     "jest-editor-support": "^31.0.0",
+    "ngx-filesize": "^3.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.1"

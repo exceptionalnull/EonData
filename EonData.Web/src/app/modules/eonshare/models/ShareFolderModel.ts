@@ -1,6 +1,8 @@
 import { ShareFileModel } from "./ShareFileModel";
 
 export class ShareFolderModel {
+  name!: string;
   prefix!: string;
-  files!: ShareFileModel[]
+  files!: ShareFileModel[];
+  lastModified?: Date | null;
 }
