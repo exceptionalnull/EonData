@@ -27,14 +27,14 @@ export class EonshareComponent implements OnInit {
 
   getSubfolders(): string[] {
     return this.fileShare
-      .filter(folder => folder.prefix.startsWith(this.currentFolderKey) && folder.prefix !== this.currentFolderKey && !folder.prefix.includes("/"))
+      .filter(folder => folder.prefix.startsWith(this.currentFolderKey) && folder.prefix !== this.currentFolderKey && !folder.prefix.includes("/", this.currentFolderKey.length))
       .map(folder => folder.prefix);
   }
 
 
   getFiles(): ShareFileModel[] {
     const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey ?? '');
-    return folder ? folder.files : [];
+    return folder ? folder.files.filter(f => !f.name.endsWith("/")) : [];
   }
 
   getDownloadUrl(objectKey: string): string {

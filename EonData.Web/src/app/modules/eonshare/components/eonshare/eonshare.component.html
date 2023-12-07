@@ -1,5 +1,5 @@
-<div>Folder: /{{currentFolderKey}}</div>
+<div><a *ngIf="this.currentFolderKey !== ''" [routerLink]="['..']"> <img height="22px" src="/assets/upward-arrow.png" /></a>Folder: /{{currentFolderKey}}</div>
 <div *ngIf="(fileShare?.length ?? 0) > 0">
-    <div *ngFor="let folder of getSubfolders()"><a [routerLink]="folder">{{folder}}</a></div>
+    <div *ngFor="let folder of getSubfolders()"><img height="22px" src="/assets/file-storage.png" /> <a [routerLink]="folder">{{folder}}</a></div>
     <div *ngFor="let file of getFiles()"><a [href]="getDownloadUrl(file.name)" target="_blank">{{file.name}}</a> - {{file.size}}</div>
 </div>
