@@ -34,7 +34,7 @@ namespace EonData.Api.Controllers
         }
 
         [HttpGet]
-        [Route("files/{objectKey}")]
+        [Route("files/{*objectKey}")]
         [AllowAnonymous]
         public async Task<IActionResult> DownloadFile(string objectKey, CancellationToken cancellationToken)
         {
