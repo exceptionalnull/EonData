@@ -7,6 +7,9 @@
                 <option value="read">Read only</option>
             </select>
             <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="setPage(this.currentPage - 1)">Prev page</button></div>
+            <div class="messagelist-pagenumbers">
+                <button *ngFor="let p of pageNumbers" [disabled]="this.currentPage == p" (click)="setPage(p)">{{p}}</button>
+            </div>
             <div class="messagelist-nextpage"><button [disabled]="this.currentPage >= this.totalPages" (click)="setPage(this.currentPage + 1)">Next page</button></div>
         </div>
         <div *ngIf="(this.messages?.length ?? 0) == 0">No messages.</div>

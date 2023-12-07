@@ -14,6 +14,7 @@ export class MessageListComponent implements OnInit {
   public unreadFilter: string = "unread";
   public currentPage: number = 1;
   public totalPages: number = 1;
+  public pageNumbers: number[] = [];
   public pageMessages: MessageListModel[] = [];
 
   // maximum number of messages per page
@@ -39,7 +40,7 @@ export class MessageListComponent implements OnInit {
     this.contactService.getMessageList(unread, pageKey).subscribe(response => {
       this.messages = response;
       this.totalPages = Math.ceil(this.messages.length / this.pageLimit);
-      console.log(this.totalPages);
+      this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
       this.setPage(1);
     })
   }

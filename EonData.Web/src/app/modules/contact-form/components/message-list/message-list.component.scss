@@ -33,12 +33,16 @@ div.messagelist-filters {
     order: 1;
   }
 
+  .messagelist-pagenumbers {
+    order: 3;
+  }
+
   .messagelist-prevpage {
     order: 2;
   }
 
   .messagelist-nextpage {
-    order: 3;
+    order: 4;
   }
 }
 
