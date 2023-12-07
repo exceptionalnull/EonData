@@ -1,0 +1,4 @@
+<div>Folder: /{{currentFolderKey}}</div>
+<div *ngIf="(fileShare?.length ?? 0) > 0">
+    <div *ngFor="let file in getFiles()">{{file.name}}</div>
+</div>

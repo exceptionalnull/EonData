@@ -12,7 +12,8 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
   { path: 'clouds', loadChildren: () => import('./modules/cloud-control/cloud-control.module').then(m => m.CloudControlModule), canActivate: [MsalGuard] },
-  { path: 'messages', loadChildren: () => import('./modules/contact-form/contact-form.module').then(m => m.ContactFormModule), canActivate: [MsalGuard] }
+  { path: 'messages', loadChildren: () => import('./modules/contact-form/contact-form.module').then(m => m.ContactFormModule), canActivate: [MsalGuard] },
+  { path: 'fshare', loadChildren: () => import('./modules/eonshare/eonshare.module').then(m => m.EonshareModule), canActivate: [MsalGuard] }
 ];
 
 @NgModule({
