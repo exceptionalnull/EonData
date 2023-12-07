@@ -1,7 +1,16 @@
 <div class="eonshare-container">
-    <div><a *ngIf="this.currentFolderKey !== ''" [routerLink]="['..']"> <img height="22px" src="/assets/upward-arrow.png" /></a>Folder: /{{currentFolderKey}}</div>
+    <div class="eonshare-directory">
+        <!-- Folder: <select [(ngModel)]="currentFolderKey">
+            <option *ngFor="let folder of getAllFolders()" [value]="folder">/{{folder}}</option>
+        </select> -->
+        <div><a *ngIf="this.currentFolderKey !== ''" [routerLink]="['..']"> <img height="22px" src="/assets/upward-arrow.png" /></a>Folder: /{{currentFolderKey}}</div>
+    </div>
     <div *ngIf="(fileShare?.length ?? 0) > 0">
-        <div class="eonshare-row" *ngFor="let folder of getSubfolders()"><a [routerLink]="folder"><img class="eonshare-rowlogo" src="/assets/file-storage.png" />{{folder}}</a></div>
-        <div class="eonshare-row" *ngFor="let file of getFiles()"><a [href]="getDownloadUrl(file.key)" target="_blank"><img class="eonshare-rowlogo" src="/assets/file.png" [title]="file.lastModified | date:'short'" />{{file.name}}</a> {{file.size | filesize}}</div>
+        <div class="eonshare-row" *ngFor="let folder of getSubfolders()">
+            <a [routerLink]="folder"><img class="eonshare-rowlogo" src="/assets/file-storage.png" />{{folder}}</a>
+        </div>
+        <div class="eonshare-row" *ngFor="let file of getFiles()">
+            <a [href]="getDownloadUrl(file.key)" target="_blank">
+                <img class="eonshare-rowlogo" src="/assets/file.png" [title]="file.lastModified | date:'short'" />{{file.name}}</a><span class="eonshare-filesize">{{file.size | filesize}}</span></div>
     </div>
 </div>
