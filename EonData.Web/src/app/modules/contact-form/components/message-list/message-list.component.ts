@@ -13,16 +13,16 @@ export class MessageListComponent implements OnInit {
   public readMessage?: ContactMessageModel;
   public unreadFilter: string = "unread";
   public currentPage: number = 1;
-  public finalPage: boolean = true;
+  public totalPages: number = 1;
   public pageMessages: MessageListModel[] = [];
 
+  // maximum number of messages per page
   private readonly pageLimit: number = 15;
 
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
     this.updateData();
-    this.pageMessages = this.getPageMessages();
   }
 
   updateData(pageKey?: string) {
@@ -37,37 +37,19 @@ export class MessageListComponent implements OnInit {
     }
     
     this.contactService.getMessageList(unread, pageKey).subscribe(response => {
-      console.log(response);
       this.messages = response;
-      this.currentPage = 1;
-      this.pageMessages = this.getPageMessages();
+      this.totalPages = Math.ceil(this.messages.length / this.pageLimit);
+      console.log(this.totalPages);
+      this.setPage(1);
     })
   }
 
-  getPageMessages(): MessageListModel[] {
-    const startIndex: number = (this.currentPage - 1) * this.pageLimit;
-    const endIndex: number = Math.min(startIndex + this.pageLimit - 1, this.messages.length);
-    this.finalPage = (endIndex == this.messages.length);
-    console.log(startIndex);
-    console.log(endIndex);
-    return this.messages.slice(startIndex, endIndex);
-  }
-
-  nextPage() {
-    if (!this.finalPage) {
-      this.currentPage++;
-      this.pageMessages = this.getPageMessages();
-    }
-  }
-
-  setFilter() {
-    this.updateData();
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.pageMessages = this.getPageMessages();
+  setPage(gotoPage: number) {
+    if (gotoPage >= 1 && gotoPage <= this.totalPages) {
+      this.currentPage = gotoPage;
+      const startIndex: number = (this.currentPage - 1) * this.pageLimit;
+      const endIndex: number = Math.min(startIndex + this.pageLimit - 1, this.messages.length);
+      this.pageMessages = this.messages.slice(startIndex, endIndex);
     }
   }
 

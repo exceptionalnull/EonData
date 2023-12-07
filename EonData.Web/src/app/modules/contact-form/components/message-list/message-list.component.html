@@ -1,13 +1,13 @@
 <div class="messagelist-container">
     <div class="messagelist-sidebar">
         <div class="messagelist-filters">
-            <select class="messagelist-unreadfilter" [(ngModel)]="unreadFilter" (change)="setFilter()">
+            <select class="messagelist-unreadfilter" [(ngModel)]="unreadFilter" (change)="updateData()">
                 <option value="all">All messages</option>
                 <option value="unread">Unread only</option>
                 <option value="read">Read only</option>
             </select>
-            <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="prevPage()">Prev page</button></div>
-            <div class="messagelist-nextpage"><button [disabled]="this.finalPage" (click)="nextPage()">Next page</button></div>
+            <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="setPage(this.currentPage - 1)">Prev page</button></div>
+            <div class="messagelist-nextpage"><button [disabled]="this.currentPage >= this.totalPages" (click)="setPage(this.currentPage + 1)">Next page</button></div>
         </div>
         <div *ngIf="(this.messages?.length ?? 0) == 0">No messages.</div>
         <table *ngIf="(this.messages?.length ?? 0) > 0">
