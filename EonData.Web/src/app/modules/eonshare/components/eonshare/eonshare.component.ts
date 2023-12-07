@@ -11,18 +11,18 @@ import { ShareFileModel } from '../../models/ShareFileModel';
 })
 export class EonshareComponent implements OnInit {
   public fileShare: ShareFolderModel[] = [];
-  public currentFolderKey: string | null = null;
+  public currentFolderKey: string = '';
   constructor(private fileService: EonShareService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.currentFolderKey = this.route.snapshot.paramMap.get('objectKey');
+    this.currentFolderKey = this.route.snapshot.paramMap.get('objectKey') ?? '';
     this.fileService.getFileShare().subscribe(response => {
       this.fileShare = response;
     });
   }
 
   getFiles(): ShareFileModel[] {
-    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey);
+    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey ?? '');
     return folder ? folder.files : [];
   }
 }

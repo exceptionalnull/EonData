@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ShareFolderModel } from './models/ShareFolderModel';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
