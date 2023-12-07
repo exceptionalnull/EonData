@@ -1,9 +1,11 @@
 using Amazon.DynamoDBv2;
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Identity.Web;
 using EonData.ContactForm.Services;
-using Microsoft.AspNetCore.RateLimiting;
+using EonData.FileShare.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +36,8 @@ builder.Logging.AddAWSProvider();
 
 // add AWS services
 builder.Services
-    .AddAWSService<IAmazonDynamoDB>();
+    .AddAWSService<IAmazonDynamoDB>()
+    .AddAWSService<IAmazonS3>();
 
 // add application services
 builder.Services
