@@ -20,27 +20,14 @@ namespace EonData.FileShare.Services
 
         public async Task<IEnumerable<ShareFolderModel>> GetFileShareAsync(CancellationToken cancellationToken)
         {
-            // list the S3Objects in the share bucket
             var req = new ListObjectsV2Request()
             {
                 BucketName = EONSHARE_S3_BUCKET
             };
+
             var resp = await s3Client.ListObjectsV2Async(req, cancellationToken);
 
-            // convert S3Objects to ShareFileModels
-            var files = resp.S3Objects.Select(GetFileModel);
-
-            // process the ShareFileModels into the full fileshare data structure
-            var folders = files.GroupBy(f => f.Prefix).Select(g => new ShareFolderModel()
-            {
-                Name = g.Key.Substring(g.Key.LastIndexOf('/') + 1),
-                Prefix = g.Key,
-                // when Name == empty it is the directory details...
-                Files = g.Where(g => g.Name != string.Empty).ToList(),
-                LastModified = g.Where(g => g.Name == string.Empty).FirstOrDefault()?.LastModified
-            });
-
-            return folders;
+            return GetFolderModels(resp.S3Objects);
         }
 
         public async Task<string> GetSignedUrlAsync(string file, CancellationToken cancellationToken)
@@ -60,7 +47,18 @@ namespace EonData.FileShare.Services
             return shareUrl;
         }
 
-        private ShareFileModel GetFileModel(S3Object fileObject)
+        private static IEnumerable<ShareFolderModel> GetFolderModels(List<S3Object> objects) => objects
+            .Select(GetFileModel)
+            .GroupBy(f => f.Prefix)
+            .Select(g => new ShareFolderModel() {
+                Name = g.Key.Substring(g.Key.LastIndexOf('/') + 1),
+                Prefix = g.Key,
+                // when Name == empty it is the directory details...
+                Files = g.Where(g => g.Name != string.Empty).ToList(),
+                LastModified = g.Where(g => g.Name == string.Empty).FirstOrDefault()?.LastModified
+            });
+
+        private static ShareFileModel GetFileModel(S3Object fileObject)
         {
             int lastSep = fileObject.Key.LastIndexOf('/');
             return new ShareFileModel()
