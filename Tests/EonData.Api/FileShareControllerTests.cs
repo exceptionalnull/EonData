@@ -29,7 +29,7 @@ namespace Tests.EonData.Api
         }
 
         [Fact]
-        public async Task CreatesDownloadFileRedirect()
+        public async Task ValidDownloadRedirects()
         {
             List<ShareFolderModel> data = new()
             {
