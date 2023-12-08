@@ -18,7 +18,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFileShareDetails(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<ShareFolderModel>>> GetFileShareDetails(CancellationToken cancellationToken)
         {
             IEnumerable<ShareFolderModel> result;
             try
@@ -47,6 +47,12 @@ namespace EonData.Api.Controllers
             {
                 return BadRequest(ex.ToString());
             }
+
+            if (string.IsNullOrEmpty(signedUrl))
+            {
+                return NotFound();
+            }
+
             return Redirect(signedUrl);
         }
     }
