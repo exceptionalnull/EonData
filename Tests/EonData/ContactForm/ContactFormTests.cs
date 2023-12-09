@@ -64,30 +64,21 @@ namespace Tests.EonData.ContactForm
         [Fact]
         public async Task CanReadExistingContactMessage()
         {
-            SendMessageModel sentMessage = new()
-            {
-                ContactAddress = "testing@example.com",
-                ContactName = "Test Suite",
-                FormSource = "xunit",
-                MessageContent = "this is a test message."
-            };
-
             var mockDynamoDB = new Mock<IAmazonDynamoDB>();
-            mockDynamoDB.Setup(dydb => dydb.GetItemAsync(It.IsAny<GetItemRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetItemResponse()
-            {
-                IsItemSet = true,
-                Item = new Dictionary<string, AttributeValue>()
-                {
-                    { "messageId", new AttributeValue(Guid.Empty.ToString()) },
-                    { "messageTimestamp", new AttributeValue(new DateTime(2022, 2, 2, 2, 22, 22).ToString("s")) },
-                    { "contactAddress", new AttributeValue("testing@example.com") },
-                    { "contactName", new AttributeValue("Testing Suite") },
-                    { "formSource", new AttributeValue("xunit") },
-                    { "requestSource", new AttributeValue("255.255.255.0") },
-                    { "isRead", new AttributeValue() { BOOL = false } },
-                    { "messageContent", new AttributeValue("this is a test record") }
-                }
-            });
+            mockDynamoDB.Setup(dydb => dydb.GetItemAsync(It.IsAny<GetItemRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetItemResponse() {
+                    IsItemSet = true,
+                    Item = new Dictionary<string, AttributeValue>() {
+                        { "messageId", new AttributeValue(Guid.Empty.ToString()) },
+                        { "messageTimestamp", new AttributeValue(new DateTime(2022, 2, 2, 2, 22, 22).ToString("s")) },
+                        { "contactAddress", new AttributeValue("testing@example.com") },
+                        { "contactName", new AttributeValue("Testing Suite") },
+                        { "formSource", new AttributeValue("xunit") },
+                        { "requestSource", new AttributeValue("255.255.255.0") },
+                        { "isRead", new AttributeValue() { BOOL = false } },
+                        { "messageContent", new AttributeValue("this is a test record") }
+                    }
+                });
 
             var service = new ContactFormService(mockDynamoDB.Object);
             var result = await service.GetContactMessageAsync(Guid.Empty, new CancellationToken());
@@ -101,6 +92,26 @@ namespace Tests.EonData.ContactForm
             Assert.Equal("255.255.255.0", result.RequestSource);
             Assert.False(result.isRead);
             Assert.Equal("this is a test record", result.MessageContent);
+        }
+
+        [Fact]
+        public async Task CanMarkMessageAsRead()
+        {
+            var messageId = Guid.NewGuid();
+            var mockDynamoDB = new Mock<IAmazonDynamoDB>();
+            mockDynamoDB.Setup(dydb => dydb.UpdateItemAsync(It.IsAny<UpdateItemRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<UpdateItemRequest, CancellationToken>((req, _) =>
+                {
+                    Assert.True(req.Key.ContainsKey("messageId"));
+                    Assert.Equal(messageId.ToString(), req.Key["messageId"].S);
+                    Assert.Equal("SET isRead = :is_r", req.UpdateExpression);
+                    Assert.True(req.ExpressionAttributeValues.ContainsKey(":is_r"));
+                    Assert.True(req.ExpressionAttributeValues[":is_r"].BOOL);
+                    Assert.Equal("attribute_exists(messageId)", req.ConditionExpression);
+                });
+
+            var service = new ContactFormService(mockDynamoDB.Object);
+            await service.MarkAsReadAsync(messageId, new CancellationToken());
         }
     }
 }
