@@ -1,4 +1,6 @@
-﻿using EonData.FileShare.Models;
+﻿using Amazon.S3.Model;
+
+using EonData.FileShare.Models;
 using EonData.FileShare.Services;
 
 using Microsoft.AspNetCore.Authorization;

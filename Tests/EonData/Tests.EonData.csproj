@@ -29,4 +29,13 @@
     <ProjectReference Include="..\..\EonData\EonData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="defaultFileObjects.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="defaultFileShare.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

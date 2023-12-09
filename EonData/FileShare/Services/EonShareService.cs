@@ -56,7 +56,7 @@ namespace EonData.FileShare.Services
                 // when Name == empty it is the directory details...
                 Files = g.Where(g => g.Name != string.Empty).ToList(),
                 LastModified = g.Where(g => g.Name == string.Empty).FirstOrDefault()?.LastModified
-            });
+            }).ToList();
 
         private static ShareFileModel GetFileModel(S3Object fileObject)
         {
