@@ -38,6 +38,21 @@ namespace Tests.EonData.FileShare
         }
 
         [Fact]
+        public async Task FileShareDetailsNeverHasFileWithNoName()
+        {
+            var mockS3 = new Mock<IAmazonS3>();
+            mockS3.Setup(s3 => s3.ListObjectsV2Async(It.IsAny<ListObjectsV2Request>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ListObjectsV2Response() { S3Objects = GetDefaultFileObjects() });
+
+            var service = new EonShareService(mockS3.Object);
+            var result = await service.GetFileShareAsync(new CancellationToken());
+
+            // the files with empty names are information about folders and should not be included in the final data structure.
+            // they are used to determine lastModified for directories but are hidden from the final output.
+            var isNoNameFile = result.SelectMany(d => d.Files).Any(f => string.IsNullOrEmpty(f.Name));
+            Assert.False(isNoNameFile);
+        }
+
+        [Fact]
         public async Task CanCreateSignedUrl()
         {
             var mockS3 = new Mock<IAmazonS3>();
