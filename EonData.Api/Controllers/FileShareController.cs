@@ -52,7 +52,6 @@ namespace EonData.Api.Controllers
                 {
                     return NotFound();
                 }
-                
             }
             catch (Exception ex)
             {

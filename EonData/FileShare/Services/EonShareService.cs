@@ -52,7 +52,6 @@ namespace EonData.FileShare.Services
                 {
                     throw;
                 }
-                    
             }
             
             return true;

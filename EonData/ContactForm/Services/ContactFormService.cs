@@ -14,8 +14,8 @@ namespace EonData.ContactForm.Services
 {
     public class ContactFormService : IContactFormService
     {
-        private const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
-        private const int READ_LIMIT = 50;
+        public const string CONTACT_MESSAGE_TABLE = "EonDataWebContactMessages";
+        public const int READ_LIMIT = 50;
 
         private readonly IAmazonDynamoDB db;
 
@@ -122,7 +122,7 @@ namespace EonData.ContactForm.Services
                 request.ExpressionAttributeValues = new Dictionary<string, AttributeValue>() { { ":read", new AttributeValue() { BOOL = !(bool)unread } } };
             }
             var result = await db.ScanAsync(request, cancellationToken);
-            return result.Count;
+            return result?.Count ?? 0;
         }
 
         /// <summary>
