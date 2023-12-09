@@ -1,11 +1,12 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Amazon.S3.Model;
 
 using EonData.ContactForm.Models;
 using EonData.ContactForm.Services;
 
 using Moq;
+
+using Xunit.Sdk;
 
 namespace Tests.EonData.ContactForm
 {
@@ -17,7 +18,7 @@ namespace Tests.EonData.ContactForm
             SendMessageModel sendMessage = new()
             {
                 ContactAddress = "testing@example.com",
-                ContactName = "Test Suite",
+                ContactName = "Unit Test",
                 FormSource = "xunit",
                 MessageContent = "this is a test message."
             };
@@ -86,7 +87,7 @@ namespace Tests.EonData.ContactForm
                         { "messageId", new AttributeValue(testMessageId.ToString()) },
                         { "messageTimestamp", new AttributeValue(new DateTime(2022, 2, 2, 2, 22, 22).ToString("s")) },
                         { "contactAddress", new AttributeValue("testing@example.com") },
-                        { "contactName", new AttributeValue("Testing Suite") },
+                        { "contactName", new AttributeValue("Unit Test") },
                         { "formSource", new AttributeValue("xunit") },
                         { "requestSource", new AttributeValue("255.255.255.0") },
                         { "isRead", new AttributeValue() { BOOL = false } },
@@ -102,7 +103,7 @@ namespace Tests.EonData.ContactForm
             Assert.Equal(testMessageId, result.MessageId);
             Assert.Equal(new DateTime(2022, 2, 2, 2, 22, 22), result.MessageTimestamp);
             Assert.Equal("testing@example.com", result.ContactAddress);
-            Assert.Equal("Testing Suite", result.ContactName);
+            Assert.Equal("Unit Test", result.ContactName);
             Assert.Equal("xunit", result.FormSource);
             Assert.Equal("255.255.255.0", result.RequestSource);
             Assert.False(result.isRead);
@@ -203,6 +204,7 @@ namespace Tests.EonData.ContactForm
             Assert.Equal(7, result);
         }
 
+        [Fact]
         public async Task GetsListOfMessages()
         {
             var mockDynamoDB = new Mock<IAmazonDynamoDB>();
@@ -211,7 +213,108 @@ namespace Tests.EonData.ContactForm
                 {
                     // check the request is well formed
                     Assert.Equal(ContactFormService.CONTACT_MESSAGE_TABLE, req.TableName);
+
+                    Assert.Equal(ContactFormService.READ_LIMIT, req.Limit);
+
+                    Assert.Null(req.FilterExpression);
+                    Assert.False(req.ExpressionAttributeNames?.ContainsKey("#read") ?? false);
+                    Assert.False(req.ExpressionAttributeValues?.ContainsKey(":read") ?? false);
+                })
+                .ReturnsAsync(new ScanResponse() { Items = new() });
+
+            var service = new ContactFormService(mockDynamoDB.Object);
+            var result = await service.ListMessagesAsync(null, new CancellationToken());
+        }
+
+        [Fact]
+        public async Task GetsListOfUnreadMessages()
+        {
+            var mockDynamoDB = new Mock<IAmazonDynamoDB>();
+            mockDynamoDB.Setup(dydb => dydb.ScanAsync(It.IsAny<ScanRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<ScanRequest, CancellationToken>((req, _) =>
+                {
+                    // check the request is well formed
+                    Assert.Equal(ContactFormService.CONTACT_MESSAGE_TABLE, req.TableName);
+
+                    Assert.Equal(ContactFormService.READ_LIMIT, req.Limit);
+
+                    Assert.NotEmpty(req.FilterExpression);
+                    Assert.Equal("#read = :read", req.FilterExpression);
+                    Assert.True(req.ExpressionAttributeNames?.ContainsKey("#read") ?? false);
+                    Assert.Equal("isRead", req.ExpressionAttributeNames["#read"]);
+                    Assert.True(req.ExpressionAttributeValues?.ContainsKey(":read") ?? false);
+                    Assert.False(req.ExpressionAttributeValues[":read"].BOOL);
+                })
+                .ReturnsAsync(new ScanResponse() { Items = new() });
+
+            var service = new ContactFormService(mockDynamoDB.Object);
+            var result = await service.ListMessagesAsync(true, new CancellationToken());
+        }
+
+        [Fact]
+        public async Task GetsListOfReadMessages()
+        {
+            var mockDynamoDB = new Mock<IAmazonDynamoDB>();
+            mockDynamoDB.Setup(dydb => dydb.ScanAsync(It.IsAny<ScanRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<ScanRequest, CancellationToken>((req, _) =>
+                {
+                    // check the request is well formed
+                    Assert.Equal(ContactFormService.CONTACT_MESSAGE_TABLE, req.TableName);
+
+                    Assert.Equal(ContactFormService.READ_LIMIT, req.Limit);
+
+                    Assert.NotEmpty(req.FilterExpression);
+                    Assert.Equal("#read = :read", req.FilterExpression);
+                    Assert.True(req.ExpressionAttributeNames?.ContainsKey("#read") ?? false);
+                    Assert.Equal("isRead", req.ExpressionAttributeNames["#read"]);
+                    Assert.True(req.ExpressionAttributeValues?.ContainsKey(":read") ?? false);
+                    Assert.True(req.ExpressionAttributeValues[":read"].BOOL);
+                })
+                .ReturnsAsync(new ScanResponse() { Items = new() });
+
+            var service = new ContactFormService(mockDynamoDB.Object);
+            var result = await service.ListMessagesAsync(false, new CancellationToken());
+        }
+
+        // this tests if the internal calls will correctly handle paginated results.
+        // it checks if a series of Scan calls is made with the expected values.
+        [Fact]
+        public async Task ListMessagesCanPaginateResults()
+        {
+            int requestCount = 1;
+            string? expectedStartKey = null;
+
+            var mockDynamoDB = new Mock<IAmazonDynamoDB>();
+            mockDynamoDB.Setup(dydb => dydb.ScanAsync(It.IsAny<ScanRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<ScanRequest, CancellationToken>((req, _) =>
+                {
+                    // check the request is well formed
+                    Assert.Equal(ContactFormService.CONTACT_MESSAGE_TABLE, req.TableName);
+                    Assert.Equal(ContactFormService.READ_LIMIT, req.Limit);
+                    Assert.True(requestCount <= 3, "Too many pages processed.");
+                    if (requestCount == 1 || requestCount == 3)
+                    {
+                        Assert.Empty(req.ExclusiveStartKey);
+                    }
+                    else
+                    {
+                        Assert.True(req.ExclusiveStartKey?.ContainsKey("messageId") ?? false);
+                        Assert.Equal(expectedStartKey, req.ExclusiveStartKey["messageId"].S);
+                    }
+                    expectedStartKey = Guid.NewGuid().ToString();
+                    requestCount++;
+                })
+                .ReturnsAsync(() =>
+                {
+                    return new ScanResponse()
+                    {
+                        Items = new(),
+                        LastEvaluatedKey = (requestCount == 3) ? new() : new() { { "messageId", new AttributeValue(expectedStartKey) } }
+                    };
                 });
+
+            var service = new ContactFormService(mockDynamoDB.Object);
+            var result = await service.ListMessagesAsync(null, new CancellationToken());
         }
     }
 }

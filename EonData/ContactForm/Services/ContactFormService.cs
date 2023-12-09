@@ -138,8 +138,8 @@ namespace EonData.ContactForm.Services
             do
             {
                 var result = await ReadMessagesAsync(unread, lastEvaluatedKey, cancellationToken);
-                lastEvaluatedKey = result.Item2;
-                if ((result.Item1?.Count() ?? 0) > 0)
+                lastEvaluatedKey = result.LastKey;
+                if ((result.Messages?.Count() ?? 0) > 0)
                 {
                     messages.AddRange(result.Item1!);
                 }
@@ -148,8 +148,9 @@ namespace EonData.ContactForm.Services
         }
 
         // reads a batch of messages from the dynamodb table
-        private async Task<Tuple<IEnumerable<MessageListModel>, string?>> ReadMessagesAsync(bool? unread, string? startKey, CancellationToken cancellationToken)
+        private async Task<(IEnumerable<MessageListModel>? Messages, string? LastKey)> ReadMessagesAsync(bool? unread, string? startKey, CancellationToken cancellationToken)
         {
+            
             ScanRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
@@ -183,7 +184,7 @@ namespace EonData.ContactForm.Services
                 isRead = itm["isRead"].BOOL
             });
             string? lastEvaluatedKey = (response.LastEvaluatedKey.ContainsKey("messageId")) ? response.LastEvaluatedKey["messageId"].S : null;
-            return Tuple.Create(messages, lastEvaluatedKey);
+            return (Messages: messages, LastKey: lastEvaluatedKey);
         }
     }
 }
