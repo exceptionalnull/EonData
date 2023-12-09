@@ -1,4 +1,5 @@
 ﻿using Amazon.S3;
+
 using Amazon.S3.Model;
 
 using EonData.FileShare.Models;
@@ -28,6 +29,33 @@ namespace EonData.FileShare.Services
             var resp = await s3Client.ListObjectsV2Async(req, cancellationToken);
 
             return GetFolderModels(resp.S3Objects);
+        }
+
+        public async Task<bool> FileExistsAsync(string file, CancellationToken cancellationToken)
+        {
+            var req = new GetObjectMetadataRequest()
+            {
+                BucketName = EONSHARE_S3_BUCKET,
+                Key = file
+            };
+            try
+            {
+                var result = await s3Client.GetObjectMetadataAsync(req, cancellationToken);
+            }
+            catch (AmazonS3Exception exception)
+            {
+                if (exception.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+                    
+            }
+            
+            return true;
         }
 
         public async Task<string> GetSignedUrlAsync(string file, CancellationToken cancellationToken)

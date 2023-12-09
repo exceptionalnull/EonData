@@ -43,19 +43,21 @@ namespace EonData.Api.Controllers
             string signedUrl;
             try
             {
-                signedUrl = await eonShare.GetSignedUrlAsync(objectKey, cancellationToken);
+                if (await eonShare.FileExistsAsync(objectKey, cancellationToken))
+                {
+                    signedUrl = await eonShare.GetSignedUrlAsync(objectKey, cancellationToken);
+                    return Redirect(signedUrl);
+                }
+                else
+                {
+                    return NotFound();
+                }
+                
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
-
-            if (string.IsNullOrEmpty(signedUrl))
-            {
-                return NotFound();
-            }
-
-            return Redirect(signedUrl);
         }
     }
 }
