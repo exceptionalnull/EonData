@@ -6,11 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Moq;
 
-using NuGet.Frameworks;
-
 using System.Text.Json;
-
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Tests.EonData.Api
 {
@@ -57,7 +53,7 @@ namespace Tests.EonData.Api
         }
 
         [Fact]
-        public async Task InvalidDownload404Redirects()
+        public async Task InvalidDownloadReturns404()
         {
             var mockService = new Mock<IEonShareService>();
             mockService.Setup(fs => fs.GetSignedUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
