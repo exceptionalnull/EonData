@@ -4,8 +4,6 @@ using EonData.FileShare.Services;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Tests.Tests.EonData.Api;
-
 namespace Tests.EonData.Api
 {
     public class FileShareControllerTests

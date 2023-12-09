@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests.Tests.EonData.Api
+namespace Tests.EonData.Api
 {
     internal class EonShareServiceMock : IEonShareService
     {
@@ -77,5 +77,7 @@ namespace Tests.Tests.EonData.Api
 
             return result;
         }
+
+        public Task<bool> FileExistsAsync(string file, CancellationToken cancellationToken) => Task.FromResult(data.SelectMany(d => d.Files).Any(f => f.Key.Equals(file)));
     }
 }

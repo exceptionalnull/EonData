@@ -16,7 +16,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Tests.Tests.EonData.FileShare
+namespace Tests.EonData.FileShare
 {
     public class FileShareTests
     {
