@@ -46,6 +46,110 @@ namespace Tests.EonData.Api
 
             Assert.NotNull(response);
             Assert.IsType<OkResult>(response);
+            mockService.Verify(cfrm => cfrm.SaveContactMessageAsync(It.IsAny<SendMessageModel>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task CanGetTotal()
+        {
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()))
+                .Callback<bool?, CancellationToken>((unread, _) => { Assert.Null(unread); })
+                .ReturnsAsync(11);
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.GetTotal(null, new CancellationToken());
+            Assert.NotNull(response);
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            Assert.Equal(11, okResult.Value);
+            mockService.Verify(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task CanGetTotalUnread()
+        {
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()))
+                .Callback<bool?, CancellationToken>((unread, _) => { Assert.True(unread); })
+                .ReturnsAsync(7);
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.GetTotal(true, new CancellationToken());
+            Assert.NotNull(response);
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            Assert.Equal(7, okResult.Value);
+            mockService.Verify(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task CanGetTotalRead()
+        {
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()))
+                .Callback<bool?, CancellationToken>((unread, _) => { Assert.False(unread); })
+                .ReturnsAsync(3);
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.GetTotal(false, new CancellationToken());
+            Assert.NotNull(response);
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            Assert.Equal(3, okResult.Value);
+            mockService.Verify(cfrm => cfrm.GetTotalContactMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task CanListMessages()
+        {
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.ListMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()))
+                .Callback<bool?, CancellationToken>((unread, _) => { Assert.Null(unread); })
+                .ReturnsAsync(new List<MessageListModel>());
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.ListMessages(null, new CancellationToken());
+            Assert.NotNull(response);
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            Assert.NotNull(okResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<MessageListModel>>(okResult.Value);
+            mockService.Verify(cfrm => cfrm.ListMessagesAsync(It.IsAny<bool?>(), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task CanGetMessage()
+        {
+            Guid testMessageId = Guid.NewGuid();
+            ContactMessageModel testMessage = new()
+            {
+                MessageId = testMessageId,
+                ContactAddress = "testing@example.com",
+                ContactName = "Unit Test",
+                FormSource = "xunit",
+                RequestSource = "255.255.255.0",
+                isRead = true,
+                MessageContent = "this is a test message.",
+                MessageTimestamp = DateTime.UtcNow
+            };
+
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.GetContactMessageAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .Callback<Guid, CancellationToken>((mid, _) => { Assert.Equal(testMessageId, mid); })
+                .ReturnsAsync(testMessage);
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.GetMessage(testMessageId, new CancellationToken());
+            Assert.NotNull(response);
+            var okResult = Assert.IsType<OkObjectResult>(response.Result);
+            Assert.Equal(testMessage, okResult.Value);
+            mockService.Verify(cfrm => cfrm.GetContactMessageAsync(testMessageId, It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task CanSetMessageAsRead()
+        {
+            Guid testMessageId = Guid.NewGuid();
+            var mockService = new Mock<IContactFormService>();
+            mockService.Setup(cfrm => cfrm.MarkAsReadAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+                .Callback<Guid, CancellationToken>((mid, _) => { Assert.Equal(testMessageId, mid); });
+            var controller = new ContactFormController(mockService.Object);
+            var response = await controller.MarkAsRead(testMessageId, new CancellationToken());
+            Assert.NotNull(response);
+            Assert.IsType<OkResult>(response);
+            mockService.Verify(cfrm => cfrm.MarkAsReadAsync(testMessageId, It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]

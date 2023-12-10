@@ -45,7 +45,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("total")]
         [Authorize]
-        public async Task<IActionResult> GetTotal(bool? unread, CancellationToken cancellationToken)
+        public async Task<ActionResult<int>> GetTotal(bool? unread, CancellationToken cancellationToken)
         {
             int messageCount = -1;
             try
@@ -63,7 +63,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("")]
         [Authorize]
-        public async Task<IActionResult> ListMessages(bool? unread, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<MessageListModel>>> ListMessages(bool? unread, CancellationToken cancellationToken)
         {
             IEnumerable<MessageListModel> result;
             try
@@ -80,7 +80,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetMessage(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult<ContactMessageModel>> GetMessage(Guid id, CancellationToken cancellationToken)
         {
             ContactMessageModel? message;
             try
