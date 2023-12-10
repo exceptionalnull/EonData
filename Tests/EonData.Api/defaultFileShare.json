@@ -1,0 +1,149 @@
+[
+    {
+        "name": "",
+        "prefix": "",
+        "files": [
+            {
+                "key": "000076.28a8bd20.244230618.png",
+                "name": "000076.28a8bd20.244230618.png",
+                "prefix": "",
+                "size": 1013361,
+                "lastModified": "2023-12-07T06:50:27+00:00"
+            },
+            {
+                "key": "P1000895.JPG",
+                "name": "P1000895.JPG",
+                "prefix": "",
+                "size": 4626432,
+                "lastModified": "2023-12-07T06:48:53+00:00"
+            },
+            {
+                "key": "P1000901.JPG",
+                "name": "P1000901.JPG",
+                "prefix": "",
+                "size": 5474304,
+                "lastModified": "2023-12-07T06:49:32+00:00"
+            },
+            {
+                "key": "nms-crafting-stasis_chamber.png",
+                "name": "nms-crafting-stasis_chamber.png",
+                "prefix": "",
+                "size": 563591,
+                "lastModified": "2023-12-07T07:15:59+00:00"
+            },
+            {
+                "key": "stasis device crafting.png",
+                "name": "stasis device crafting.png",
+                "prefix": "",
+                "size": 6925726,
+                "lastModified": "2023-12-07T07:16:12+00:00"
+            }
+        ],
+        "lastModified": null
+    },
+    {
+        "name": "cplanet",
+        "prefix": "cplanet",
+        "files": [
+            {
+                "key": "cplanet/captain_planet-season1.zip",
+                "name": "captain_planet-season1.zip",
+                "prefix": "cplanet",
+                "size": 8060226980,
+                "lastModified": "2023-12-07T06:40:53+00:00"
+            },
+            {
+                "key": "cplanet/captain_planet-season2.zip",
+                "name": "captain_planet-season2.zip",
+                "prefix": "cplanet",
+                "size": 4935019887,
+                "lastModified": "2023-12-07T06:42:10+00:00"
+            },
+            {
+                "key": "cplanet/captain_planet-season3.zip",
+                "name": "captain_planet-season3.zip",
+                "prefix": "cplanet",
+                "size": 2412341126,
+                "lastModified": "2023-12-07T06:44:00+00:00"
+            },
+            {
+                "key": "cplanet/captain_planet-season4.zip",
+                "name": "captain_planet-season4.zip",
+                "prefix": "cplanet",
+                "size": 3927927210,
+                "lastModified": "2023-12-07T06:44:40+00:00"
+            },
+            {
+                "key": "cplanet/captain_planet-season5.zip",
+                "name": "captain_planet-season5.zip",
+                "prefix": "cplanet",
+                "size": 4321821127,
+                "lastModified": "2023-12-07T06:45:36+00:00"
+            },
+            {
+                "key": "cplanet/captain_planet-season6.zip",
+                "name": "captain_planet-season6.zip",
+                "prefix": "cplanet",
+                "size": 3484684615,
+                "lastModified": "2023-12-07T06:42:47+00:00"
+            }
+        ],
+        "lastModified": null
+    },
+    {
+        "name": "test",
+        "prefix": "test",
+        "files": [
+            {
+                "key": "test/000076.28a8bd20.244230618.png",
+                "name": "000076.28a8bd20.244230618.png",
+                "prefix": "test",
+                "size": 1013361,
+                "lastModified": "2023-12-07T10:00:30+00:00"
+            },
+            {
+                "key": "test/hamsterdance.gif",
+                "name": "hamsterdance.gif",
+                "prefix": "test",
+                "size": 4739314,
+                "lastModified": "2023-12-07T07:11:39+00:00"
+            }
+        ],
+        "lastModified": "2023-12-07T07:11:18+00:00"
+    },
+    {
+        "name": "nested",
+        "prefix": "test/nested",
+        "files": [
+            {
+                "key": "test/nested/duck-hat.gif",
+                "name": "duck-hat.gif",
+                "prefix": "test/nested",
+                "size": 4382477,
+                "lastModified": "2023-12-07T07:12:16+00:00"
+            }
+        ],
+        "lastModified": "2023-12-07T07:11:52+00:00"
+    },
+    {
+        "name": "folders",
+        "prefix": "test/nested/folders",
+        "files": [
+            {
+                "key": "test/nested/folders/delusional_robot.PNG",
+                "name": "delusional_robot.PNG",
+                "prefix": "test/nested/folders",
+                "size": 3150024,
+                "lastModified": "2023-12-07T07:14:22+00:00"
+            },
+            {
+                "key": "test/nested/folders/mrburns.png",
+                "name": "mrburns.png",
+                "prefix": "test/nested/folders",
+                "size": 286469,
+                "lastModified": "2023-12-07T07:13:05+00:00"
+            }
+        ],
+        "lastModified": "2023-12-07T07:12:28+00:00"
+    }
+]

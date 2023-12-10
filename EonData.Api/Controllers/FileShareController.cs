@@ -1,4 +1,6 @@
-﻿using EonData.FileShare.Models;
+﻿using Amazon.S3.Model;
+
+using EonData.FileShare.Models;
 using EonData.FileShare.Services;
 
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +20,7 @@ namespace EonData.Api.Controllers
         [HttpGet]
         [Route("")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFileShareDetails(CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<ShareFolderModel>>> GetFileShareDetails(CancellationToken cancellationToken)
         {
             IEnumerable<ShareFolderModel> result;
             try
@@ -41,13 +43,20 @@ namespace EonData.Api.Controllers
             string signedUrl;
             try
             {
-                signedUrl = await eonShare.GetSignedUrlAsync(objectKey, cancellationToken);
+                if (await eonShare.FileExistsAsync(objectKey, cancellationToken))
+                {
+                    signedUrl = await eonShare.GetSignedUrlAsync(objectKey, cancellationToken);
+                    return Redirect(signedUrl);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
             }
-            return Redirect(signedUrl);
         }
     }
 }
