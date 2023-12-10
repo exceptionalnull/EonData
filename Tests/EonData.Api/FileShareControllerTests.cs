@@ -33,16 +33,10 @@ namespace Tests.EonData.Api
         {
             var mockService = new Mock<IEonShareService>();
             mockService.Setup(fs => fs.GetSignedUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Callback<string, CancellationToken>((fkey, _) =>
-                {
-                    Assert.Equal("example.txt", fkey);
-                })
+                .Callback<string, CancellationToken>((fkey, _) => { Assert.Equal("example.txt", fkey); })
                 .ReturnsAsync("https://s3bucket.aws.fake.url/example.txt?sid=123ABCD");
             mockService.Setup(fs => fs.FileExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Callback<string, CancellationToken>((fkey, _) =>
-                {
-                    Assert.Equal("example.txt", fkey);
-                })
+                .Callback<string, CancellationToken>((fkey, _) => { Assert.Equal("example.txt", fkey); })
                 .ReturnsAsync(true);
             var controller = new FileShareController(mockService.Object);
             var response = await controller.DownloadFile("example.txt", new CancellationToken());
@@ -50,29 +44,24 @@ namespace Tests.EonData.Api
             Assert.NotNull(response);
             var redirect = Assert.IsType<RedirectResult>(response);
             Assert.Equal("https://s3bucket.aws.fake.url/example.txt?sid=123ABCD", redirect.Url);
+            mockService.Verify(fs => fs.FileExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+            mockService.Verify(fs => fs.GetSignedUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact]
         public async Task InvalidDownloadReturns404()
         {
             var mockService = new Mock<IEonShareService>();
-            mockService.Setup(fs => fs.GetSignedUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Callback<string, CancellationToken>((fkey, _) =>
-                {
-                    Assert.Fail("This method should not be called when a file does not exist.");
-                })
-                .ReturnsAsync("https://s3bucket.aws.fake.url/example.txt?sid=123ABCD");
             mockService.Setup(fs => fs.FileExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Callback<string, CancellationToken>((fkey, _) =>
-                {
-                    Assert.Equal("example.txt", fkey);
-                })
+                .Callback<string, CancellationToken>((fkey, _) => { Assert.Equal("example.txt", fkey); })
                 .ReturnsAsync(false);
             var controller = new FileShareController(mockService.Object);
             var response = await controller.DownloadFile("example.txt", new CancellationToken());
 
             Assert.NotNull(response);
             Assert.IsType<NotFoundResult>(response);
+            mockService.Verify(fs => fs.FileExistsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+            mockService.Verify(fs => fs.GetSignedUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
         }
 
         private static IEnumerable<ShareFolderModel> GetDefaultFileShare() => JsonSerializer.Deserialize<IEnumerable<ShareFolderModel>>(File.ReadAllText(FILESHARE_JSON), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true }) ?? new List<ShareFolderModel>();
