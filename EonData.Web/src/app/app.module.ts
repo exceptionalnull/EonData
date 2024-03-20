@@ -10,6 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './modules/auth/auth.module';
 import { MsalRedirectComponent } from '@azure/msal-angular';
 import { ContactFormModule } from './modules/contact-form/contact-form.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatGridList } from '@angular/material/grid-list';
 
 // Get the browser's locale
 const browserLocale: string = window.navigator.language;
@@ -27,10 +29,12 @@ const browserLocale: string = window.navigator.language;
     AppRoutingModule,
     HttpClientModule,
     CloudControlModule,
-    ContactFormModule
+    ContactFormModule,
+    MatGridList
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: browserLocale }
+    { provide: LOCALE_ID, useValue: browserLocale },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent, MsalRedirectComponent]
 })
