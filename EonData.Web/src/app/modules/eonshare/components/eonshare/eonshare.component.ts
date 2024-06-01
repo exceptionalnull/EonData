@@ -64,8 +64,6 @@ export class EonShareComponent implements OnInit {
       n = n / 1024;
     }
 
-    console.log(n);
-
     // Include a maximum of 2 decimal places
     return (n.toFixed(n < 10 && l > 0 ? 2 : 0) + ' ' + units[l]);
   }
