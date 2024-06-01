@@ -5,6 +5,9 @@ import { SendMessageFormComponent } from './components/send-message-form/send-me
 import { FormsModule } from '@angular/forms';
 import { NewMessageNotificationComponent } from './components/new-message-notification/new-message-notification.component';
 import { ContactFormRoutingModule } from './contact-form-routing.module';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,10 @@ import { ContactFormRoutingModule } from './contact-form-routing.module';
   imports: [
     CommonModule,
     FormsModule,
-    ContactFormRoutingModule
+    ContactFormRoutingModule,
+    ButtonModule,
+    InputTextModule,
+    InputTextareaModule
   ],
   exports: [
     SendMessageFormComponent,

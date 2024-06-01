@@ -9,7 +9,7 @@
   .row {
     display: flex;
     justify-content: space-between;
-    margin-top: 13px;
+    margin-top: 7px;
 
     input {
       width: 100%;
@@ -28,6 +28,7 @@
     font: {
       family: 'Share Tech Mono', monospace;
       weight: bold;
+      size: large;
     }
   }
 
@@ -40,27 +41,6 @@
   .button-row {
     display: flex;
     justify-content: flex-end;
-    height: 36px;
-
-    button:not(:last-child) {
-      margin-right: 22px;
-    }
-
-    button {
-      margin: {
-        left: 10px;
-        top: 7px;
-      }
-
-      margin-left: 10px;
-      margin-top: 7px;
-      color: $primary-color;
-      background-color: $primary-accent-color;
-
-      border: {
-        color: $secondary-accent-color;
-        radius: 5px;
-      }
-    }
+    margin-top: 7px;
   }
 }

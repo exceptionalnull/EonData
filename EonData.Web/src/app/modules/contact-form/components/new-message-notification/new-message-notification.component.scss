@@ -1,0 +1,7 @@
+a {
+  color: white; // Default link color
+
+  &:visited {
+    color: white; // Color for visited links
+  }
+}

@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RouterModule } from '@angular/router';
 import { ContactFormModule } from '../contact-form/contact-form.module';
 import { MsalConfig } from './msal-config';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MsalConfig } from './msal-config';
     CommonModule,
     RouterModule,
     MsalModule,
-    ContactFormModule
+    ContactFormModule,
+    ButtonModule
   ],
   providers: [
     {

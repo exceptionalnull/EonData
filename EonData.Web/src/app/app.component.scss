@@ -1,73 +1,30 @@
 @import '../variables';
 
-header {
-  display: flex;
-  align-content: center;
-  justify-content: space-between;
-
-  div.logo {
-    border-radius: 19px 19px 22px 22px;
-    min-width: 475px;
-
-
-    background: {
-      image: url('/assets/spacegrid.png');
-      position: center;
-      repeat: round;
-      attachment: fixed;
-    }
-
-    img {
-      // height of the img controls the height of the whole logo
-      height: 96px;
-      vertical-align: middle;
-
-      margin: {
-        top: 3px;
-        bottom: 5px;
-        left: 22px;
-        right: 13px;
-      }
-    }
-
-    a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-
-      span {
-        color: $logo-label-color;
-
-        margin: {
-          left: 19px;
-          right: 42px;
-        }
-
-        width: 100%;
-        text-align: center;
-
-        font: {
-          family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
-          weight: bold;
-          size: 50px;
-        }
-      }
-    }
+.logo {
+  img {
+    // height of the img controls the height of the whole logo
+    height: 96px;
+    vertical-align: middle;
   }
 
-  div.authbox {
+  text-decoration: none;
 
+  a {
+    display: flex;
+    align-items: center;
+  }
+
+  span {
+    color: $logo-label-color;
+    vertical-align: middle;
+
+    font: {
+      family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
+      weight: bold;
+      size: 50px;
+    }
   }
 }
-
-/*nav {
-  div.appmenu {
-  }
-
-  div.appnotify {
-  }
-}*/
 
 main {
   min-width: 768px;

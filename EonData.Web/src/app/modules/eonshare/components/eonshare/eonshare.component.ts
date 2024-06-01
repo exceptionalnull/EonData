@@ -5,6 +5,7 @@ import { ShareFolderModel } from '../../models/ShareFolderModel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShareFileModel } from '../../models/ShareFileModel';
 
+
 @Component({
   selector: 'app-eonshare',
   templateUrl: './eonshare.component.html',
@@ -56,9 +57,20 @@ export class EonShareComponent implements OnInit {
     }
   }
 
+  humanReadableSize(bytes: number): string {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    let l = 0, n = bytes;
+
+    while (n >= 1024 && ++l) {
+      n = n / 1024;
+    }
+
+    // Include a maximum of 2 decimal places
+    return (n.toFixed(n < 10 && l > 0 ? 2 : 0) + ' ' + units[l]);
+  }
 
   getFiles(): ShareFileModel[] {
-    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey ?? '');
+    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey);
     return folder ? folder.files.filter(f => !f.name.endsWith("/")) : [];
   }
 
