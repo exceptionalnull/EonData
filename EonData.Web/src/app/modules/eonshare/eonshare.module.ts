@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EonshareRoutingModule } from './eonshare-routing.module';
 import { EonShareComponent } from './components/eonshare/eonshare.component';
 import { FormsModule } from '@angular/forms';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-    EonshareRoutingModule
+    EonshareRoutingModule,
+    ProgressSpinnerModule
   ]
 })
 export class EonshareModule { }

@@ -1,7 +1,7 @@
 .eonshare-container {
-    div {
-        margin-top: 22px;
-    }
+  div {
+    margin-top: 22px;
+  }
 }
 
 .eonshare-row {
@@ -16,9 +16,21 @@
   }
 }
 
+a.folderNav {
+  color: white; // Default link color
+
+  &:visited {
+    color: white; // Color for visited links
+  }
+}
+
+i.folderNav {
+  font-size: large;
+}
+
 
 .eonshare-filesize {
-    font-size: small;
-    color: lightgoldenrodyellow;
-    margin-left: 5px;
+  font-size: small;
+  color: lightgray;
+  margin-left: 5px;
 }
