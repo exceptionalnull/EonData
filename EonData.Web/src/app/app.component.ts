@@ -8,15 +8,14 @@ import { environment } from '@environments/environment';
 })
 export class AppComponent {
   title = 'EonData.Web';
-  toolbarBackground = '/assets/spacegrid.png';
+  toolbarBackground = '/assets/t3.jpg';
 
   // toolbar styles don't apply correctly unless done this way
   toolbarStyle: { [klass: string]: string; } = {
     'border': 'none',
     'border-radius': '1.618em',
     'background-image': 'url(' + this.toolbarBackground + ')',
-    'background-attachment': 'fixed',
-    'background-size': 'cover'
+    'background-attachment': 'fixed'
   };
 
   appVersion = environment.version;
