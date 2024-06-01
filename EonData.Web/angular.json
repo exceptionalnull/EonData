@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "EonData.Web:build:production"
+              "buildTarget": "EonData.Web:build:production"
             },
             "development": {
-              "browserTarget": "EonData.Web:build:development"
+              "buildTarget": "EonData.Web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "EonData.Web:build"
+            "buildTarget": "EonData.Web:build"
           }
         },
         "test": {
