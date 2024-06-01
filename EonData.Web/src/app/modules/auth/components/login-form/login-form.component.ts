@@ -20,7 +20,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log("auth login-form init...");
     this.broadcastService.inProgress$
       .pipe(
         filter((status: InteractionStatus) => status === InteractionStatus.None),

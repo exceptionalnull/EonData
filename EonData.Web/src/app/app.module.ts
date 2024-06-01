@@ -10,22 +10,31 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { AuthModule } from './modules/auth/auth.module';
 import { MsalRedirectComponent } from '@azure/msal-angular';
 import { ContactFormModule } from './modules/contact-form/contact-form.module';
+import { ToolbarModule } from 'primeng/toolbar';
+
 
 // Get the browser's locale
 const browserLocale: string = window.navigator.language;
 
-@NgModule({ declarations: [
-        AppComponent,
-        HomeComponent,
-        AboutComponent
-    ],
-    bootstrap: [AppComponent, MsalRedirectComponent], imports: [AuthModule,
-        BrowserModule,
-        FormsModule,
-        AppRoutingModule,
-        CloudControlModule,
-        ContactFormModule], providers: [
-        { provide: LOCALE_ID, useValue: browserLocale },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AboutComponent
+  ],
+  bootstrap: [AppComponent, MsalRedirectComponent],
+  imports: [
+    AuthModule,
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    CloudControlModule,
+    ContactFormModule,
+    ToolbarModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: browserLocale },
+    provideHttpClient(withInterceptorsFromDi())
+  ]
+})
 export class AppModule { }

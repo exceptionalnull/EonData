@@ -1,11 +1,19 @@
-<header>
+<!-- <header>
     <div class="logo">
         <a [routerLink]="['']"><img src="/assets/logo.png" alt="EonData Logo" /><span>E o n D a t a</span></a>
     </div>
     <div class="authbox">
         <app-login-form></app-login-form>
     </div>
-</header>
+</header> -->
+<p-toolbar styleClass="eontoolbar" [style]="toolbarStyle">
+    <div class="p-toolbar-group-left">
+        <a [routerLink]="['']" class="logo"><img src="/assets/logo.png" alt="EonData Logo" class="logo" /><span class="logo">E o n D a t a</span></a>
+    </div>
+    <div class="p-toolbar-group-right">
+        <app-login-form></app-login-form>
+    </div>
+</p-toolbar>
 <!--<nav>
     <div class="appmenu">
     </div>
