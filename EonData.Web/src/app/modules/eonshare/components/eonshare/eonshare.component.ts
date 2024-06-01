@@ -58,7 +58,7 @@ export class EonShareComponent implements OnInit {
 
 
   getFiles(): ShareFileModel[] {
-    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey ?? '');
+    const folder = this.fileShare.find(f => f.prefix === this.currentFolderKey);
     return folder ? folder.files.filter(f => !f.name.endsWith("/")) : [];
   }
 
