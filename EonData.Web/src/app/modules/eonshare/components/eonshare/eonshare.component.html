@@ -11,6 +11,6 @@
         </div>
         <div class="eonshare-row" *ngFor="let file of getFiles()">
             <a [href]="getDownloadUrl(file.key)" target="_blank">
-                <img class="eonshare-rowlogo" src="/assets/file.png" [title]="file.lastModified | date:'short'" />{{file.name}}</a><span class="eonshare-filesize">{{file.prettySize}}</span></div>
+                <img class="eonshare-rowlogo" src="/assets/file.png" [title]="file.lastModified | date:'short'" />{{file.name}}</a><span class="eonshare-filesize">{{humanReadableSize(file.size)}}</span></div>
     </div>
 </div>
