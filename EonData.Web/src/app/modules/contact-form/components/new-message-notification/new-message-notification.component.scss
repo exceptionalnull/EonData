@@ -1,19 +1,7 @@
 a {
   color: white; // Default link color
 
-  /*&:hover {
-    color: $hover-color; // Color when hovered over
-  }
-
-  &:active {
-    color: $active-color; // Color when active (being clicked)
-  }*/
-
   &:visited {
     color: white; // Color for visited links
   }
-
-  /*&:focus {
-    color: $focus-color; // Color when the link is focused
-  }*/
 }
