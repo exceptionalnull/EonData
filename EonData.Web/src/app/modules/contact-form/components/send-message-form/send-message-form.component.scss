@@ -6,19 +6,34 @@
   display: flex;
   flex-direction: column;
 
+  @media (max-width: 768px) {
+    width: 100%; // Allow form to take full width on smaller screens
+    min-width: unset;
+    padding: 20px;
+  }
+
   .row {
     display: flex;
     justify-content: space-between;
     margin-top: 7px;
 
-    input {
-      width: 100%;
+    @media (max-width: 768px) {
+      flex-direction: column;
     }
 
-    label:not(:first-child) {
-      margin-left: 10px;
+    input {
+      width: 100%;
+      min-width: 100px;
+    }
+
+    @media(min-width: 769px) {
+      label:not(:first-child) {
+        margin-left: 10px;
+      }
     }
   }
+
+
 
   label {
     color: $primary-heading-color;

@@ -5,6 +5,10 @@
     // height of the img controls the height of the whole logo
     height: 96px;
     vertical-align: middle;
+
+    @media(max-width: 769px) {
+        height: 52px;
+    }
   }
 
   text-decoration: none;
@@ -23,14 +27,21 @@
       weight: bold;
       size: 50px;
     }
+
+    @media(max-width: 768px) {
+        font-size: 28px;
+    }
   }
 }
 
 main {
-  min-width: 768px;
-  max-width: 1536px;
+  max-width: 100%; // Allow full width on all screens
   text-indent: 0.9rem;
   line-height: 1.4;
+
+  @media screen and (max-width: 768px) {
+    padding: 10px; // Add padding for mobile view
+  }
 }
 
 footer {
@@ -42,5 +53,10 @@ footer {
     font-size: small;
     color: $footer-copy-text-color;
     text-align: center;
+
+    @media screen and (max-width: 768px) {
+      font-size: 0.9rem; // Slightly smaller text on smaller screens
+      padding: 10px;
+    }
   }
 }

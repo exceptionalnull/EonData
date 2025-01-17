@@ -5,15 +5,16 @@ body {
   color: $primary-color;
 
   a {
-      color: mediumblue;
-      &:visited {
-          color: rebeccapurple;
-      }
-      &:hover {
-          color: limegreen;
-      }
+    color: mediumblue;
+
+    &:visited {
+      color: rebeccapurple;
+    }
+
+    &:hover {
+      color: limegreen;
+    }
   }
-  
 
   font: {
     family: 'Montserrat', sans-serif;
@@ -24,5 +25,11 @@ body {
     left: 13%;
     right: 19%;
     bottom: 7px;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 0 2%; // Add padding for smaller screens
   }
 }

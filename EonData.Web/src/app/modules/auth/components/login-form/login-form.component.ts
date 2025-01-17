@@ -7,7 +7,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
