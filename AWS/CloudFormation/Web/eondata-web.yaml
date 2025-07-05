@@ -520,7 +520,7 @@ Resources:
                     yum:
                       nano: []
                       nginx-core: []
-                      aspnetcore-runtime-7.0: []
+                      aspnetcore-runtime-8.0: []
                 # finalize build and start services
                 fnlz:
                   files:
