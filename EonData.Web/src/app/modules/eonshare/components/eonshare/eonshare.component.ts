@@ -7,9 +7,10 @@ import { ShareFileModel } from '../../models/ShareFileModel';
 
 
 @Component({
-  selector: 'app-eonshare',
-  templateUrl: './eonshare.component.html',
-  styleUrls: ['./eonshare.component.scss']
+    selector: 'app-eonshare',
+    templateUrl: './eonshare.component.html',
+    styleUrls: ['./eonshare.component.scss'],
+    standalone: false
 })
 export class EonShareComponent implements OnInit {
   public fileShare: ShareFolderModel[] = [];

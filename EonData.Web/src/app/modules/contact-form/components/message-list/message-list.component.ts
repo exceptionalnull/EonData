@@ -4,9 +4,10 @@ import { MessageListModel } from '../../models/MessageListModel';
 import { ContactMessageModel } from '../../models/ContactMessageModel';
 
 @Component({
-  selector: 'app-message-list',
-  templateUrl: './message-list.component.html',
-  styleUrls: ['./message-list.component.scss']
+    selector: 'app-message-list',
+    templateUrl: './message-list.component.html',
+    styleUrls: ['./message-list.component.scss'],
+    standalone: false
 })
 export class MessageListComponent implements OnInit {
   public messages: MessageListModel[] = [];

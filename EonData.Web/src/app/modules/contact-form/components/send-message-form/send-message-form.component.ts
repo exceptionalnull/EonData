@@ -3,9 +3,10 @@ import { ContactService } from '../../contact-form.service';
 import { SendMessageModel } from '../../models/SendMessageModel';
 
 @Component({
-  selector: 'app-contact-send-message',
-  templateUrl: './send-message-form.component.html',
-  styleUrls: ['./send-message-form.component.scss']
+    selector: 'app-contact-send-message',
+    templateUrl: './send-message-form.component.html',
+    styleUrls: ['./send-message-form.component.scss'],
+    standalone: false
 })
 export class SendMessageFormComponent implements OnInit {
   @Input() source: string = '';

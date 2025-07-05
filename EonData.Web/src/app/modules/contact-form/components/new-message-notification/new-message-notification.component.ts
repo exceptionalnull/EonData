@@ -3,9 +3,10 @@ import { timer } from 'rxjs';
 import { ContactService } from '../../contact-form.service';
 
 @Component({
-  selector: 'app-contact-notification',
-  templateUrl: './new-message-notification.component.html',
-  styleUrls: ['./new-message-notification.component.scss']
+    selector: 'app-contact-notification',
+    templateUrl: './new-message-notification.component.html',
+    styleUrls: ['./new-message-notification.component.scss'],
+    standalone: false
 })
 export class NewMessageNotificationComponent implements OnInit {
   public unreadMessageCount: number = 0;
