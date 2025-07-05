@@ -1,38 +1,48 @@
 <div class="messagelist-container">
-    <div class="messagelist-sidebar">
-        <div class="messagelist-filters">
-            <select class="messagelist-unreadfilter" [(ngModel)]="unreadFilter" (change)="updateData()">
-                <option value="all">All messages</option>
-                <option value="unread">Unread only</option>
-                <option value="read">Read only</option>
-            </select>
-            <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="setPage(this.currentPage - 1)">Prev page</button></div>
-            <div class="messagelist-pagenumbers">
-                <button *ngFor="let p of pageNumbers" [disabled]="this.currentPage == p" (click)="setPage(p)">{{p}}</button>
-            </div>
-            <div class="messagelist-nextpage"><button [disabled]="this.currentPage >= this.totalPages" (click)="setPage(this.currentPage + 1)">Next page</button></div>
-        </div>
-        <div *ngIf="(this.messages?.length ?? 0) == 0">No messages.</div>
-        <table *ngIf="(this.messages?.length ?? 0) > 0">
-            <thead>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let message of this.pageMessages" [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
-                    <td>{{message.messageTimestamp | date:'short'}}</td>
-                    <td>{{message.contactName}}</td>
-                    <td>{{message.contactAddress}}</td>
-                </tr>
-            </tbody>
-        </table>
+  <div class="messagelist-sidebar">
+    <div class="messagelist-filters">
+      <select class="messagelist-unreadfilter" [(ngModel)]="unreadFilter" (change)="updateData()">
+        <option value="all">All messages</option>
+        <option value="unread">Unread only</option>
+        <option value="read">Read only</option>
+      </select>
+      <div class="messagelist-prevpage"><button [disabled]="this.currentPage == 1" (click)="setPage(this.currentPage - 1)">Prev page</button></div>
+      <div class="messagelist-pagenumbers">
+        @for (p of pageNumbers; track p) {
+          <button [disabled]="this.currentPage == p" (click)="setPage(p)">{{p}}</button>
+        }
+      </div>
+      <div class="messagelist-nextpage"><button [disabled]="this.currentPage >= this.totalPages" (click)="setPage(this.currentPage + 1)">Next page</button></div>
     </div>
-    <div *ngIf="readMessage" class="messagelist-viewer">
-        <p>{{readMessage.contactName}} ({{readMessage.contactAddress}})</p>
-        <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}&commat;{{readMessage.formSource}})</p>
-        <p>{{readMessage.messageContent}}</p>
+    @if ((this.messages?.length ?? 0) == 0) {
+      <div>No messages.</div>
+    }
+    @if ((this.messages?.length ?? 0) > 0) {
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Name</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (message of this.pageMessages; track message) {
+            <tr [ngClass]="getRowClass(message)" (click)="selectMessage(message.messageId)">
+              <td>{{message.messageTimestamp | date:'short'}}</td>
+              <td>{{message.contactName}}</td>
+              <td>{{message.contactAddress}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+  @if (readMessage) {
+    <div class="messagelist-viewer">
+      <p>{{readMessage.contactName}} ({{readMessage.contactAddress}})</p>
+      <p>{{readMessage.messageTimestamp | date:'short'}} ({{readMessage.requestSource}}&commat;{{readMessage.formSource}})</p>
+      <p>{{readMessage.messageContent}}</p>
     </div>
+  }
 </div>

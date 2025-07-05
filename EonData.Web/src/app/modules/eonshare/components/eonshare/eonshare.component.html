@@ -1,22 +1,32 @@
 <div class="eonshare-container">
-    <div class="eonshare-directory">
-        <!-- Folder: <select [(ngModel)]="currentFolderKey">
-            <option *ngFor="let folder of getAllFolders()" [value]="folder">/{{folder}}</option>
-        </select> -->
-        <div>
-            <a *ngIf="this.currentFolderKey !== ''" [routerLink]="['..']" class="folderNav"><i class="pi pi-arrow-up"></i></a>&nbsp;Folder: /{{currentFolderKey}}
-        </div>
+  <div class="eonshare-directory">
+    <!-- Folder: <select [(ngModel)]="currentFolderKey">
+    <option *ngFor="let folder of getAllFolders()" [value]="folder">/{{folder}}</option>
+  </select> -->
+  <div>
+    @if (this.currentFolderKey !== '') {
+      <a [routerLink]="['..']" class="folderNav"><i class="pi pi-arrow-up"></i></a>
+      }&nbsp;Folder: /{{currentFolderKey}}
     </div>
-    <p-progressSpinner *ngIf="(fileShare?.length ?? 0) == 0"></p-progressSpinner>
-    <div *ngIf="(fileShare?.length ?? 0) > 0">
-        <div class="eonshare-row" *ngFor="let folder of getSubfolders()">
-            <i class="pi pi-folder"></i>&nbsp;
-            <a [routerLink]="folder">{{folder}}</a>
+  </div>
+  @if ((fileShare?.length ?? 0) == 0) {
+    <p-progressSpinner></p-progressSpinner>
+  }
+  @if ((fileShare?.length ?? 0) > 0) {
+    <div>
+      @for (folder of getSubfolders(); track folder) {
+        <div class="eonshare-row">
+          <i class="pi pi-folder"></i>&nbsp;
+          <a [routerLink]="folder">{{folder}}</a>
         </div>
-        <div class="eonshare-row" *ngFor="let file of getFiles()">
-            <i class="pi pi-file" [title]="file.lastModified | date:'short'"></i>&nbsp;
-            <a [href]="getDownloadUrl(file.key)" target="_blank">{{file.name}}</a>
-            <span class="eonshare-filesize">{{humanReadableSize(file.size)}}</span>
+      }
+      @for (file of getFiles(); track file) {
+        <div class="eonshare-row">
+          <i class="pi pi-file" [title]="file.lastModified | date:'short'"></i>&nbsp;
+          <a [href]="getDownloadUrl(file.key)" target="_blank">{{file.name}}</a>
+          <span class="eonshare-filesize">{{humanReadableSize(file.size)}}</span>
         </div>
+      }
     </div>
+  }
 </div>
