@@ -1,15 +1,16 @@
-@import '../../../../../variables';
+@use 'sass:color';
+@use '../../../../../palette';
 
-$messagelist-rowcolor: darken($secondary-accent-color, 13%);
+$messagelist-rowcolor: color.adjust(palette.$secondary-accent-color, $lightness: 13%);
 
 .list-unread {
-  background-color: invert($messagelist-rowcolor);
+  background-color: color.invert($messagelist-rowcolor);
   color: $messagelist-rowcolor;
 }
 
 .list-read {
   background-color: $messagelist-rowcolor;
-  color: invert($messagelist-rowcolor);
+  color: color.invert($messagelist-rowcolor);
 }
 
 .list-selected {

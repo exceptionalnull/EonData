@@ -1,17 +1,17 @@
-@import '../variables';
+@use '../palette';
 
 .logo {
+  text-decoration: none;
+
   img {
     // height of the img controls the height of the whole logo
     height: 96px;
     vertical-align: middle;
 
     @media(max-width: 769px) {
-        height: 52px;
+      height: 52px;
     }
   }
-
-  text-decoration: none;
 
   a {
     display: flex;
@@ -19,7 +19,7 @@
   }
 
   span {
-    color: $logo-label-color;
+    color: palette.$logo-label-color;
     vertical-align: middle;
 
     font: {
@@ -29,7 +29,7 @@
     }
 
     @media(max-width: 768px) {
-        font-size: 28px;
+      font-size: 28px;
     }
   }
 }
@@ -51,7 +51,7 @@ footer {
   div.copyr {
     text-indent: 0;
     font-size: small;
-    color: $footer-copy-text-color;
+    color: palette.$footer-copy-text-color;
     text-align: center;
 
     @media screen and (max-width: 768px) {

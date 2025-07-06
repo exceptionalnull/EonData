@@ -14,10 +14,10 @@
       </div>
       <div class="messagelist-nextpage"><button [disabled]="this.currentPage >= this.totalPages" (click)="setPage(this.currentPage + 1)">Next page</button></div>
     </div>
-    @if ((this.messages?.length ?? 0) == 0) {
+    @if (this.messages.length == 0) {
       <div>No messages.</div>
     }
-    @if ((this.messages?.length ?? 0) > 0) {
+    @if (this.messages.length > 0) {
       <table>
         <thead>
           <tr>

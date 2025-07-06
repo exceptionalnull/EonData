@@ -1,4 +1,4 @@
-@import '../../../../../variables';
+@use '../../../../../palette';
 
 .contact-form {
   width: 45%;
@@ -36,7 +36,7 @@
 
 
   label {
-    color: $primary-heading-color;
+    color: palette.$primary-heading-color;
     flex-grow: 1;
     margin-right: 10px;
 
