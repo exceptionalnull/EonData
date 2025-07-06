@@ -5,9 +5,9 @@ import { SendMessageFormComponent } from './components/send-message-form/send-me
 import { FormsModule } from '@angular/forms';
 import { NewMessageNotificationComponent } from './components/new-message-notification/new-message-notification.component';
 import { ContactFormRoutingModule } from './contact-form-routing.module';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -19,9 +19,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     CommonModule,
     FormsModule,
     ContactFormRoutingModule,
-    ButtonModule,
-    InputTextModule,
-    InputTextareaModule
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   exports: [
     SendMessageFormComponent,

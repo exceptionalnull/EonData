@@ -6,14 +6,14 @@
         <app-login-form></app-login-form>
     </div>
 </header> -->
-<p-toolbar styleClass="eontoolbar" [style]="toolbarStyle">
+<mat-toolbar [ngStyle]="toolbarStyle" class="eontoolbar">
     <div class="p-toolbar-group-left">
         <a [routerLink]="['']" class="logo"><img src="/assets/logo.png" alt="EonData Logo" class="logo" /><span class="logo">E o n D a t a</span></a>
     </div>
     <div class="p-toolbar-group-right">
         <app-login-form></app-login-form>
     </div>
-</p-toolbar>
+</mat-toolbar>
 <!--<nav>
     <div class="appmenu">
     </div>

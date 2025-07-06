@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $primary-background-color: #333333;
 $primary-background-color2: #5F758E;
 $primary-color: #FAF0E6;
@@ -6,4 +8,4 @@ $primary-heading-color: #1A237E;
 $logo-label-color: #FFD700;
 $primary-accent-color: #007400;
 $secondary-accent-color: #4A148C;
-$footer-copy-text-color: darken(#00DA00, 9%);
+$footer-copy-text-color: color.adjust(#00DA00, $lightness: -9%);

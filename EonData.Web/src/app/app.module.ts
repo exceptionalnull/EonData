@@ -10,7 +10,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { AuthModule } from './modules/auth/auth.module';
 import { MsalRedirectComponent } from '@azure/msal-angular';
 import { ContactFormModule } from './modules/contact-form/contact-form.module';
-import { ToolbarModule } from 'primeng/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 // Get the browser's locale
@@ -30,7 +30,7 @@ const browserLocale: string = window.navigator.language;
     AppRoutingModule,
     CloudControlModule,
     ContactFormModule,
-    ToolbarModule
+    MatToolbarModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: browserLocale },

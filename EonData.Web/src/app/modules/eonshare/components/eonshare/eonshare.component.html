@@ -10,19 +10,19 @@
     </div>
   </div>
   @if ((fileShare?.length ?? 0) == 0) {
-    <p-progressSpinner></p-progressSpinner>
+    <mat-progress-spinner></mat-progress-spinner>
   }
   @if ((fileShare?.length ?? 0) > 0) {
     <div>
       @for (folder of getSubfolders(); track folder) {
         <div class="eonshare-row">
-          <i class="pi pi-folder"></i>&nbsp;
+          <mat-icon>folder</mat-icon>&nbsp;
           <a [routerLink]="folder">{{folder}}</a>
         </div>
       }
       @for (file of getFiles(); track file) {
         <div class="eonshare-row">
-          <i class="pi pi-file" [title]="file.lastModified | date:'short'"></i>&nbsp;
+          <mat-icon [matTooltip]="file.lastModified | date:'short'">description</mat-icon>&nbsp;
           <a [href]="getDownloadUrl(file.key)" target="_blank">{{file.name}}</a>
           <span class="eonshare-filesize">{{humanReadableSize(file.size)}}</span>
         </div>
