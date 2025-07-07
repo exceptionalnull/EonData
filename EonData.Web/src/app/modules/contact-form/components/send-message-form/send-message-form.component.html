@@ -11,8 +11,8 @@
             <textarea matInput name="message" [(ngModel)]="model.messageContent" required maxlength="7500"></textarea>
         </div>
         <div class="button-row">
-            <button type="reset" (click)="resetForm()">Reset</button>
-            <button type="submit">Submit</button>
+            <button type="reset" matButton="tonal" (click)="resetForm()">Reset</button>
+            <button type="submit" matButton="filled">Submit</button>
         </div>
     </div>
 </form>
