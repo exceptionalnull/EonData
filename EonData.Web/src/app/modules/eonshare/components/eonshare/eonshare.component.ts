@@ -14,6 +14,7 @@ import { ShareFileModel } from '../../models/ShareFileModel';
 })
 export class EonShareComponent implements OnInit {
   public fileShare: ShareFolderModel[] = [];
+  public isLoaded: boolean = false;
   public currentFolderKey: string = "";
   constructor(
     private fileService: EonShareService,
@@ -32,6 +33,7 @@ export class EonShareComponent implements OnInit {
 
     this.fileService.getFileShare().subscribe(response => {
       this.fileShare = response;
+      this.isLoaded = true;
     });
   }
 

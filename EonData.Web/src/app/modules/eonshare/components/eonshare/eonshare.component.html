@@ -9,10 +9,10 @@
       }&nbsp;Folder: /{{currentFolderKey}}
     </div>
   </div>
-  @if (fileShare.length == 0) {
-    <mat-progress-spinner></mat-progress-spinner>
+  @if (!isLoaded) {
+    <mat-spinner></mat-spinner>
   }
-  @if (fileShare.length > 0) {
+  @if (isLoaded && fileShare.length > 0) {
     <div>
       @for (folder of getSubfolders(); track folder) {
         <div class="eonshare-row">
