@@ -1,9 +1,9 @@
 <!--<a [routerLink]="['auth','profile']">Edit Profile</a>-->
 @if (!loginDisplay) {
-  <button (click)="login()" class="authbutton">Login</button>
+  <button (click)="login()" matButton="tonal" class="authbutton">Login</button>
 }
 @if (loginDisplay) {
-  <button (click)="logout()" class="authbutton">Logout</button>
+  <button (click)="logout()" matButton="tonal" class="authbutton">Logout</button>
 }
 @if (loginDisplay) {
   <div class="message-notify">
