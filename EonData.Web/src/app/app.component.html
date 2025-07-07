@@ -1,25 +1,11 @@
-<!-- <header>
-    <div class="logo">
-        <a [routerLink]="['']"><img src="/assets/logo.png" alt="EonData Logo" /><span>E o n D a t a</span></a>
-    </div>
-    <div class="authbox">
-        <app-login-form></app-login-form>
-    </div>
-</header> -->
-<mat-toolbar [ngStyle]="toolbarStyle" class="eontoolbar">
-    <div class="p-toolbar-group-left">
-        <a [routerLink]="['']" class="logo"><img src="/assets/logo.png" alt="EonData Logo" class="logo" /><span class="logo">E o n D a t a</span></a>
-    </div>
-    <div class="p-toolbar-group-right">
-        <app-login-form></app-login-form>
-    </div>
+<mat-toolbar class="eontoolbar">
+  <a [routerLink]="['']" class="logo-container">
+    <img src="/assets/logo.png" alt="EonData Logo" />
+    <span class="logo-text">E o n D a t a</span>
+  </a>
+  <span class="spacer"></span>
+  <app-login-form></app-login-form>
 </mat-toolbar>
-<!--<nav>
-    <div class="appmenu">
-    </div>
-    <div class="appnotify">
-    </div>
-</nav>-->
 <main>
     <router-outlet></router-outlet>
 </main>

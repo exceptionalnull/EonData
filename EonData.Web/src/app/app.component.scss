@@ -1,47 +1,61 @@
 @use '../palette';
 
-.logo {
+.eontoolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 1.5rem 2rem 1rem;
+  background: url('/assets/toolbar2.png') repeat-x center center;
+  background-size: auto 100%;
+  border-radius: 19px;
+  width: 66%;
+  height: 5rem;
+  margin: 1rem auto 3rem auto;
+  box-sizing: border-box;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem; // Add spacing between image and text
   text-decoration: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
 
   img {
-    // height of the img controls the height of the whole logo
-    height: 96px;
-    vertical-align: middle;
+    height: 5rem;
+    max-height: 100%;
+    object-fit: contain;
 
     @media(max-width: 769px) {
-      height: 52px;
+      height: 4rem;
     }
   }
 
-  a {
-    display: flex;
-    align-items: center;
-  }
-
-  span {
+  .logo-text {
+    font-family: 'Chakra Petch', Verdana, sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
     color: palette.$logo-label-color;
-    vertical-align: middle;
-
-    font: {
-      family: 'Chakra Petch', Verdana, Arial, Helvetica, sans-serif;
-      weight: bold;
-      size: 50px;
-    }
 
     @media(max-width: 768px) {
-      font-size: 28px;
+      font-size: 1.6rem;
     }
   }
 }
 
-main {
-  max-width: 100%; // Allow full width on all screens
-  text-indent: 0.9rem;
-  line-height: 1.4;
+.spacer {
+  flex: 1;
+}
 
-  @media screen and (max-width: 768px) {
-    padding: 10px; // Add padding for mobile view
-  }
+main {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+
+    @media(max-width: 768px) {
+        padding: 0 1rem;
+    }
 }
 
 footer {
