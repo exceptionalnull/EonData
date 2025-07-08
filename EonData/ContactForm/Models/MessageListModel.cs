@@ -12,6 +12,6 @@ namespace EonData.ContactForm.Models
         public DateTime MessageTimestamp { get; set; }
         public string ContactName { get; set; }
         public string ContactAddress { get; set; }
-        public bool isRead { get; set; }
+        public bool? isRead { get; set; }
     }
 }
