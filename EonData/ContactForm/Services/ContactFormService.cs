@@ -32,7 +32,7 @@ namespace EonData.ContactForm.Services
             GetItemRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
-                Key = { { "messageId", new AttributeValue(messageId.ToString()) } },
+                Key = new() { { "messageId", new AttributeValue(messageId.ToString()) } },
                 ProjectionExpression = "messageId, messageTimestamp, contactAddress, contactName, formSource, requestSource, isRead, messageContent"
             };
 
@@ -65,9 +65,9 @@ namespace EonData.ContactForm.Services
             UpdateItemRequest request = new()
             {
                 TableName = CONTACT_MESSAGE_TABLE,
-                Key = { { "messageId", new AttributeValue(messageId.ToString()) } },
+                Key = new() { { "messageId", new AttributeValue(messageId.ToString()) } },
                 UpdateExpression = "SET isRead = :is_r",
-                ExpressionAttributeValues = { { ":is_r", new AttributeValue() { BOOL = true } } },
+                ExpressionAttributeValues = new() { { ":is_r", new AttributeValue() { BOOL = true } } },
                 ConditionExpression = "attribute_exists(messageId)"
             };
             await db.UpdateItemAsync(request, cancellationToken);
