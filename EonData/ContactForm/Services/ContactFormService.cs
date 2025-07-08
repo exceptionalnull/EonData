@@ -183,7 +183,7 @@ namespace EonData.ContactForm.Services
                 ContactName = itm["contactName"].S,
                 isRead = itm["isRead"].BOOL
             });
-            string? lastEvaluatedKey = (response.LastEvaluatedKey.ContainsKey("messageId")) ? response.LastEvaluatedKey["messageId"].S : null;
+            string? lastEvaluatedKey = (response.LastEvaluatedKey?.ContainsKey("messageId") ?? false) ? response.LastEvaluatedKey["messageId"].S : null;
             return (Messages: messages, LastKey: lastEvaluatedKey);
         }
     }
