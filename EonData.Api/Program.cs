@@ -1,11 +1,14 @@
 using Amazon.DynamoDBv2;
 using Amazon.S3;
+
+using EonData.ContactForm.Services;
+using EonData.FileShare.Services;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Identity.Web;
-using EonData.ContactForm.Services;
-using EonData.FileShare.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +96,8 @@ app.Use(async (context, next) =>
 });
 
 // finish building and run
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
