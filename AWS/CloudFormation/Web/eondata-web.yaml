@@ -364,7 +364,7 @@ Resources:
                                 }
                             }
                     /etc/systemd/system/eondata-api.socket:
-                        mode: "000400"
+                        mode: "000644"
                         content: !Sub |
                             [Unit]
                             Description=Eon Data API socket
@@ -377,9 +377,9 @@ Resources:
                             DirectoryMode=0775
 
                             [Install]
-                            WantedBy=sockets.target nginx.service
+                            WantedBy=sockets.target
                     /etc/systemd/system/eondata-api.service:
-                        mode: "000400"
+                        mode: "000644"
                         content: !Sub |
                             [Unit]
                             Description=EonData API
@@ -401,7 +401,7 @@ Resources:
                             [Install]
                             WantedBy=multi-user.target
                     /etc/systemd/system/eondata-api-update.service:
-                        mode: "000400"
+                        mode: "000644"
                         content: !Sub |
                             [Unit]
                             Description=EonData API automatic update
@@ -410,12 +410,12 @@ Resources:
                             [Service]
                             Type=oneshot
                             SyslogIdentifier=eondata-api-update
-                            ExecStart=/bin/bash /root/apiUpdate.sh
+                            ExecStart=/bin/bash /root/apiUpdate.sh --eon
 
                             [Install]
                             WantedBy=multi-user.target
                     /etc/systemd/system/eondata-api-update.timer:
-                        mode: "000400"
+                        mode: "000644"
                         content: !Sub |
                             [Unit]
                             Description=Timer for EonData API automatic update
@@ -427,12 +427,94 @@ Resources:
 
                             [Install]
                             WantedBy=timers.target
+                    /etc/systemd/system/hpl-api.socket:
+                        mode: "000644"
+                        content: !Sub |
+                            [Unit]
+                            Description=HPL API socket
+
+                            [Socket]
+                            ListenStream=/run/hpl/api.socket
+                            SocketUser=eondata
+                            SocketGroup=apisocket
+                            SocketMode=0660
+                            DirectoryMode=0775
+
+                            [Install]
+                            WantedBy=sockets.target nginx.service
+                    /etc/systemd/system/hpl-api.service:
+                        mode: "000644"
+                        content: !Sub |
+                            [Unit]
+                            Description=HPL API
+                            After=network.target hpl-api.socket
+                            Requires=hpl-api.socket
+
+                            [Service]
+                            WorkingDirectory=/home/eondata/hplapi
+                            ExecStart=/usr/bin/dotnet /home/eondata/hplapi/hpl.api.dll
+                            SyslogIdentifier=hpl-api
+                            User=eondata
+                            Group=eondata
+                            Environment=ASPNETCORE_ENVIRONMENT=Production
+                            Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+                            Type=notify
+                            Restart=always
+                            RestartSec=10
+
+                            [Install]
+                            WantedBy=multi-user.target
+                    /etc/systemd/system/hpl-api-update.service:
+                        mode: "000644"
+                        content: !Sub |
+                            [Unit]
+                            Description=HPL API automatic update
+                            Wants=hpl-api.service
+
+                            [Service]
+                            Type=oneshot
+                            SyslogIdentifier=hpl-api-update
+                            ExecStart=/bin/bash /root/apiUpdate.sh --hpl
+
+                            [Install]
+                            WantedBy=multi-user.target
+                    /etc/systemd/system/hpl-api-update.timer:
+                        mode: "000644"
+                        content: !Sub |
+                            [Unit]
+                            Description=Timer for HPL API automatic update
+
+                            [Timer]
+                            OnStartupSec=1min
+                            OnUnitActiveSec=7min
+                            Unit=hpl-api-update.service
+
+                            [Install]
+                            WantedBy=timers.target
                     /root/apiUpdate.sh:
                         mode: "000700"
                         content: !Sub |
                             #!/bin/bash
-                            TARGET_DIR="/home/eondata/webapi"
-                            SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/bin/api/ $TARGET_DIR --delete --exact-timestamps"
+                            set -euo pipefail
+
+                            if [ "$1" = "--hpl" ]
+                            then
+                                TARGET_DIR="/home/eondata/hplapi"
+                                S3_LOCATION="bin/hpl/"
+                                SYSD_SOCKET="hpl-api.socket"
+                                SYSD_SERVICE="hpl-api.service"
+                            elif [ "$1" = "--eon" ]
+                            then
+                                TARGET_DIR="/home/eondata/webapi"
+                                S3_LOCATION="bin/api/"
+                                SYSD_SOCKET="eondata-api.socket"
+                                SYSD_SERVICE="eondata-api.service"
+                            else
+                                echo "invalid argument"
+                                exit 1
+                            fi
+
+                            SYNC_COMMAND="aws s3 sync s3://${EonDataWebDataBucketName}/$S3_LOCATION $TARGET_DIR --delete --exact-timestamps"
 
                             SYNC_NEEDED=$($SYNC_COMMAND --dryrun)
 
@@ -443,8 +525,8 @@ Resources:
                                     echo "updating web api..."
 
                                     # disable systemd service and socket
-                                    systemctl stop eondata-api.socket
-                                    systemctl stop eondata-api.service
+                                    systemctl stop "$SYSD_SOCKET"
+                                    systemctl stop "$SYSD_SERVICE"
                                 else
                                     echo "deploying web api..."
                                 fi
@@ -453,10 +535,10 @@ Resources:
                                 $SYNC_COMMAND
 
                                 # correct file ownership permissions
-                                chown -R eondata:eondata $TARGET_DIR
+                                chown -R eondata:eondata "$TARGET_DIR"
 
                                 # re-enable the socket
-                                systemctl start eondata-api.socket
+                                systemctl start "$SYSD_SOCKET"
 
                                 echo "done."
                             fi
@@ -478,7 +560,7 @@ Resources:
                             {
                                 "HostedZoneId": "${DnsHostedZoneId}",
                                 "ChangeBatch": {
-                                    "Comment": "Set eondata eondata api DNS name to the current public IP of the EC2 instance.",
+                                    "Comment": "Set api DNS name to the current public IP of the EC2 instance.",
                                     "Changes": [{
                                     "Action": "UPSERT",
                                     "ResourceRecordSet": {
@@ -513,7 +595,7 @@ Resources:
                     awsrt53set:
                         command: '/root/r53update.sh'
                     msrepoadd:
-                        command: rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+                        command: rpm -Uvh https://packages.microsoft.com/config/amazonlinux/2023/packages-microsoft-prod.rpm
                 # install core server packages
                 nstl:
                   packages:
@@ -525,7 +607,7 @@ Resources:
                 fnlz:
                   files:
                     /etc/systemd/system/nginx.service:
-                        mode: "000400"
+                        mode: "000644"
                         content: !Sub |
                             [Unit]
                             Description=The NGINX HTTP and reverse proxy server
@@ -544,9 +626,9 @@ Resources:
                             [Install]
                             WantedBy=multi-user.target
                     /etc/nginx/conf.d/eondata-api.conf:
-                        mode: "000640"
+                        mode: "000644"
                         content: !Sub |
-                            limit_req_zone $binary_remote_addr zone=one:10m rate=5r/s;
+                            limit_req_zone $binary_remote_addr zone=eon:10m rate=5r/s;
 
                             server {
                                 listen 80;
@@ -557,13 +639,35 @@ Resources:
                                 }
 
                                 location /api/ {
-                                    proxy_pass http://apisock/;
-                                    limit_req zone=one burst=10 nodelay;
+                                    proxy_pass http://eondata_apisock/;
+                                    limit_req zone=eon burst=10 nodelay;
                                 }
                             }
 
-                            upstream apisock {
+                            upstream eondata_apisock {
                                 server unix:/run/eondata/api.socket;
+                            }
+                    /etc/nginx/conf.d/hpl-api.conf:
+                        mode: "000644"
+                        content: !Sub |
+                            limit_req_zone $binary_remote_addr zone=hpl:10m rate=5r/s;
+
+                            server {
+                                listen 80;
+                                server_name hpl.eondata.net;
+
+                                location / {
+                                    return 301 https://hpl.eondata.net/;
+                                }
+
+                                location /api/ {
+                                    proxy_pass http://hpl_apisock/;
+                                    limit_req zone=hpl burst=10 nodelay;
+                                }
+                            }
+
+                            upstream hpl_apisock {
+                                server unix:/run/hpl/api.socket;
                             }
                     /usr/share/nginx/html/index.html:
                         owner: root
@@ -600,14 +704,16 @@ Resources:
                             # start the web server
                             systemctl enable nginx.service --now
 
-                            systemctl enable eondata-api.service
                             systemctl enable eondata-api.socket
-                            
+                            systemctl enable hpl-api.socket
+
                             # enable and run the update service to deploy the web api
-                            systemctl enable eondata-api-update.service --now
+                            systemctl start eondata-api-update.service
+                            systemctl start hpl-api-update.service
 
                             # start the automatic update service timer
                             systemctl enable eondata-api-update.timer --now
+                            systemctl enable hpl-api-update.timer --now
                   commands:
                     cleanr53scrpts:
                       command: 'rm -f /root/r53*.*'
