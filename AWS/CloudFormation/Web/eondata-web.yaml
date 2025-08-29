@@ -16,12 +16,10 @@ Parameters:
         Description: Name of the S3 bucket that stores data used by the website.
         Type: String
         Default: eondataweb-data
-    EonDataWebAppCertArn:
-        Description: ARN of the certificate to use for the webapp. This needs to be deployed to us-east-1 to work with CloudFront.
+    EonDataCFLogsBucketName:
+        Description: Name of the S3 bucket that stores CloudFront logs
         Type: String
-    EonDataWebApiCertArn:
-        Description: ARN of the certificate to use for the webapp. This needs to be deployed to us-east-1 to work with CloudFront.
-        Type: String
+        Default: eondata-cf-logs
     BastionSecurityGroupId:
         Description: The security group id the bastion host belongs to.
         Type: String
@@ -44,11 +42,26 @@ Parameters:
         Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
         Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64'
 Resources:
+    EonDataWebAppCert:
+        Type: AWS::CertificateManager::Certificate
+        Properties:
+            DomainName: www.eondata.net
+            ValidationMethod: DNS
+            DomainValidationOptions:
+                - DomainName: www.eondata.net
+                  ValidationDomain: eondata.net
+    EonDataWebApiCert:
+        Type: AWS::CertificateManager::Certificate
+        Properties:
+            DomainName: api.eondata.net
+            ValidationMethod: DNS
+            DomainValidationOptions:
+                - DomainName: api.eondata.net
+                  ValidationDomain: eondata.net
     EonDataWebAppS3Bucket:
         Type: AWS::S3::Bucket
         Properties:
             BucketName: !Ref EonDataWebAppBucketName
-            AccessControl: PublicRead
             WebsiteConfiguration:
                 IndexDocument: index.html
                 ErrorDocument: index.html
@@ -62,9 +75,12 @@ Resources:
                     - Sid: "PublicReadGetObject"
                       Effect: "Allow"
                       Principal:
-                        AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${EonDataWebOriginAccess}
+                        Service: cloudfront.amazonaws.com
                       Action: "s3:GetObject"
-                      Resource: !Join ["", ["arn:aws:s3:::", !Ref EonDataWebAppBucketName, "/*"]]
+                      Resource: !Sub arn:aws:s3:::${EonDataWebAppBucketName}/*
+                      Condition:
+                        StringEquals:
+                            AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${EonDataWebAppCloudFrontDistribution}
     EonDataFileShareS3Bucket:
         Type: AWS::S3::Bucket
         Properties:
@@ -72,7 +88,6 @@ Resources:
             AccessControl: Private
     EonDataWebDataS3Bucket:
         Type: AWS::S3::Bucket
-        DeletionPolicy: Retain
         Properties:
             BucketName: !Ref EonDataWebDataBucketName
             AccessControl: Private
@@ -81,10 +96,28 @@ Resources:
                 BlockPublicPolicy: true
                 IgnorePublicAcls: true
                 RestrictPublicBuckets: true
-    EonDataWebDataS3Policy:
+    EonDataCFLogsS3Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Ref EonDataCFLogsBucketName
+            OwnershipControls:
+                Rules:
+                    - ObjectOwnership: BucketOwnerPreferred
+            AccessControl: LogDeliveryWrite
+            PublicAccessBlockConfiguration:
+                BlockPublicAcls: true
+                BlockPublicPolicy: true
+                IgnorePublicAcls: true
+                RestrictPublicBuckets: true
+            LifecycleConfiguration:
+                Rules:
+                    - Id: DeleteOldLogs
+                      Status: Enabled
+                      ExpirationInDays: 90
+    EonDataWebCFLogsS3Policy:
         Type: AWS::S3::BucketPolicy
         Properties:
-            Bucket: !Ref EonDataWebDataS3Bucket
+            Bucket: !Ref EonDataCFLogsS3Bucket
             PolicyDocument:
                 Version: "2012-10-17"
                 Statement:
@@ -95,7 +128,7 @@ Resources:
                       Action:
                         - s3:GetBucketAcl
                         - s3:PutBucketAcl
-                      Resource: !Sub arn:aws:s3:::${EonDataWebDataBucketName}
+                      Resource: !Sub arn:aws:s3:::${EonDataCFLogsBucketName}
     EonDataWebAppCloudFrontRequests:
         Type: AWS::CloudFront::OriginRequestPolicy
         Properties:
@@ -160,15 +193,15 @@ Resources:
                 Aliases:
                     - www.eondata.net
                 ViewerCertificate:
-                    AcmCertificateArn: !Ref EonDataWebAppCertArn
+                    AcmCertificateArn: !Ref EonDataWebAppCert
                     SslSupportMethod: sni-only
                     MinimumProtocolVersion: TLSv1.2_2021
                 DefaultRootObject: index.html
                 Origins:
                     - Id: EonDataWebAppS3Origin
-                      DomainName: !Sub ${EonDataWebAppBucketName}.s3.amazonaws.com
-                      S3OriginConfig:
-                        OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${EonDataWebOriginAccess}
+                      DomainName: !Sub ${EonDataWebAppBucketName}.s3.${AWS::Region}.amazonaws.com
+                      S3OriginConfig: {}
+                      OriginAccessControlId: !Ref EonDataWebAppOAC
                       OriginPath: ''
                 DefaultCacheBehavior:
                     TargetOriginId: EonDataWebAppS3Origin
@@ -195,9 +228,18 @@ Resources:
                       ResponseCode: '200'
                       ErrorCachingMinTTL: 300
                 Logging:
-                    Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
-                    Prefix: logs/webapp/cf/
+                    Bucket: !Sub ${EonDataCFLogsBucketName}.s3.amazonaws.com
+                    Prefix: eondata/webapp/
                     IncludeCookies: false
+    EonDataWebAppOAC:
+        Type: AWS::CloudFront::OriginAccessControl
+        Properties:
+            OriginAccessControlConfig:
+                Name: EonDataWebAppOAC
+                OriginAccessControlOriginType: s3
+                SigningBehavior: always
+                SigningProtocol: sigv4
+                Description: OAC for S3 eondata webapp origin
     EonDataWebOriginAccess:
         Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
         Properties:
@@ -780,7 +822,7 @@ Resources:
                 Aliases:
                     - api.eondata.net
                 ViewerCertificate:
-                    AcmCertificateArn: !Ref EonDataWebApiCertArn
+                    AcmCertificateArn: !Ref EonDataWebApiCert
                     SslSupportMethod: sni-only
                     MinimumProtocolVersion: TLSv1.2_2021
                 Origins:
@@ -808,8 +850,8 @@ Resources:
                         - POST
                         - DELETE
                 Logging:
-                    Bucket: !Sub ${EonDataWebDataBucketName}.s3.amazonaws.com
-                    Prefix: logs/webapi/cf/
+                    Bucket: !Sub ${EonDataCFLogsBucketName}.s3.amazonaws.com
+                    Prefix: eondata/webapi/
                     IncludeCookies: false
     EonDataApiHostIAMRole:
         Type: AWS::IAM::Role
