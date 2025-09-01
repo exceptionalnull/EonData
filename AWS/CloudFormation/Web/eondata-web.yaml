@@ -226,7 +226,11 @@ Resources:
                     - ErrorCode: 404
                       ResponsePagePath: /index.html
                       ResponseCode: '200'
-                      ErrorCachingMinTTL: 300
+                      ErrorCachingMinTTL: 0
+                    - ErrorCode: 403
+                      ResponsePagePath: /index.html
+                      ResponseCode: '200'
+                      ErrorCachingMinTTL: 0
                 Logging:
                     Bucket: !Sub ${EonDataCFLogsBucketName}.s3.amazonaws.com
                     Prefix: eondata/webapp/
@@ -282,6 +286,12 @@ Resources:
                 ImageId: !Ref LatestAmiId
                 InstanceInitiatedShutdownBehavior: terminate
                 InstanceType: !Ref WebHostInstanceType
+                BlockDeviceMappings:
+                    - DeviceName: /dev/xvda
+                      Ebs:
+                        VolumeSize: 5
+                        VolumeType: gp3
+                        DeleteOnTermination: true
                 IamInstanceProfile:
                     Arn: !GetAtt EonDataApiHostIAMProfile.Arn
                 CreditSpecification:
@@ -292,8 +302,8 @@ Resources:
                 UserData:
                   Fn::Base64: !Sub |
                     #!/bin/bash
-                    yum update -y
-                    yum install -y aws-cfn-bootstrap
+                    dnf update -y
+                    dnf install -y aws-cfn-bootstrap
                     /opt/aws/bin/cfn-init --stack ${AWS::StackName} --resource EonDataApiHostLaunchTemplate --region ${AWS::Region} --configsets Setup
         Metadata:
             AWS::CloudFormation::Init:
@@ -772,7 +782,7 @@ Resources:
             VPCZoneIdentifier: !Ref WebHostSubnets
             LaunchTemplate:
                 LaunchTemplateId: !Ref EonDataApiHostLaunchTemplate
-                Version: 1
+                Version: !GetAtt EonDataApiHostLaunchTemplate.LatestVersionNumber
     EonDataWebApiCloudFrontRequests:
         Type: AWS::CloudFront::OriginRequestPolicy
         Properties:
