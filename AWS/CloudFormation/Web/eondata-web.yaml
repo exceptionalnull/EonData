@@ -33,9 +33,6 @@ Parameters:
     WebHostSubnets:
         Description: The subnets to deploy the web host instances to. These should be private subnets.
         Type: List<AWS::EC2::Subnet::Id>
-    DnsHostedZoneId:
-        Description: The DNS hosted zone this stack can use for new entries.
-        Type: AWS::Route53::HostedZone::Id
     # get the latest amazon linux 2 ami id
     LatestAmiId:
         Description: This is the latest Amazon Linux 2 AMI which will be used for the EC2 instances.
@@ -594,36 +591,6 @@ Resources:
 
                                 echo "done."
                             fi
-                    /root/r53update.sh:
-                        mode: "000500"
-                        content: !Sub |
-                            #!/bin/bash
-                            TOKEN=$(curl -s --request PUT "http://169.254.169.254/latest/api/token" --header "X-aws-ec2-metadata-token-ttl-seconds: 19")
-                            PUB_IP4=$( curl -s http://169.254.169.254/latest/meta-data/public-ipv4 --header "X-aws-ec2-metadata-token: $TOKEN" )
-                            JQ_SET_IP=".ChangeBatch.Changes[0].ResourceRecordSet.ResourceRecords[0].Value=\"$PUB_IP4\""
-                            R53_JSON=$( cat /root/r53set.json | jq -cr $JQ_SET_IP )
-                            aws route53 change-resource-record-sets --cli-input-json "$R53_JSON"
-                            R53_HOSTNAME=$( cat /root/r53set.json | jq -r .ChangeBatch.Changes[0].ResourceRecordSet.Name )
-                            hostnamectl set-hostname "$R53_HOSTNAME"
-                            hostname "$R53_HOSTNAME"
-                    /root/r53set.json:
-                        mode: "000400"
-                        content: !Sub |
-                            {
-                                "HostedZoneId": "${DnsHostedZoneId}",
-                                "ChangeBatch": {
-                                    "Comment": "Set api DNS name to the current public IP of the EC2 instance.",
-                                    "Changes": [{
-                                    "Action": "UPSERT",
-                                    "ResourceRecordSet": {
-                                        "Name": "eondata-api.aws.eondata.net",
-                                        "Type": "A",
-                                        "TTL": 30,
-                                        "ResourceRecords": [ { "Value": "127.0.0.1" } ]
-                                    }
-                                    }]
-                                }
-                            }
                     /root/finishInit.sh:
                         mode: "000700"
                         content: !Sub |
@@ -644,8 +611,6 @@ Resources:
                   commands:
                     awsinitfin:
                         command: '/root/finishInit.sh'
-                    awsrt53set:
-                        command: '/root/r53update.sh'
                     msrepoadd:
                         command: rpm -Uvh https://packages.microsoft.com/config/amazonlinux/2023/packages-microsoft-prod.rpm
                 # install core server packages
@@ -767,8 +732,6 @@ Resources:
                             systemctl enable eondata-api-update.timer --now
                             systemctl enable hpl-api-update.timer --now
                   commands:
-                    cleanr53scrpts:
-                      command: 'rm -f /root/r53*.*'
                     finalizesvc:
                       command: /root/finalizeBuild.sh
     EonDataApiHostEC2AutoScale:
@@ -951,21 +914,6 @@ Resources:
                         - dynamodb:Scan
                       Resource:
                         - !Sub arn:aws:dynamodb:*:*:table/EonDataWebContactMessages
-    EonDataWebIAMPolicyRt53:
-        Type: AWS::IAM::Policy
-        Properties:
-            PolicyName: EonDataWebIAMPolicyRt53
-            Roles:
-                - !Ref EonDataApiHostIAMRole
-            PolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Sid: EonDataWebIAMPolicyRt53
-                      Effect: Allow
-                      Action:
-                        - route53:ChangeResourceRecordSets
-                      Resource:
-                        - !Sub 'arn:aws:route53:::hostedzone/${DnsHostedZoneId}'
     EonDataApiHostIAMProfile:
         Type: AWS::IAM::InstanceProfile
         Properties:
